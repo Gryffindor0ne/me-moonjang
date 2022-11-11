@@ -1,3 +1,30 @@
 {
-  "extends": "next/core-web-vitals"
+  "extends": [
+    "next/core-web-vitals",
+    "next",
+    "plugin:prettier/recommended",
+    "plugin:jest-formatting/recommended",
+    "plugin:jest-dom/recommended"
+  ],
+  "rules": {
+    "react/prop-types": [
+      "error",
+      {
+        "skipUndeclared": true
+      }
+    ],
+    "@typescript-eslint/no-explicit-any": "off",
+    "@typescript-eslint/explicit-function-return-type": "off",
+    "@typescript-eslint/explicit-module-boundary-types": "off",
+    "no-useless-computed-key": "error",
+    "array-callback-return": "error",
+    "import/order": [
+      "error",
+      { "newlines-between": "always-and-inside-groups" }
+    ],
+    "no-unused-vars": [
+      "error",
+      { "vars": "all", "args": "none", "ignoreRestSiblings": false }
+    ]
+  }
 }
