@@ -1,12 +1,16 @@
+import { useState } from 'react';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-
 import axios from 'axios';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import * as yup from 'yup';
-import { useState } from 'react';
+import { GoEyeClosed, GoEye } from 'react-icons/go';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+import styles from '@styles/Form.module.css';
 
 export type AuthType = 'memoonjang';
 
@@ -56,11 +60,12 @@ const Register: NextPage = () => {
         authType,
       });
 
-      console.log(res);
-
       if (res.status === 201) {
-        alert('회원가입 완료!');
-        router.replace('/auth/login');
+        toast.success('회원가입 완료!', {
+          position: 'top-center',
+          autoClose: 2000,
+        });
+        setTimeout(() => router.replace('/auth/login'), 2500);
       }
     } catch (error) {
       let message;
@@ -68,7 +73,10 @@ const Register: NextPage = () => {
         message = error.response.data.message;
         console.error(message);
         if (error.response.status === 422) {
-          alert('동일한 이메일이 존재합니다.');
+          toast.warning('동일한 이메일이 존재합니다.', {
+            position: 'top-center',
+            autoClose: 2000,
+          });
         }
       } else message = String(error);
       console.error(message);
@@ -80,9 +88,11 @@ const Register: NextPage = () => {
       <Head>
         <title>Me-Moonjang : 회원가입</title>
       </Head>
-
-      <section>
-        <h1>회원가입</h1>
+      <ToastContainer />
+      <section className="w-full mx-auto flex flex-col gap-5">
+        <h1 className="flex mx-auto text-gray-800 text-4xl font-bold py-4 my-16">
+          회원가입
+        </h1>
         <Formik
           initialValues={{
             email: '',
@@ -95,56 +105,98 @@ const Register: NextPage = () => {
           validationSchema={userSchema}
         >
           {(props) => (
-            <Form onSubmit={props.handleSubmit}>
+            <Form className="flex flex-col gap-2" onSubmit={props.handleSubmit}>
+              <label className={styles.label} htmlFor="email">
+                이메일
+              </label>
               <div>
-                <label htmlFor="email">이메일</label>
-                <Field name="email" type="email" placeholder="이메일 입력" />
-                <ErrorMessage name="email" component="div" />
-              </div>
-              <div>
-                <label htmlFor="username">이름</label>
-                <Field name="username" type="text" placeholder="이름 입력" />
-                <ErrorMessage name="username" component="div" />
-              </div>
-              <div>
-                <label htmlFor="password">비밀번호</label>
                 <Field
+                  className={styles.field}
+                  name="email"
+                  type="email"
+                  placeholder="이메일 입력"
+                />
+              </div>
+              <ErrorMessage
+                className={styles.errorMsg}
+                name="email"
+                component="div"
+              />
+              <label className={styles.label} htmlFor="username">
+                이름
+              </label>
+              <div>
+                <Field
+                  className={styles.field}
+                  name="username"
+                  type="text"
+                  placeholder="이름 입력"
+                />
+              </div>
+              <ErrorMessage
+                className={styles.errorMsg}
+                name="username"
+                component="div"
+              />
+              <label className={styles.label} htmlFor="password">
+                비밀번호
+              </label>
+              <div className="flex">
+                <Field
+                  className={styles.field}
                   name="password"
                   type={`${show.password ? 'text' : 'password'}`}
                   placeholder="비밀번호 입력"
                 />
                 <span
+                  className="border-b-2 border-gray-300 flex items-center px-4 cursor-pointer"
                   onClick={() => setShow({ ...show, password: !show.password })}
                 >
-                  비번 보여주기
+                  {show.password ? <GoEye /> : <GoEyeClosed />}
                 </span>
-                <ErrorMessage name="password" component="div" />
               </div>
+              <ErrorMessage
+                className={styles.errorMsg}
+                name="password"
+                component="div"
+              />
 
-              <div>
-                <label htmlFor="password">비밀번호 확인</label>
+              <label className={styles.label} htmlFor="password">
+                비밀번호 확인
+              </label>
+              <div className="flex">
                 <Field
+                  className={styles.field}
                   name="confirmPassword"
                   type={`${show.confirmPassword ? 'text' : 'password'}`}
                   placeholder="비밀번호 확인"
                 />
                 <span
+                  className="border-b-2 border-gray-300 flex items-center px-4 cursor-pointer"
                   onClick={() =>
                     setShow({ ...show, confirmPassword: !show.confirmPassword })
                   }
                 >
-                  비번 보여주기
+                  {show.confirmPassword ? <GoEye /> : <GoEyeClosed />}
                 </span>
-                <ErrorMessage name="confirmPassword" component="div" />
               </div>
-              <button type="submit">회원가입하기</button>
+              <ErrorMessage
+                className={styles.errorMsg}
+                name="confirmPassword"
+                component="div"
+              />
+              <button className={styles.button} type="submit">
+                회원가입하기
+              </button>
             </Form>
           )}
         </Formik>
-        <p>
-          회원이 있으신가요?
+        <p className=" text-gray-600 text-lg font-bold mx-2 mt-12 flex flex-col items-center">
+          계정이 있으신가요?
           <Link href="/auth/login">
-            <span>로그인하러가기</span>
+            <span className="bg-gray-100 border-2 border-gray-300 rounded flex justify-center px-16 py-4 mt-4 hover:bg-gray-200 cursor-pointer">
+              로그인하러가기
+            </span>
           </Link>
         </p>
       </section>
