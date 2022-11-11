@@ -14,7 +14,7 @@ const AuthPage: NextPage = () => {
         <div>카카오로 이용하기</div>
         <div>구글로 로그인하기</div>
         <p>
-          회원이 없으신가요?
+          계정이 없으신가요?
           <Link href="/auth/register">
             <span>회원가입하기</span>
           </Link>
