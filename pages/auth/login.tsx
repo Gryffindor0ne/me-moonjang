@@ -16,7 +16,7 @@ const AuthPage: NextPage = () => {
         <p>
           계정이 없으신가요?
           <Link href="/auth/register">
-            <span>회원가입하기</span>
+            <span data-testid="register-btn">회원가입하기</span>
           </Link>
         </p>
       </section>
