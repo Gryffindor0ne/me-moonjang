@@ -7,6 +7,7 @@ const createUser = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== 'POST') {
     return;
   }
+
   const { email, password, username, authType } = req.body;
   const client = await dbConnect();
   const db = client.db();
