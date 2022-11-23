@@ -38,6 +38,22 @@ const gate = () => {
 };
 
 const mainPage = ({ session }: any) => {
+  const { id } = session.user;
+
+  const handleLogout = async () => {
+    try {
+      const res = await axios.post(`api/auth/logout`, {
+        id,
+      });
+
+      if (res.status === 200) {
+        signOut();
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <main className="container mx-auto text-center mt-20">
       <h3 className="text-4xl font-bold">Me-Moonjang</h3>
@@ -48,7 +64,10 @@ const mainPage = ({ session }: any) => {
       </div>
 
       <div className="flex justify-center">
-        <button className="mt-5 px-10 py-1 rounded-sm bg-indigo-500">
+        <button
+          onClick={handleLogout}
+          className="mt-5 px-10 py-1 rounded-sm bg-indigo-500"
+        >
           로그아웃
         </button>
       </div>
