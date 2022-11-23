@@ -22,7 +22,7 @@ export type UserInfo = {
   authType: AuthType;
 };
 
-const userSchema = yup.object().shape({
+export const userSchema = yup.object().shape({
   email: yup
     .string()
     .email('잘못된 형식입니다.')
@@ -191,10 +191,10 @@ const Register: NextPage = () => {
             </Form>
           )}
         </Formik>
-        <p className=" text-gray-600 text-lg font-bold mx-2 mt-12 flex flex-col items-center">
+        <p className=" text-gray-600 text-lg font-bold mx-2 mt-24 flex items-center justify-center gap-12">
           계정이 있으신가요?
           <Link href="/auth/login">
-            <span className="bg-gray-100 border-2 border-gray-300 rounded flex justify-center px-16 py-4 mt-4 hover:bg-gray-200 cursor-pointer">
+            <span className="bg-white border-2 border-gray-300 rounded-full flex items-center justify-center px-10 py-2 hover:bg-gray-200 cursor-pointer">
               로그인하러가기
             </span>
           </Link>

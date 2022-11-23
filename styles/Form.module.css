@@ -9,5 +9,5 @@
   @apply text-red-500 text-sm mx-2 my-2;
 }
 .button {
-  @apply bg-gray-700 text-white text-lg font-bold py-4 px-4 mt-8 w-full rounded hover:bg-gray-600;
+  @apply bg-gray-700 text-white text-lg font-bold py-4 px-4 mt-8 w-full rounded-3xl hover:bg-gray-600;
 }
