@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import type { NextPage } from 'next';
-import Head from 'next/head';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import axios from 'axios';
@@ -11,6 +10,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import styles from '@styles/Form.module.css';
+import Seo from '@components/layout/Seo';
 
 export type AuthType = 'memoonjang';
 
@@ -85,9 +85,7 @@ const Register: NextPage = () => {
 
   return (
     <>
-      <Head>
-        <title>Me-Moonjang : 회원가입</title>
-      </Head>
+      <Seo title="회원가입" />
       <ToastContainer />
       <section className="w-full mx-auto flex flex-col gap-5">
         <h1 className="flex mx-auto text-gray-800 text-4xl font-bold py-4 my-16">
