@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { NextPage } from 'next';
+import Head from 'next/head';
 import Link from 'next/link';
 import { signIn, getSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
@@ -12,7 +13,6 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import styles from '@styles/Form.module.css';
-import Seo from '@components/layout/Seo';
 
 const loginSchema = yup.object().shape({
   email: yup
@@ -68,7 +68,9 @@ const AuthPage: NextPage = () => {
 
   return (
     <>
-      <Seo title="로그인" />
+      <Head>
+        <title>Me-Moonjang : 로그인</title>
+      </Head>
       <ToastContainer />
       <section className="w-full mx-auto flex flex-col gap-5">
         <h1 className="flex mx-auto text-gray-800 text-4xl font-bold py-4 my-16">
