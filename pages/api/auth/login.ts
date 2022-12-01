@@ -16,8 +16,8 @@ const login = async (req: NextApiRequest, res: NextApiResponse) => {
 
     if (!user) {
       client.close();
-      res.send({ status: 404, error: 'User does not exist' });
-      throw new Error('User no existed');
+      res.status(404).send({ message: 'User does not exist' });
+      return;
     }
 
     if (password) {
@@ -28,7 +28,8 @@ const login = async (req: NextApiRequest, res: NextApiResponse) => {
 
       if (!isValid) {
         client.close();
-        throw new Error('password is wrong');
+        res.status(404).send({ message: 'Wrong password' });
+        return;
       }
     }
 

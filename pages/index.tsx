@@ -24,7 +24,7 @@ const gate = () => {
   return (
     <>
       <Link href="/auth/login" className={styles.main}>
-        <span className="text-gray-600 text-4xl font-bold">Me Moonjang</span>
+        <span className="text-4xl font-bold text-gray-600">Me Moonjang</span>
       </Link>
 
       <footer className={styles.footer}>
@@ -37,7 +37,7 @@ const gate = () => {
 const mainPage = () => {
   return (
     <Layout>
-      <main className="container mx-auto text-center mt-20 p-5">
+      <main className="container p-5 mx-auto mt-20 text-center">
         <h3 className="text-4xl font-bold">Me-Moonjang</h3>
       </main>
     </Layout>

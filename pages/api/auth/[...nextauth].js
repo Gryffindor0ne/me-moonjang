@@ -68,7 +68,7 @@ export default NextAuth({
           }
           return null;
         } catch (error) {
-          throw new Error(e);
+          throw new Error(error);
         }
       },
     }),
@@ -80,53 +80,86 @@ export default NextAuth({
 
   callbacks: {
     async signIn({ user, account, profile }) {
+      console.log(account.provider, 'provider what?????????????????????');
       if (account.provider === 'credentials' && user) {
         return true;
       }
       if (account.provider === 'kakao') {
-        const res = await axios.post(
-          `${process.env.NEXTAUTH_URL}/api/auth/login`,
-          {
-            email: user.email,
-          }
-        );
-
-        if (res.data.status === 404 && res.data.error) {
-          const result = await axios.post(
-            `${process.env.NEXTAUTH_URL}/api/auth/signup`,
+        try {
+          const res = await axios.post(
+            `${process.env.NEXTAUTH_URL}/api/auth/login`,
             {
               email: user.email,
-              username: user.name,
-              password: user.id,
-              authType: 'kakao',
             }
           );
+
+          return true;
+        } catch (error) {
+          if (error.response?.status === 404) {
+            const result = await axios.post(
+              `${process.env.NEXTAUTH_URL}/api/auth/signup`,
+              {
+                email: user.email,
+                username: user.name,
+                password: user.id,
+                authType: 'kakao',
+              }
+            );
+
+            if (result.status == 201) {
+              const login = await axios.post(
+                `${process.env.NEXTAUTH_URL}/api/auth/login`,
+                {
+                  email: user.email,
+                }
+              );
+            }
+
+            return true;
+          } else {
+            throw error;
+          }
         }
-        return true;
       }
       if (account.provider === 'google') {
-        const res = await axios.post(
-          `${process.env.NEXTAUTH_URL}/api/auth/login`,
-          {
-            email: user.email,
-          }
-        );
-
-        if (res.data.status === 404 && res.data.error) {
-          const result = await axios.post(
-            `${process.env.NEXTAUTH_URL}/api/auth/signup`,
+        try {
+          const res = await axios.post(
+            `${process.env.NEXTAUTH_URL}/api/auth/login`,
             {
               email: user.email,
-              username: user.name,
-              password: user.id,
-              authType: 'google',
             }
           );
+          return true;
+        } catch (error) {
+          if (error.response?.status === 404) {
+            const result = await axios.post(
+              `${process.env.NEXTAUTH_URL}/api/auth/signup`,
+              {
+                email: user.email,
+                username: user.name,
+                password: user.id,
+                authType: 'google',
+              }
+            );
+
+            if (result.status == 201) {
+              const login = await axios.post(
+                `${process.env.NEXTAUTH_URL}/api/auth/login`,
+                {
+                  email: user.email,
+                }
+              );
+            }
+
+            return true;
+          } else {
+            throw error;
+          }
         }
-        return true;
       }
     },
     async jwt({ token, user, account }) {
+      console.log(user, 'USER');
       if (user) {
         if (account.provider === 'kakao' || 'google') {
           const client = await dbConnect();
@@ -149,6 +182,7 @@ export default NextAuth({
             id: userId,
             email: userInfo.email,
             username: userInfo.username,
+            authType: userInfo.authType,
           };
           token.accessToken = accessToken;
         } else {
@@ -156,6 +190,7 @@ export default NextAuth({
             id: user.id,
             email: user.email,
             username: user.username,
+            authType: userInfo.authType,
           };
           token.accessToken = user.accessToken;
         }
