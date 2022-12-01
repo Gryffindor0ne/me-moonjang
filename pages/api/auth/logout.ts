@@ -19,6 +19,7 @@ const deleteRefreshToken = async (
       client.close();
       throw new Error('No token deleted');
     }
+
     res.status(200).json({ message: 'Token deleted' });
     client.close();
   } catch (error) {
