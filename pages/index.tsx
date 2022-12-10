@@ -1,4 +1,4 @@
-import type { GetServerSideProps, NextPage } from 'next';
+import type { GetServerSideProps } from 'next';
 import { getSession, useSession } from 'next-auth/react';
 
 import Link from 'next/link';
@@ -6,16 +6,18 @@ import Link from 'next/link';
 import styles from '../styles/Home.module.css';
 import Layout from '@components/layout/Layout';
 import Seo from '@components/layout/Seo';
+import GroupBoard from '@components/groups/GroupBoard';
+import dbConnect from '@lib/db';
+import { UserInfo } from '@pages/profile';
 
-const Home: NextPage = () => {
+const Home = ({ groups }: { groups: string[] }) => {
   const { data: session } = useSession();
-  console.log(session, 'HOME SESSION');
 
   return (
     <div className={styles.container}>
       <Seo title="Home" />
 
-      {session ? mainPage() : gate()}
+      {session ? mainPage({ groups }) : gate()}
     </div>
   );
 };
@@ -34,12 +36,10 @@ const gate = () => {
   );
 };
 
-const mainPage = () => {
+const mainPage = ({ groups }: { groups: string[] }) => {
   return (
     <Layout>
-      <main className="container p-5 mx-auto mt-20 text-center">
-        <h3 className="text-4xl font-bold">Me-Moonjang</h3>
-      </main>
+      <GroupBoard groups={groups} />
     </Layout>
   );
 };
@@ -47,9 +47,26 @@ const mainPage = () => {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getSession(context);
 
+  const user = session?.user as UserInfo;
+
+  const client = await dbConnect();
+  const db = client.db();
+  const groupsCollection = db.collection('groups');
+  let groupsData = await groupsCollection
+    .find(
+      { name: { $exists: 1 }, email: user?.email },
+      { projection: { _id: 0 } }
+    )
+    .toArray();
+
+  const groups = groupsData.map(({ name }) => name);
+
+  client.close();
+
   return {
     props: {
       session,
+      groups,
     },
   };
 };

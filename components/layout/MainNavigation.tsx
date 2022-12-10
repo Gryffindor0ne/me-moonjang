@@ -5,37 +5,37 @@ const MainNavigation = () => {
   return (
     <div className="w-full h-screen">
       <section className="max-w-[520px] mx-auto fixed inset-x-0 bottom-0 z-10 bg-white shadow">
-        <div id="tabs" className="flex justify-evenly border-t-2 pt-1">
+        <div id="tabs" className="flex pt-1 border-t-2 justify-evenly">
           <Link
             href="/"
-            className="px-4 py-2 mx-2 text-gray-800 text-2xl font-bold text-center"
+            className="px-4 py-2 mx-2 text-2xl font-bold text-center text-gray-800"
           >
             <CiGrid41 />
-            <span className="tab block text-xs mt-1">그룹</span>
+            <span className="block mt-1 text-xs tab">그룹</span>
           </Link>
 
           <Link
             href="sentence"
-            className="px-4 py-2 mx-2 text-gray-800 text-2xl font-bold text-center"
+            className="px-4 py-2 mx-2 text-2xl font-bold text-center text-gray-800"
           >
             <CiPen />
-            <span className="tab block text-xs mt-1">문장</span>
+            <span className="block mt-1 text-xs tab">문장</span>
           </Link>
 
           <Link
             href="quiz"
-            className="px-4 py-2 mx-2 text-gray-800 text-2xl font-bold text-center"
+            className="px-4 py-2 mx-2 text-2xl font-bold text-center text-gray-800"
           >
             <CiLollipop />
-            <span className="tab block text-xs mt-1">퀴즈</span>
+            <span className="block mt-1 text-xs tab">퀴즈</span>
           </Link>
 
           <Link
             href="profile"
-            className="px-4 py-2 mx-2 text-gray-800 text-2xl font-bold text-center"
+            className="px-4 py-2 mx-2 text-2xl font-bold text-center text-gray-800 "
           >
             <CiUser />
-            <span className="tab block text-xs mt-1">내 정보</span>
+            <span className="block mt-1 text-xs tab">내 정보</span>
           </Link>
         </div>
       </section>
