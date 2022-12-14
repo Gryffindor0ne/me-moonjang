@@ -1,4 +1,5 @@
 import React from 'react';
+import { useSession } from 'next-auth/react';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import * as yup from 'yup';
 import axios from 'axios';
@@ -6,7 +7,7 @@ import { useRouter } from 'next/router';
 import { HiOutlineX } from 'react-icons/hi';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { useSession } from 'next-auth/react';
+
 import { UserInfo } from '@pages/profile';
 
 export const userSchema = yup.object().shape({

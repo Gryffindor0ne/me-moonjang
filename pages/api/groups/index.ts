@@ -15,6 +15,8 @@ const createGroup = async (req: NextApiRequest, res: NextApiResponse) => {
       })
       .toArray();
 
+    console.log(checkExistingGroup);
+
     if (checkExistingGroup.length !== 0) {
       res.status(422).json({ message: 'Group already exists' });
       client.close();
