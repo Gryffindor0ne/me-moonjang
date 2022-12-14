@@ -14,7 +14,7 @@ import Seo from '@components/layout/Seo';
 
 export type AuthType = 'memoonjang';
 
-export type UserInfo = {
+export type UserInputInfo = {
   email: string;
   password: string;
   confirmPassword: string;
@@ -49,7 +49,7 @@ const Register: NextPage = () => {
   const router = useRouter();
   const [show, setShow] = useState({ password: false, confirmPassword: false });
 
-  const onSubmit = async (values: UserInfo) => {
+  const onSubmit = async (values: UserInputInfo) => {
     const { email, password, username, authType } = values;
 
     try {
@@ -87,8 +87,8 @@ const Register: NextPage = () => {
     <>
       <Seo title="회원가입" />
       <ToastContainer />
-      <section className="w-full mx-auto flex flex-col gap-5">
-        <h1 className="flex mx-auto text-gray-800 text-4xl font-bold py-4 my-16">
+      <section className="flex flex-col w-full gap-5 mx-auto">
+        <h1 className="flex py-4 mx-auto my-16 text-4xl font-bold text-gray-800">
           회원가입
         </h1>
         <Formik
@@ -147,7 +147,7 @@ const Register: NextPage = () => {
                   placeholder="비밀번호 입력"
                 />
                 <span
-                  className="border-b-2 border-gray-300 flex items-center px-4 cursor-pointer"
+                  className="flex items-center px-4 border-b-2 border-gray-300 cursor-pointer"
                   onClick={() => setShow({ ...show, password: !show.password })}
                 >
                   {show.password ? <GoEye /> : <GoEyeClosed />}
@@ -170,7 +170,7 @@ const Register: NextPage = () => {
                   placeholder="비밀번호 확인"
                 />
                 <span
-                  className="border-b-2 border-gray-300 flex items-center px-4 cursor-pointer"
+                  className="flex items-center px-4 border-b-2 border-gray-300 cursor-pointer"
                   onClick={() =>
                     setShow({ ...show, confirmPassword: !show.confirmPassword })
                   }
@@ -189,10 +189,10 @@ const Register: NextPage = () => {
             </Form>
           )}
         </Formik>
-        <p className=" text-gray-600 text-lg font-bold mx-2 mt-24 flex items-center justify-center gap-12">
+        <p className="flex items-center justify-center gap-12 mx-2 mt-24 text-lg font-bold text-gray-600 ">
           계정이 있으신가요?
           <Link href="/auth/login">
-            <span className="bg-white border-2 border-gray-300 rounded-full flex items-center justify-center px-10 py-2 hover:bg-gray-200 cursor-pointer">
+            <span className="flex items-center justify-center px-10 py-2 bg-white border-2 border-gray-300 rounded-full cursor-pointer hover:bg-gray-200">
               로그인하러가기
             </span>
           </Link>

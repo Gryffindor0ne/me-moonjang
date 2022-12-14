@@ -80,7 +80,6 @@ export default NextAuth({
 
   callbacks: {
     async signIn({ user, account, profile }) {
-      console.log(account.provider, 'provider what?????????????????????');
       if (account.provider === 'credentials' && user) {
         return true;
       }
@@ -159,7 +158,6 @@ export default NextAuth({
       }
     },
     async jwt({ token, user, account }) {
-      console.log(user, 'USER');
       if (user) {
         if (account.provider === 'kakao' || 'google') {
           const client = await dbConnect();
