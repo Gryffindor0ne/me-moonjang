@@ -27,7 +27,7 @@ export const sentenceSchema = yup.object().shape({
     .string()
     .required('문장을 입력하세요.')
     .max(500, '500자 이내로 입력해주세요.')
-    .matches(/^[a-zA-Z0-9?!()*&.,'"-_\/\s]+$/, '올바른 입력이 아닙니다.'),
+    .matches(/^[a-zA-Z0-9?!()*&.,’'"-_\/\s]+$/, '올바른 입력이 아닙니다.'),
   interpretation: yup
     .string()
     .required('해석을 입력하세요.')
@@ -35,7 +35,15 @@ export const sentenceSchema = yup.object().shape({
   explanation: yup.string().max(500, '500자 이내로 입력해주세요.'),
 });
 
-const SentenceInputPage = ({ groups }: { groups: string[] }) => {
+const SentenceInputPage = ({
+  groups,
+  name,
+  email,
+}: {
+  groups: string[];
+  name: string;
+  email: string;
+}) => {
   const router = useRouter();
 
   const onSubmit = async (values: SentenceInfo) => {
@@ -44,6 +52,7 @@ const SentenceInputPage = ({ groups }: { groups: string[] }) => {
 
     try {
       const res = await axios.post(`api/groups/sentence`, {
+        email,
         group,
         sentence,
         interpretation,
@@ -55,7 +64,7 @@ const SentenceInputPage = ({ groups }: { groups: string[] }) => {
           position: 'top-center',
           autoClose: 1000,
         });
-        // setTimeout(() => router.replace('/'), 1600);
+        setTimeout(() => router.push(name ? `/${name}` : `${group}`), 1600);
       }
     } catch (error) {
       let message;
@@ -93,7 +102,7 @@ const SentenceInputPage = ({ groups }: { groups: string[] }) => {
           {groups.length !== 0 ? (
             <Formik
               initialValues={{
-                group: `${groups[0]}`,
+                group: name ? `${name}` : `${groups[0]}`,
                 sentence: '',
                 interpretation: '',
                 explanation: '',
@@ -106,25 +115,26 @@ const SentenceInputPage = ({ groups }: { groups: string[] }) => {
                   className="flex flex-col gap-2"
                   onSubmit={props.handleSubmit}
                 >
-                  <label className={styles.label} htmlFor="groups">
-                    그룹 선택
-                  </label>
-                  <div>
-                    <Field
-                      as="select"
-                      name="group"
-                      className="bg-gray-50 border
-                   border-gray-300 text-gray-900 text-sm 
-                   rounded-lg focus:ring-2 focus:ring-teal-500 
-                   focus:ring-offset-1 focus:outline-none w-full p-2.5"
-                    >
-                      {groups.map((group, idx) => (
-                        <option key={idx} value={group}>
-                          {group}
-                        </option>
-                      ))}
-                    </Field>
-                  </div>
+                  {!name && (
+                    <>
+                      <label className={styles.label} htmlFor="groups">
+                        그룹 선택
+                      </label>
+                      <div>
+                        <Field
+                          as="select"
+                          name="group"
+                          className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 focus:ring-teal-500 focus:ring-offset-1 focus:outline-none w-full p-2.5"
+                        >
+                          {groups.map((group, idx) => (
+                            <option key={idx} value={group}>
+                              {group}
+                            </option>
+                          ))}
+                        </Field>
+                      </div>
+                    </>
+                  )}
                   <label className={styles.label} htmlFor="sentence">
                     문장
                   </label>
@@ -204,6 +214,7 @@ const SentenceInputPage = ({ groups }: { groups: string[] }) => {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const session = await getSession(context);
+  const { name } = context?.query;
 
   const user = session?.user as UserInfo;
 
@@ -223,8 +234,9 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
 
   return {
     props: {
-      session,
+      email: user.email,
       groups,
+      name: name ? name : null,
     },
   };
 };

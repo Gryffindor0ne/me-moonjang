@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { useSession } from 'next-auth/react';
+import { HiOutlineExclamationCircle } from 'react-icons/hi';
 
 import GroupNavbar from '@components/groups/components/GroupNavbar';
 import GroupCreateModal from '@components/modals/GroupCreateModal';
 import { UserInfo } from '@pages/profile';
 import Group from '@components/groups/components/Group';
-import { HiOutlineExclamationCircle } from 'react-icons/hi';
 
 const GroupBoard = ({ groups }: { groups: string[] }) => {
   const [isOpen, setIsOpen] = useState(false);

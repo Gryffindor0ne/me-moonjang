@@ -15,7 +15,7 @@ const MainNavigation = () => {
           </Link>
 
           <Link
-            href="sentence"
+            href="newsentence"
             className="px-4 py-2 mx-2 text-2xl font-bold text-center text-gray-800"
           >
             <CiPen />

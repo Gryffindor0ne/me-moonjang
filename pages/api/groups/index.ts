@@ -1,4 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+
 import dbConnect from '@lib/db';
 
 const createGroup = async (req: NextApiRequest, res: NextApiResponse) => {
@@ -14,8 +15,6 @@ const createGroup = async (req: NextApiRequest, res: NextApiResponse) => {
         email,
       })
       .toArray();
-
-    console.log(checkExistingGroup);
 
     if (checkExistingGroup.length !== 0) {
       res.status(422).json({ message: 'Group already exists' });
