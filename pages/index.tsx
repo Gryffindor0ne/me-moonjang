@@ -3,7 +3,7 @@ import { getSession, useSession } from 'next-auth/react';
 
 import Link from 'next/link';
 
-import styles from '../styles/Home.module.css';
+import styles from '@styles/Home.module.css';
 import Layout from '@components/layout/Layout';
 import Seo from '@components/layout/Seo';
 import GroupBoard from '@components/groups/GroupBoard';
