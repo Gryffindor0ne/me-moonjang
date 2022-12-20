@@ -1,9 +1,10 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import dbConnect from '@lib/db';
 import { ObjectID } from 'bson';
 
+import dbConnect from '@lib/db';
+
 const createSentence = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { group, sentence, interpretation, explanation } = req.body;
+  const { group, sentence, interpretation, explanation, email } = req.body;
   const client = await dbConnect();
 
   try {
@@ -11,6 +12,7 @@ const createSentence = async (req: NextApiRequest, res: NextApiResponse) => {
     const groupsCollection = db.collection('groups');
     const checkSentence = await groupsCollection
       .find({
+        email,
         name: group,
         sentences: { $elemMatch: { sentence: sentence } },
       })
@@ -25,6 +27,7 @@ const createSentence = async (req: NextApiRequest, res: NextApiResponse) => {
     await groupsCollection.updateOne(
       {
         name: group,
+        email,
       },
       {
         $push: {
