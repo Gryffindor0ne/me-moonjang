@@ -8,6 +8,7 @@ import dbConnect from '@lib/db';
 import Sentence, { SentenceDetailInfo } from '@components/sentence/Sentence';
 import { UserInfo } from '@pages/profile';
 import Seo from '@components/layout/Seo';
+import { descendingSort } from '@utils/utils';
 
 export type GroupInfo = {
   _id: string;
@@ -52,7 +53,7 @@ const SentenceByGroup = ({ groupData }: { groupData: GroupInfo[] }) => {
         )}
 
         {groupData[0].sentences ? (
-          groupData[0].sentences?.map((sentenceInfo, idx) => (
+          descendingSort(groupData[0].sentences).map((sentenceInfo, idx) => (
             <Sentence
               key={idx}
               data={sentenceInfo}

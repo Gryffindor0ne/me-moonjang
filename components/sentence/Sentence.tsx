@@ -1,12 +1,14 @@
 import { useRouter } from 'next/router';
 
+import { writtenDate } from '@utils/utils';
+
 export type SentenceDetailInfo = {
   id: string;
   sentence: string;
   interpretation: string;
   explanation: string;
-  createdAt: string;
-  updatedAt: string;
+  createdAt: number;
+  updatedAt: number;
 };
 
 const Sentence = ({
@@ -28,6 +30,9 @@ const Sentence = ({
       onClick={handleClickGroupName}
       className="w-full p-3 text-gray-700 border border-gray-300 rounded-md cursor-pointer resize-none hover:ring-2 hover:ring-teal-500 hover:ring-offset-1 hover:outline-none"
     >
+      <div id={data.id} className="mb-3 text-xs text-gray-500 md:text-md">
+        {writtenDate(data.createdAt)}
+      </div>
       <div id={data.id} className="font-bold text-md md:text-xl">
         {data.sentence}
       </div>
