@@ -8,7 +8,7 @@ const MainNavigation = () => {
         <div id="tabs" className="flex pt-1 border-t-2 justify-evenly">
           <Link
             href="/"
-            className="px-4 py-2 mx-2 text-2xl font-bold text-center text-gray-800"
+            className="flex flex-col items-center justify-center px-4 py-2 mx-2 text-2xl font-bold text-center text-gray-800"
           >
             <CiGrid41 />
             <span className="block mt-1 text-xs tab">그룹</span>
@@ -16,7 +16,7 @@ const MainNavigation = () => {
 
           <Link
             href="newsentence"
-            className="px-4 py-2 mx-2 text-2xl font-bold text-center text-gray-800"
+            className="flex flex-col items-center px-4 py-2 mx-2 text-2xl font-bold text-center text-gray-800 justify-centerpx-4"
           >
             <CiPen />
             <span className="block mt-1 text-xs tab">문장</span>
@@ -24,7 +24,7 @@ const MainNavigation = () => {
 
           <Link
             href="quiz"
-            className="px-4 py-2 mx-2 text-2xl font-bold text-center text-gray-800"
+            className="flex flex-col items-center justify-center px-4 py-2 mx-2 text-2xl font-bold text-center text-gray-800"
           >
             <CiLollipop />
             <span className="block mt-1 text-xs tab">퀴즈</span>
@@ -32,7 +32,7 @@ const MainNavigation = () => {
 
           <Link
             href="profile"
-            className="px-4 py-2 mx-2 text-2xl font-bold text-center text-gray-800"
+            className="flex flex-col items-center justify-center px-4 py-2 mx-2 text-2xl font-bold text-center text-gray-800"
           >
             <CiUser />
             <span className="block mt-1 text-xs tab">내 정보</span>

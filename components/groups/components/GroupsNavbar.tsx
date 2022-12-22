@@ -1,7 +1,7 @@
 import React from 'react';
 import { HiBookOpen } from 'react-icons/hi';
 
-const GroupNavbar = ({
+const GroupsNavbar = ({
   setIsOpen,
 }: {
   setIsOpen: (value: boolean) => void;
@@ -28,4 +28,4 @@ const GroupNavbar = ({
   );
 };
 
-export default GroupNavbar;
+export default GroupsNavbar;

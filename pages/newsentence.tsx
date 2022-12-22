@@ -51,7 +51,7 @@ const SentenceInputPage = ({
     const { group, sentence, interpretation, explanation } = values;
 
     try {
-      const res = await axios.post(`api/groups/sentence`, {
+      const res = await axios.post(`api/sentence`, {
         email,
         group,
         sentence,

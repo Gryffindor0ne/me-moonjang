@@ -39,7 +39,7 @@ const GroupCreateModal = ({
     const { name } = value;
 
     try {
-      const res = await axios.post('/api/groups', {
+      const res = await axios.post('/api/group', {
         name,
         email: user.email,
       });

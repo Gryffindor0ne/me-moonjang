@@ -36,17 +36,17 @@ const Sentence = ({ sentenceData }: { sentenceData: any }) => {
         </div>
         <div
           onClick={handleSentence}
-          className="flex flex-col items-center w-full gap-5 py-10 text-gray-700 border border-gray-300 rounded-md cursor-pointer resize-none hover:ring-2 hover:ring-teal-500 hover:ring-offset-1 hover:outline-none"
+          className="flex flex-col w-full gap-5 px-6 py-10 text-gray-700 border border-gray-300 rounded-md cursor-pointer resize-none hover:ring-2 hover:ring-teal-500 hover:ring-offset-1 hover:outline-none"
         >
-          <div className="flex px-4 py-10 text-base font-bold md:text-xl">
+          <div className="flex p-6 text-base font-bold bg-teal-100 rounded-md md:text-xl">
             {sentenceDetail.sentence}
           </div>
           {open && (
-            <div className="flex flex-col items-center justify-center w-full gap-5 p-4 mt-5">
-              <div className="text-sm md:text-lg">
+            <div className="flex flex-col w-full gap-5 p-2 mt-5">
+              <div className="p-2 text-sm md:text-lg">
                 {sentenceDetail.interpretation}
               </div>
-              <div className="flex items-center justify-center w-full p-4 text-xs leading-relaxed text-gray-600 bg-teal-100 rounded-md mt-7 md:text-base md:leading-loose">
+              <div className="flex w-full p-2 text-xs leading-relaxed text-gray-600 rounded-md mt-7 md:text-base md:leading-loose">
                 {sentenceDetail.explanation}
               </div>
             </div>

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
 
-import GroupNavbar from '@components/groups/components/GroupNavbar';
+import GroupsNavbar from '@components/groups/components/GroupsNavbar';
 import GroupCreateModal from '@components/modals/GroupCreateModal';
 import { UserInfo } from '@pages/profile';
 import Group from '@components/groups/components/Group';
@@ -14,7 +14,7 @@ const GroupBoard = ({ groups }: { groups: string[] }) => {
 
   return (
     <>
-      <GroupNavbar setIsOpen={setIsOpen} />
+      <GroupsNavbar setIsOpen={setIsOpen} />
       {isOpen && <GroupCreateModal setIsOpen={setIsOpen} />}
       <div className="flex p-2 mx-auto my-6 text-base font-bold text-gray-700 md:text-xl md:p-4">
         {user?.username.toUpperCase()}'s memoonjang

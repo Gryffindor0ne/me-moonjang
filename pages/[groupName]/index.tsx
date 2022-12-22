@@ -1,14 +1,22 @@
+import { useState } from 'react';
 import { GetServerSideProps } from 'next';
 import { getSession } from 'next-auth/react';
+import axios from 'axios';
 import { useRouter } from 'next/router';
-import { MdOutlineArrowBackIos } from 'react-icons/md';
-import { HiOutlineExclamationCircle, HiOutlinePlus } from 'react-icons/hi';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+import { HiOutlineExclamationCircle } from 'react-icons/hi';
 
 import dbConnect from '@lib/db';
-import Sentence, { SentenceDetailInfo } from '@components/sentence/Sentence';
-import { UserInfo } from '@pages/profile';
-import Seo from '@components/layout/Seo';
 import { descendingSort } from '@utils/utils';
+import { UserInfo } from '@pages/profile';
+import Sentence, { SentenceDetailInfo } from '@components/group/Sentence';
+import Seo from '@components/layout/Seo';
+import GroupNavbar from '@components/group/GroupNavbar';
+import SentenceEditModal from '@components/modals/SentenceEditModal';
+import ConfirmModal from '@components/modals/ConfirmModal';
+import SelectSentence from '@components/group/SelectSentence';
+import GroupHeader from '@components/group/GroupHeader';
 
 export type GroupInfo = {
   _id: string;
@@ -20,39 +28,75 @@ export type GroupInfo = {
 };
 
 const SentenceByGroup = ({ groupData }: { groupData: GroupInfo[] }) => {
+  const [isOpen, setIsOpen] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [selectBtn, setSelectBtn] = useState('');
+  const [selectedSentence, setIsSelectedSentence] = useState<string[]>([]);
+
+  const [option, setIsOption] = useState('');
+
   const router = useRouter();
-  const addSentence = () => {
-    router.push(`/newsentence/?name=${groupData[0].name}`);
+
+  const handleUpdateSentence = () => {};
+
+  const handleDeleteSentence = async () => {
+    try {
+      const response = await axios.delete(`/api/sentence/delete`, {
+        data: {
+          email: groupData[0].email,
+          name: groupData[0].name,
+          sentences: selectedSentence,
+        },
+      });
+
+      if (response.status === 201) {
+        toast.success('문장 삭제완료', {
+          position: 'top-center',
+          autoClose: 1000,
+        });
+        setShowConfirmModal((prev) => !prev);
+        setIsOption('');
+        setIsOpen(false);
+        setTimeout(() => {
+          router.push(`/${groupData[0].name}`);
+        }, 1300);
+      }
+
+      console.log(response);
+    } catch (err) {}
   };
 
   return (
     <>
+      <ToastContainer />
       <Seo title={`${groupData[0].name}`} />
+      {showConfirmModal && (
+        <ConfirmModal
+          btn={selectBtn}
+          setShowModal={setShowConfirmModal}
+          handler={handleUpdateSentence}
+          deleteHandler={handleDeleteSentence}
+          setIsSelectedSentence={setIsSelectedSentence}
+        />
+      )}
       <section className="flex flex-col w-full gap-3 p-4 mx-auto">
-        <div className="flex">
-          <span
-            onClick={() => router.push('/')}
-            className="flex items-center justify-center pl-4 text-2xl cursor-pointer"
-          >
-            <MdOutlineArrowBackIos />
-          </span>
-          <h1 className="flex py-2 mx-auto my-8 text-xl font-bold text-gray-800 md:2xl">
-            {groupData[0].name}
-          </h1>
-          <span
-            onClick={addSentence}
-            className="flex items-center justify-center pr-4 text-2xl cursor-pointer"
-          >
-            <HiOutlinePlus />
-          </span>
-        </div>
-        {groupData[0].sentences && (
-          <div className="p-3 text-lg font-bold text-teal-500">
-            총 {groupData[0].sentences.length} 문장
-          </div>
+        <GroupNavbar name={groupData[0].name} setIsOpen={setIsOpen} />
+        {isOpen && (
+          <SentenceEditModal setIsOpen={setIsOpen} setIsOption={setIsOption} />
         )}
-
-        {groupData[0].sentences ? (
+        {groupData[0].sentences && (
+          <GroupHeader groupData={groupData} name={groupData[0].name} />
+        )}
+        {option && groupData[0].sentences ? (
+          <SelectSentence
+            sentences={descendingSort(groupData[0].sentences)}
+            groupName={groupData[0].name}
+            setIsOption={setIsOption}
+            setSelectBtn={setSelectBtn}
+            setShowConfirmModal={setShowConfirmModal}
+            setIsSelectedSentence={setIsSelectedSentence}
+          />
+        ) : groupData[0].sentences ? (
           descendingSort(groupData[0].sentences).map((sentenceInfo, idx) => (
             <Sentence
               key={idx}
