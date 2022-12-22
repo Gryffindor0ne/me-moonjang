@@ -1,26 +1,60 @@
-import React, { Fragment, useRef, useState } from 'react';
+import React, {
+  Dispatch,
+  Fragment,
+  SetStateAction,
+  useRef,
+  useState,
+} from 'react';
 import { Dialog, Transition } from '@headlessui/react';
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 
 const ConfirmModal = ({
   btn,
   setShowModal,
+  handler,
   deleteHandler,
-  logoutHandler,
+  setIsSelectedSentence,
 }: {
   btn: string;
-  setShowModal: (value: boolean) => void;
+  setShowModal: Dispatch<SetStateAction<boolean>>;
+  handler: () => void;
   deleteHandler: () => void;
-  logoutHandler: () => void;
+  setIsSelectedSentence: Dispatch<SetStateAction<string[] | []>>;
 }) => {
   const [open, setOpen] = useState(true);
 
   const cancelButtonRef = useRef(null);
 
-  const handleCloseModal = () => {
+  const handleCancel = () => {
     setOpen((prev) => !prev);
-    setShowModal(false);
+    setShowModal((prev) => !prev);
+    setIsSelectedSentence([]);
   };
+
+  console.log(btn);
+
+  const confirmMessageSet = [
+    {
+      btn: 'logout',
+      title: '로그아웃',
+      description: '로그아웃하시겠습니까?',
+      handler: handler,
+    },
+    {
+      btn: 'deleteAccount',
+      title: '회원탈퇴',
+      description: '정말 회원을 탈퇴하겠습니까? 모든 데이터가 삭제됩니다.',
+      handler: deleteHandler,
+    },
+    {
+      btn: 'deleteSentence',
+      title: '문장삭제',
+      description: '선택한 문장을 삭제하시겠습니까?',
+      handler: deleteHandler,
+    },
+  ];
+
+  const confirmTarget = confirmMessageSet.filter((set) => set.btn === btn);
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -28,7 +62,7 @@ const ConfirmModal = ({
         as="div"
         className="relative z-10"
         initialFocus={cancelButtonRef}
-        onClose={handleCloseModal}
+        onClose={handleCancel}
       >
         <Transition.Child
           as={Fragment}
@@ -67,13 +101,11 @@ const ConfirmModal = ({
                         as="h3"
                         className="text-lg font-medium leading-6 text-gray-900 "
                       >
-                        {btn === 'logout' ? '로그아웃' : '회원탈퇴'}
+                        {confirmTarget[0].title}
                       </Dialog.Title>
                       <div className="mt-2">
                         <p className="text-xs text-gray-500 sm:text-sm">
-                          {btn === 'logout'
-                            ? '로그아웃하시겠습니까?'
-                            : '정말 회원을 탈퇴하겠습니까? 모든 데이터가 삭제됩니다.'}
+                          {confirmTarget[0].description}
                         </p>
                       </div>
                     </div>
@@ -83,14 +115,14 @@ const ConfirmModal = ({
                   <button
                     type="button"
                     className="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white bg-orange-400 border border-transparent rounded-md shadow-sm hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-1 sm:ml-3 sm:w-auto sm:text-sm"
-                    onClick={btn === 'logout' ? logoutHandler : deleteHandler}
+                    onClick={confirmTarget[0].handler}
                   >
-                    {btn === 'logout' ? '로그아웃' : '회원탈퇴'}
+                    {confirmTarget[0].title}
                   </button>
                   <button
                     type="button"
                     className="inline-flex justify-center w-full px-4 py-2 mt-3 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-1 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
-                    onClick={handleCloseModal}
+                    onClick={handleCancel}
                     ref={cancelButtonRef}
                   >
                     취소
