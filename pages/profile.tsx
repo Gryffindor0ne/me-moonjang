@@ -1,15 +1,15 @@
-import Seo from '@components/layout/Seo';
-import axios from 'axios';
-
 import { getSession, signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
+import { GetServerSideProps } from 'next';
+import axios from 'axios';
 import { MdOutlineArrowBackIos } from 'react-icons/md';
 import { CiLogout } from 'react-icons/ci';
 
-import { GetServerSideProps } from 'next';
 import { useState } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
+import Seo from '@components/layout/Seo';
 import ConfirmModal from '@components/modals/ConfirmModal';
 
 export type UserInfo = {
@@ -79,7 +79,7 @@ const ProfilePage = () => {
           btn={selectBtn}
           setShowModal={setShowModal}
           deleteHandler={handleDeleteAccount}
-          logoutHandler={handleLogout}
+          handler={handleLogout}
         />
       )}
       <ToastContainer />
