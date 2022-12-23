@@ -1,4 +1,6 @@
 /** @type {import('tailwindcss').Config} */
+const defaultTheme = require('tailwindcss/defaultTheme');
+
 module.exports = {
   content: [
     './app/**/*.{js,ts,jsx,tsx}',
@@ -6,7 +8,15 @@ module.exports = {
     './components/**/*.{js,ts,jsx,tsx}',
   ],
   theme: {
-    extend: {},
+    extend: {
+      fontFamily: {
+        Lora: ['Lora', 'serif'],
+        Gowun: ['Gowun Batang', 'serif'],
+      },
+    },
+  },
+  variants: {
+    outline: ['focus'],
   },
   plugins: [require('@tailwindcss/forms')],
 };

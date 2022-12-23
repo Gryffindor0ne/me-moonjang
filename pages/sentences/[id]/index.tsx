@@ -4,6 +4,7 @@ import { getSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { ObjectId } from 'mongodb';
 import { MdOutlineArrowBackIos } from 'react-icons/md';
+import { HiOutlineBell } from 'react-icons/hi';
 
 import dbConnect from '@lib/db';
 import { UserInfo } from '@pages/profile';
@@ -36,18 +37,35 @@ const Sentence = ({ sentenceData }: { sentenceData: any }) => {
         </div>
         <div
           onClick={handleSentence}
-          className="flex flex-col w-full gap-5 px-6 py-10 text-gray-700 border border-gray-300 rounded-md cursor-pointer resize-none hover:ring-2 hover:ring-teal-500 hover:ring-offset-1 hover:outline-none"
+          className="flex flex-col w-full h-full gap-2 px-6 py-10 text-gray-700 border border-gray-300 rounded-md cursor-pointer resize-none hover:ring-2 hover:ring-teal-500 hover:ring-offset-1 hover:outline-none"
         >
-          <div className="flex p-6 text-base font-bold bg-teal-100 rounded-md md:text-xl">
+          <div className="flex p-2 text-2xl font-bold font-Lora md:text-3xl">
             {sentenceDetail.sentence}
           </div>
           {open && (
-            <div className="flex flex-col w-full gap-5 p-2 mt-5">
-              <div className="p-2 text-sm md:text-lg">
+            <div className="flex flex-col w-full p-2 mt-5">
+              <div className="mb-10 text-base text-gray-400 font-Gowun md:text-xl">
                 {sentenceDetail.interpretation}
               </div>
-              <div className="flex w-full p-2 text-xs leading-relaxed text-gray-600 rounded-md mt-7 md:text-base md:leading-loose">
-                {sentenceDetail.explanation}
+              {sentenceDetail.explanation && (
+                <div>
+                  <div className="p-2 mt-2 text-2xl text-teal-400">
+                    <HiOutlineBell />
+                  </div>
+
+                  <div className="flex w-full mt-2 text-xs leading-relaxed text-gray-600 md:text-base">
+                    {sentenceDetail.explanation}
+                  </div>
+                </div>
+              )}
+
+              <div className="my-5">
+                <div className="flex w-full text-sm leading-relaxed text-gray-400 mt-14 md:text-xl">
+                  클릭시 문장만 남습니다.
+                </div>
+                <div className="flex w-full mt-2 text-sm leading-relaxed text-gray-400 md:text-xl">
+                  재클릭시 모든 내용이 표시됩니다.
+                </div>
               </div>
             </div>
           )}
