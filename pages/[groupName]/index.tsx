@@ -84,9 +84,9 @@ const SentenceByGroup = ({ groupData }: { groupData: GroupInfo[] }) => {
         {isOpen && (
           <SentenceEditModal setIsOpen={setIsOpen} setIsOption={setIsOption} />
         )}
-        {groupData[0].sentences && (
-          <GroupHeader groupData={groupData} name={groupData[0].name} />
-        )}
+
+        <GroupHeader groupData={groupData} name={groupData[0].name} />
+
         {option && groupData[0].sentences ? (
           <SelectSentence
             sentences={descendingSort(groupData[0].sentences)}
@@ -96,7 +96,7 @@ const SentenceByGroup = ({ groupData }: { groupData: GroupInfo[] }) => {
             setShowConfirmModal={setShowConfirmModal}
             setIsSelectedSentence={setIsSelectedSentence}
           />
-        ) : groupData[0].sentences ? (
+        ) : groupData[0].sentences && groupData[0].sentences.length !== 0 ? (
           descendingSort(groupData[0].sentences).map((sentenceInfo, idx) => (
             <Sentence
               key={idx}
