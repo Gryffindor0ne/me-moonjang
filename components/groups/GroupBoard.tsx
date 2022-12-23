@@ -1,6 +1,9 @@
 import React, { useState } from 'react';
 import { useSession } from 'next-auth/react';
-import { HiOutlineExclamationCircle } from 'react-icons/hi';
+import {
+  HiOutlineCollection,
+  HiOutlineExclamationCircle,
+} from 'react-icons/hi';
 
 import GroupsNavbar from '@components/groups/components/GroupsNavbar';
 import GroupCreateModal from '@components/modals/GroupCreateModal';
@@ -14,10 +17,18 @@ const GroupBoard = ({ groups }: { groups: string[] }) => {
 
   return (
     <>
-      <GroupsNavbar setIsOpen={setIsOpen} />
+      <GroupsNavbar />
       {isOpen && <GroupCreateModal setIsOpen={setIsOpen} />}
-      <div className="flex p-2 mx-auto my-6 text-base font-bold text-gray-700 md:text-xl md:p-4">
-        {user?.username.toUpperCase()}'s memoonjang
+      <div className="flex items-center justify-between w-full p-2">
+        <div className="flex justify-start p-2 my-2 text-base font-bold text-gray-700 md:text-lg md:p-4">
+          {user?.username.toUpperCase()}'s memoonjang
+        </div>
+        <div
+          onClick={() => setIsOpen((prev) => !prev)}
+          className="p-2 text-3xl text-center text-teal-400 cursor-pointer md:text-4xl md:p-4"
+        >
+          <HiOutlineCollection />
+        </div>
       </div>
 
       {groups?.length !== 0 ? (
