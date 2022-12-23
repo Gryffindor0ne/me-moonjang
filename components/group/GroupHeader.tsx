@@ -17,7 +17,9 @@ const GroupHeader = ({
     <>
       <div className="flex justify-between">
         <div className="p-3 text-lg font-bold text-teal-500">
-          총 {groupData[0].sentences.length} 문장
+          {groupData[0].sentences
+            ? `총 ${groupData[0].sentences.length} 문장`
+            : `총 0 문장`}
         </div>
         <span
           onClick={addSentence}
