@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { ObjectID } from 'bson';
+import { ObjectId } from 'mongodb';
 
 import dbConnect from '@lib/db';
 
@@ -32,7 +32,7 @@ const createSentence = async (req: NextApiRequest, res: NextApiResponse) => {
       {
         $push: {
           sentences: {
-            id: new ObjectID(),
+            id: new ObjectId(),
             sentence,
             interpretation,
             explanation,

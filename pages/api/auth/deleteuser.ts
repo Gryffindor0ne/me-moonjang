@@ -11,7 +11,6 @@ const deleteUser = async (req: NextApiRequest, res: NextApiResponse) => {
     const response = await usersCollection.deleteOne({
       email,
     });
-    console.log(response, 'user delete console');
 
     if (response.deletedCount === 0) {
       client.close();

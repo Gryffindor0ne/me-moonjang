@@ -1,5 +1,4 @@
 import { Dispatch, SetStateAction } from 'react';
-import { useRouter } from 'next/router';
 import { Field, Form, Formik } from 'formik';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -7,34 +6,38 @@ import 'react-toastify/dist/ReactToastify.css';
 import Sentence, { SentenceDetailInfo } from '@components/group/Sentence';
 
 type SelectSentenceInfo = {
-  checked: string[];
+  selected: string[];
 };
 
 const SelectSentence = ({
+  option,
   groupName,
   sentences,
   setIsOption,
   setSelectBtn,
   setShowConfirmModal,
   setIsSelectedSentence,
+  setIsSelectedSentenceIds,
+  setShowSelectGroupModal,
 }: {
+  option: string;
   groupName: string;
   sentences: SentenceDetailInfo[];
   setIsOption: Dispatch<SetStateAction<string>>;
   setSelectBtn: Dispatch<SetStateAction<string>>;
   setShowConfirmModal: Dispatch<SetStateAction<boolean>>;
-  setIsSelectedSentence: Dispatch<SetStateAction<string[]>>;
+  setIsSelectedSentenceIds: Dispatch<SetStateAction<string[]>>;
+  setIsSelectedSentence: Dispatch<SetStateAction<SentenceDetailInfo[]>>;
+  setShowSelectGroupModal: Dispatch<SetStateAction<boolean>>;
 }) => {
-  const router = useRouter();
-
   const handleCancel = () => {
     setIsOption('');
   };
 
   const onSubmit = (value: SelectSentenceInfo) => {
-    const { checked } = value;
+    const { selected } = value;
 
-    if (checked.length === 0) {
+    if (selected.length === 0) {
       toast.warning('선택된 문장이 없습니다!', {
         position: 'top-center',
         autoClose: 1500,
@@ -42,9 +45,18 @@ const SelectSentence = ({
       return;
     }
 
-    setSelectBtn('deleteSentence');
-    setIsSelectedSentence(checked);
-    setShowConfirmModal(true);
+    const selectedSentences: SentenceDetailInfo[] = sentences.filter(
+      (sentence: SentenceDetailInfo) => selected.includes(sentence.id)
+    );
+
+    setSelectBtn(`${option}`);
+    setIsSelectedSentenceIds(selected);
+
+    if (option === 'changeGroup') {
+      setShowSelectGroupModal((prev) => !prev);
+      setIsSelectedSentence(selectedSentences);
+    }
+    if (option === 'deleteSentence') setShowConfirmModal((prev) => !prev);
   };
 
   return (
@@ -52,7 +64,7 @@ const SelectSentence = ({
       <ToastContainer />
       <Formik
         initialValues={{
-          checked: [],
+          selected: [],
         }}
         onSubmit={onSubmit}
       >
@@ -63,7 +75,7 @@ const SelectSentence = ({
                 <label key={sentence.id} className="inline-flex items-center">
                   <Field
                     className="w-5 h-5 ml-2 mr-4 text-teal-600 rounded-md border-1 focus:ring-0"
-                    name="checked"
+                    name="selected"
                     type="checkbox"
                     value={sentence.id}
                   />
@@ -73,15 +85,15 @@ const SelectSentence = ({
             })}
 
             <button
-              className="inline-flex justify-center w-full text-white bg-teal-500 hover:bg-teal-600 
-              focus:ring-2 rounded-md shadow-sm border border-transparent mt-5 focus:outline-none focus:ring-teal-300 focus:ring-offset-1 font-medium  text-md px-5 py-2.5 sm:ml-3 sm:w-auto sm:text-sm"
+              className="inline-flex justify-center w-full text-white bg-teal-500 hover:bg-teal-600 tracking-wider
+              focus:ring-2 rounded-md shadow-sm border border-transparent mt-5 focus:outline-none focus:ring-teal-300 focus:ring-offset-1 font-medium px-5 py-2.5 sm:ml-3 sm:w-auto sm:text-lg"
               type="submit"
             >
-              삭제
+              {option === 'changeGroup' ? `그룹변경` : `삭제`}
             </button>
             <button
               type="button"
-              className="inline-flex justify-center w-full px-5 py-2.5  mt-1 text-base font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-1 sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm"
+              className="inline-flex justify-center w-full px-5 py-2.5  tracking-wider mt-1 font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:ring-offset-1 sm:mt-0 sm:ml-3 sm:w-auto sm:text-lg"
               onClick={handleCancel}
             >
               취소
