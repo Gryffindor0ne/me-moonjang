@@ -1,11 +1,10 @@
+import { useState } from 'react';
 import { getSession, signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { GetServerSideProps } from 'next';
 import axios from 'axios';
 import { MdOutlineArrowBackIos } from 'react-icons/md';
 import { CiLogout } from 'react-icons/ci';
-
-import { useState } from 'react';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -26,7 +25,7 @@ const ProfilePage = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectBtn, setSelectBtn] = useState('');
 
-  const handleLogout = async () => {
+  const handleLogout = async (): Promise<void> => {
     try {
       const res = await axios.post(`api/auth/logout`, {
         id: user.id,
@@ -45,7 +44,7 @@ const ProfilePage = () => {
     setShowModal((prev) => !prev);
   };
 
-  const handleDeleteAccount = async () => {
+  const handleDeleteAccount = async (): Promise<void> => {
     try {
       const res = await axios.post(`api/auth/logout`, {
         id: user.id,
@@ -75,6 +74,7 @@ const ProfilePage = () => {
     <>
       <Seo title="회원정보" />
       {showModal && (
+        //@ts-ignore
         <ConfirmModal
           btn={selectBtn}
           setShowModal={setShowModal}

@@ -13,13 +13,15 @@ const ConfirmModal = ({
   setShowModal,
   handler,
   deleteHandler,
-  setIsSelectedSentence,
+  selectedSentenceIds,
+  setIsSelectedSentenceIds,
 }: {
   btn: string;
   setShowModal: Dispatch<SetStateAction<boolean>>;
-  handler: () => void;
-  deleteHandler: () => void;
-  setIsSelectedSentence: Dispatch<SetStateAction<string[] | []>>;
+  handler: () => Promise<void>;
+  deleteHandler: () => Promise<void>;
+  selectedSentenceIds: string[];
+  setIsSelectedSentenceIds: Dispatch<SetStateAction<string[] | []>>;
 }) => {
   const [open, setOpen] = useState(true);
 
@@ -28,10 +30,8 @@ const ConfirmModal = ({
   const handleCancel = () => {
     setOpen((prev) => !prev);
     setShowModal((prev) => !prev);
-    setIsSelectedSentence([]);
+    if (selectedSentenceIds) setIsSelectedSentenceIds([]);
   };
-
-  console.log(btn);
 
   const confirmMessageSet = [
     {
@@ -51,6 +51,12 @@ const ConfirmModal = ({
       title: '문장삭제',
       description: '선택한 문장을 삭제하시겠습니까?',
       handler: deleteHandler,
+    },
+    {
+      btn: 'changeGroup',
+      title: '그룹변경',
+      description: '선택한 문장의 그룹을 변경하시겠습니까?',
+      handler: handler,
     },
   ];
 

@@ -1,6 +1,6 @@
 import { useRouter } from 'next/router';
 
-import { writtenDate } from '@utils/utils';
+import { writtenDate } from '@utils/dayjs';
 
 export type SentenceDetailInfo = {
   id: string;
