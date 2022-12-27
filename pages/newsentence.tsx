@@ -46,8 +46,7 @@ const SentenceInputPage = ({
 }) => {
   const router = useRouter();
 
-  const onSubmit = async (values: SentenceInfo) => {
-    console.log(values);
+  const onSubmit = async (values: SentenceInfo): Promise<void> => {
     const { group, sentence, interpretation, explanation } = values;
 
     try {

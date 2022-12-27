@@ -8,7 +8,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
 
 import dbConnect from '@lib/db';
-import { descendingSort } from '@utils/utils';
+import { descendingSort } from '@utils/dayjs';
 import { UserInfo } from '@pages/profile';
 import Sentence, { SentenceDetailInfo } from '@components/group/Sentence';
 import Seo from '@components/layout/Seo';
@@ -17,6 +17,7 @@ import SentenceEditModal from '@components/modals/SentenceEditModal';
 import ConfirmModal from '@components/modals/ConfirmModal';
 import SelectSentence from '@components/group/SelectSentence';
 import GroupHeader from '@components/group/GroupHeader';
+import SelectGroup from '@components/group/SelectGroup';
 
 export type GroupInfo = {
   _id: string;
@@ -27,43 +28,111 @@ export type GroupInfo = {
   sentences: SentenceDetailInfo[];
 };
 
-const SentenceByGroup = ({ groupData }: { groupData: GroupInfo[] }) => {
+const SentenceByGroup = ({
+  groupData,
+  allGroups,
+}: {
+  groupData: GroupInfo[];
+  allGroups: string[];
+}) => {
+  const SERVER_ERROR = 'There was an error contacting the server.';
+
   const [isOpen, setIsOpen] = useState(false);
+  const [showSelectGroupModal, setShowSelectGroupModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [selectBtn, setSelectBtn] = useState('');
-  const [selectedSentence, setIsSelectedSentence] = useState<string[]>([]);
-
+  const [selectedSentenceIds, setIsSelectedSentenceIds] = useState<string[]>(
+    []
+  );
+  const [selectedSentence, setIsSelectedSentence] = useState<
+    SentenceDetailInfo[]
+  >([]);
+  const [selectedGroup, setIsSelectGroup] = useState('');
   const [option, setIsOption] = useState('');
 
   const router = useRouter();
 
-  const handleUpdateSentence = () => {};
-
-  const handleDeleteSentence = async () => {
+  const handleChangeGroup = async (): Promise<void> => {
     try {
-      const response = await axios.delete(`/api/sentence/delete`, {
-        data: {
-          email: groupData[0].email,
-          name: groupData[0].name,
-          sentences: selectedSentence,
-        },
+      const response = await axios.post(`api/sentence/move`, {
+        email: groupData[0].email,
+        name: selectedGroup,
+        sentences: selectedSentence,
       });
 
       if (response.status === 201) {
+        try {
+          const deleteResponse = await axios.delete(`/api/sentence/delete`, {
+            data: {
+              email: groupData[0].email,
+              name: groupData[0].name,
+              sentences: selectedSentenceIds,
+            },
+          });
+          if (deleteResponse.status === 201) {
+            toast.success('문장 이동완료', {
+              position: 'top-center',
+              autoClose: 700,
+            });
+            setShowConfirmModal((prev) => !prev);
+            setIsOption('');
+            setIsOpen(false);
+            setTimeout(() => {
+              router.push(`/${groupData[0].name}`);
+            }, 100);
+          }
+        } catch (errorResponse) {
+          const message =
+            axios.isAxiosError(errorResponse) &&
+            errorResponse?.response?.data?.message
+              ? errorResponse?.response?.data?.message
+              : SERVER_ERROR;
+
+          console.error(message);
+        }
+      }
+    } catch (errorResponse) {
+      const message =
+        axios.isAxiosError(errorResponse) &&
+        errorResponse?.response?.data?.message
+          ? errorResponse?.response?.data?.message
+          : SERVER_ERROR;
+
+      console.error(message);
+    }
+  };
+
+  const handleDeleteSentence = async (): Promise<void> => {
+    try {
+      const deleteResponse = await axios.delete(`/api/sentence/delete`, {
+        data: {
+          email: groupData[0].email,
+          name: groupData[0].name,
+          sentences: selectedSentenceIds,
+        },
+      });
+
+      if (deleteResponse.status === 201) {
         toast.success('문장 삭제완료', {
           position: 'top-center',
-          autoClose: 1000,
+          autoClose: 700,
         });
         setShowConfirmModal((prev) => !prev);
         setIsOption('');
         setIsOpen(false);
         setTimeout(() => {
           router.push(`/${groupData[0].name}`);
-        }, 1300);
+        }, 100);
       }
+    } catch (errorResponse) {
+      const message =
+        axios.isAxiosError(errorResponse) &&
+        errorResponse?.response?.data?.message
+          ? errorResponse?.response?.data?.message
+          : SERVER_ERROR;
 
-      console.log(response);
-    } catch (err) {}
+      console.error(message);
+    }
   };
 
   return (
@@ -74,9 +143,10 @@ const SentenceByGroup = ({ groupData }: { groupData: GroupInfo[] }) => {
         <ConfirmModal
           btn={selectBtn}
           setShowModal={setShowConfirmModal}
-          handler={handleUpdateSentence}
+          handler={handleChangeGroup}
           deleteHandler={handleDeleteSentence}
-          setIsSelectedSentence={setIsSelectedSentence}
+          selectedSentenceIds={selectedSentenceIds}
+          setIsSelectedSentenceIds={setIsSelectedSentenceIds}
         />
       )}
       <section className="flex flex-col w-full gap-3 p-4 mx-auto">
@@ -85,16 +155,27 @@ const SentenceByGroup = ({ groupData }: { groupData: GroupInfo[] }) => {
           <SentenceEditModal setIsOpen={setIsOpen} setIsOption={setIsOption} />
         )}
 
+        {showSelectGroupModal && (
+          <SelectGroup
+            setShowSelectGroupModal={setShowSelectGroupModal}
+            groups={allGroups}
+            setShowConfirmModal={setShowConfirmModal}
+            setIsSelectGroup={setIsSelectGroup}
+          />
+        )}
         <GroupHeader groupData={groupData} name={groupData[0].name} />
 
         {option && groupData[0].sentences ? (
           <SelectSentence
+            option={option}
             sentences={descendingSort(groupData[0].sentences)}
             groupName={groupData[0].name}
             setIsOption={setIsOption}
             setSelectBtn={setSelectBtn}
             setShowConfirmModal={setShowConfirmModal}
+            setIsSelectedSentenceIds={setIsSelectedSentenceIds}
             setIsSelectedSentence={setIsSelectedSentence}
+            setShowSelectGroupModal={setShowSelectGroupModal}
           />
         ) : groupData[0].sentences && groupData[0].sentences.length !== 0 ? (
           descendingSort(groupData[0].sentences).map((sentenceInfo, idx) => (
@@ -132,11 +213,21 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     .find({ name: groupName, email: user?.email })
     .toArray();
 
+  const data = await groupsCollection
+    .find(
+      { name: { $exists: 1 }, email: user?.email },
+      { projection: { _id: 0 } }
+    )
+    .toArray();
+
+  const allGroups = data.map(({ name }) => name);
+
   client.close();
 
   return {
     props: {
       groupData: JSON.parse(JSON.stringify(groupData)),
+      allGroups: JSON.parse(JSON.stringify(allGroups)),
     },
   };
 };

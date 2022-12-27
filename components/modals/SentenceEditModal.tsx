@@ -1,5 +1,5 @@
 import { Dispatch, SetStateAction } from 'react';
-import { HiOutlineLightBulb, HiOutlineTrash, HiOutlineX } from 'react-icons/hi';
+import { HiOutlineRefresh, HiOutlineTrash, HiOutlineX } from 'react-icons/hi';
 
 const SentenceEditModal = ({
   setIsOpen,
@@ -8,15 +8,17 @@ const SentenceEditModal = ({
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   setIsOption: Dispatch<SetStateAction<string>>;
 }) => {
-  const handleClickModal = () => {
+  const handleClickModal = (event: React.MouseEvent<HTMLElement>) => {
     setIsOpen((prev) => !prev);
-    setIsOption('delete');
+    const purpose = (event.target as any).id;
+    if (purpose === 'changeGroup') setIsOption('changeGroup');
+    if (purpose === 'deleteSentence') setIsOption('deleteSentence');
   };
 
   return (
     <>
       <div className="fixed z-50 flex items-center justify-center w-full max-w-md pl-8 mt-10 overflow-x-hidden overflow-y-auto outline-none focus:outline-none">
-        <div className="relative w-full h-auto max-w-xs p-2 bg-white rounded-md md:p-0">
+        <div className="relative w-3/4 max-w-xs p-2 bg-white rounded-md md:p-0 md:w-full">
           <button
             onClick={() => setIsOpen((prev) => !prev)}
             type="button"
@@ -34,28 +36,48 @@ const SentenceEditModal = ({
                 </div>
               </div>
             </li>
-            {/* <li>
-              <div className="relative flex flex-row items-center h-8 pr-6 text-gray-600 border-l-4 border-transparent focus:outline-none hover:bg-gray-50 hover:text-gray-800 hover:border-teal-500">
-                <span className="inline-flex items-center justify-center ml-4">
-                  <HiOutlineLightBulb />
-                </span>
-                <span className="ml-2 text-sm tracking-wide truncate">
-                  수정
-                </span>
-              </div>
-            </li> */}
             <li>
               <div
+                id="changeGroup"
                 onClick={handleClickModal}
                 className="relative flex flex-row items-center h-8 pr-6 text-gray-600 border-l-4 border-transparent focus:outline-none hover:bg-gray-50 hover:text-gray-800 hover:border-teal-500"
               >
-                <span className="inline-flex items-center justify-center ml-4">
+                <span
+                  id="changeGroup"
+                  className="inline-flex items-center justify-center ml-4"
+                >
+                  <HiOutlineRefresh />
+                </span>
+                <span
+                  id="changeGroup"
+                  className="ml-4 text-sm tracking-wide truncate"
+                >
+                  그룹 변경
+                </span>
+              </div>
+            </li>
+            <li>
+              <div
+                id="deleteSentence"
+                onClick={handleClickModal}
+                className="relative flex flex-row items-center h-8 pr-6 text-gray-600 border-l-4 border-transparent focus:outline-none hover:bg-gray-50 hover:text-gray-800 hover:border-teal-500"
+              >
+                <span
+                  id="deleteSentence"
+                  className="inline-flex items-center justify-center ml-4"
+                >
                   <HiOutlineTrash />
                 </span>
-                <span className="ml-4 text-sm tracking-wide truncate">
+                <span
+                  id="deleteSentence"
+                  className="ml-4 text-sm tracking-wide truncate"
+                >
                   삭제
                 </span>
-                <span className="px-2 py-0.5 ml-auto text-xs font-medium tracking-wide text-teal-500 bg-teal-50 rounded-full">
+                <span
+                  id="deleteSentence"
+                  className="px-2 py-0.5 ml-auto text-xs font-medium tracking-wide text-teal-500 bg-teal-50 rounded-full"
+                >
                   주의
                 </span>
               </div>
