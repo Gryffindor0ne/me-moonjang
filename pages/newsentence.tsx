@@ -1,6 +1,7 @@
 import { GetServerSideProps } from 'next';
-import { getSession } from 'next-auth/react';
+import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
+import { useQuery } from '@tanstack/react-query';
 import * as yup from 'yup';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import axios from 'axios';
@@ -13,7 +14,7 @@ import Layout from '@components/layout/Layout';
 import Seo from '@components/layout/Seo';
 import styles from '@styles/Form.module.css';
 import { UserInfo } from '@pages/profile';
-import dbConnect from '@lib/db';
+import { getGroupsData } from '@pages/index';
 
 export type SentenceInfo = {
   group: string;
@@ -35,23 +36,35 @@ export const sentenceSchema = yup.object().shape({
   explanation: yup.string().max(500, '500자 이내로 입력해주세요.'),
 });
 
-const SentenceInputPage = ({
-  groups,
-  name,
-  email,
-}: {
-  groups: string[];
-  name: string;
-  email: string;
-}) => {
+const SentenceInputPage = () => {
   const router = useRouter();
+  const { name } = router.query;
+  const { data: session } = useSession();
+  const user = session?.user as UserInfo;
+
+  const fallback: string[] = [];
+  const {
+    data: groups = fallback,
+    isLoading,
+    isError,
+    error,
+  } = useQuery(['groupsData', user], () => getGroupsData(user));
+
+  if (isLoading) return;
+  if (isError)
+    return (
+      <>
+        <h3>Oops, something went wrong</h3>
+        <p>{error?.toString()}</p>
+      </>
+    );
 
   const onSubmit = async (values: SentenceInfo): Promise<void> => {
     const { group, sentence, interpretation, explanation } = values;
 
     try {
       const res = await axios.post(`api/sentence`, {
-        email,
+        email: user.email,
         group,
         sentence,
         interpretation,
@@ -209,35 +222,6 @@ const SentenceInputPage = ({
       </Layout>
     </>
   );
-};
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  const session = await getSession(context);
-  const { name } = context?.query;
-
-  const user = session?.user as UserInfo;
-
-  const client = await dbConnect();
-  const db = client.db();
-  const groupsCollection = db.collection('groups');
-  let groupsData = await groupsCollection
-    .find(
-      { name: { $exists: 1 }, email: user?.email },
-      { projection: { _id: 0 } }
-    )
-    .toArray();
-
-  const groups = groupsData.map(({ name }) => name);
-
-  client.close();
-
-  return {
-    props: {
-      email: user.email,
-      groups,
-      name: name ? name : null,
-    },
-  };
 };
 
 export default SentenceInputPage;
