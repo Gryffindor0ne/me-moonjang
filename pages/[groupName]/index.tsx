@@ -1,13 +1,18 @@
 import { useState } from 'react';
 import { GetServerSideProps } from 'next';
-import { getSession } from 'next-auth/react';
+import { getSession, useSession } from 'next-auth/react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
+import {
+  dehydrate,
+  QueryClient,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
 
-import dbConnect from '@lib/db';
 import { descendingSort } from '@utils/dayjs';
 import { UserInfo } from '@pages/profile';
 import Sentence, { SentenceDetailInfo } from '@components/group/Sentence';
@@ -28,13 +33,21 @@ export type GroupInfo = {
   sentences: SentenceDetailInfo[];
 };
 
-const SentenceByGroup = ({
-  groupData,
-  allGroups,
-}: {
-  groupData: GroupInfo[];
-  allGroups: string[];
-}) => {
+export const getGroupDetail = async (
+  user: UserInfo,
+  groupName: string | string[] | undefined
+) => {
+  const { data } = await axios.post(
+    `${process.env.NEXT_PUBLIC_URL}/api/group/detail`,
+    {
+      email: user.email,
+      name: groupName,
+    }
+  );
+  return data;
+};
+
+const SentenceByGroup = () => {
   const SERVER_ERROR = 'There was an error contacting the server.';
 
   const [isOpen, setIsOpen] = useState(false);
@@ -51,6 +64,29 @@ const SentenceByGroup = ({
   const [option, setIsOption] = useState('');
 
   const router = useRouter();
+  const { groupName } = router.query;
+
+  const { data: session } = useSession();
+  const user = session?.user as UserInfo;
+
+  const queryClient = useQueryClient();
+  const {
+    data: groupData,
+    isLoading,
+    isError,
+    error,
+  } = useQuery(['groupDetailInfo', user, groupName], () =>
+    getGroupDetail(user, groupName)
+  );
+
+  if (isLoading) return;
+  if (isError)
+    return (
+      <>
+        <h3>Oops, something went wrong</h3>
+        <p>{error?.toString()}</p>
+      </>
+    );
 
   const handleChangeGroup = async (): Promise<void> => {
     try {
@@ -72,8 +108,9 @@ const SentenceByGroup = ({
           if (deleteResponse.status === 201) {
             toast.success('문장 이동완료', {
               position: 'top-center',
-              autoClose: 700,
+              autoClose: 500,
             });
+            queryClient.invalidateQueries({ queryKey: ['groupDetailInfo'] });
             setShowConfirmModal((prev) => !prev);
             setIsOption('');
             setIsOpen(false);
@@ -115,8 +152,9 @@ const SentenceByGroup = ({
       if (deleteResponse.status === 201) {
         toast.success('문장 삭제완료', {
           position: 'top-center',
-          autoClose: 700,
+          autoClose: 500,
         });
+        queryClient.invalidateQueries({ queryKey: ['groupDetailInfo'] });
         setShowConfirmModal((prev) => !prev);
         setIsOption('');
         setIsOpen(false);
@@ -158,7 +196,6 @@ const SentenceByGroup = ({
         {showSelectGroupModal && (
           <SelectGroup
             setShowSelectGroupModal={setShowSelectGroupModal}
-            groups={allGroups}
             setShowConfirmModal={setShowConfirmModal}
             setIsSelectGroup={setIsSelectGroup}
           />
@@ -203,31 +240,19 @@ const SentenceByGroup = ({
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const groupName = context.params?.groupName;
   const session = await getSession(context);
-
   const user = session?.user as UserInfo;
 
-  const client = await dbConnect();
-  const db = client.db();
-  const groupsCollection = db.collection('groups');
-  const groupData = await groupsCollection
-    .find({ name: groupName, email: user?.email })
-    .toArray();
+  const queryClient = new QueryClient();
 
-  const data = await groupsCollection
-    .find(
-      { name: { $exists: 1 }, email: user?.email },
-      { projection: { _id: 0 } }
-    )
-    .toArray();
-
-  const allGroups = data.map(({ name }) => name);
-
-  client.close();
+  await queryClient.prefetchQuery({
+    queryKey: ['groupDetailInfo'],
+    queryFn: () => getGroupDetail(user, groupName),
+  });
 
   return {
     props: {
-      groupData: JSON.parse(JSON.stringify(groupData)),
-      allGroups: JSON.parse(JSON.stringify(allGroups)),
+      session,
+      dehydreatedState: dehydrate(queryClient),
     },
   };
 };

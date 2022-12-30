@@ -1,5 +1,12 @@
+import { UserInfo } from '@pages/profile';
+import { getGroupDetail } from '@pages/[groupName]';
+import { useQuery } from '@tanstack/react-query';
+import { useSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
 import { Dispatch, SetStateAction } from 'react';
 import { HiOutlineRefresh, HiOutlineTrash, HiOutlineX } from 'react-icons/hi';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 const SentenceEditModal = ({
   setIsOpen,
@@ -8,8 +15,39 @@ const SentenceEditModal = ({
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   setIsOption: Dispatch<SetStateAction<string>>;
 }) => {
+  const router = useRouter();
+  const { groupName } = router.query;
+
+  const { data: session } = useSession();
+  const user = session?.user as UserInfo;
+
+  const {
+    data: groupData,
+    isLoading,
+    isError,
+    error,
+  } = useQuery(['groupDetailInfo', user, groupName], () =>
+    getGroupDetail(user, groupName)
+  );
+
+  if (isLoading) return null;
+  if (isError)
+    return (
+      <>
+        <h3>Oops, something went wrong</h3>
+        <p>{error?.toString()}</p>
+      </>
+    );
+
   const handleClickModal = (event: React.MouseEvent<HTMLElement>) => {
     setIsOpen((prev) => !prev);
+    if (!groupData[0].sentences || groupData[0].sentences.length === 0) {
+      toast.warning('문장이 존재하지 않습니다.', {
+        position: 'top-center',
+        autoClose: 300,
+      });
+      return;
+    }
     const purpose = (event.target as any).id;
     if (purpose === 'changeGroup') setIsOption('changeGroup');
     if (purpose === 'deleteSentence') setIsOption('deleteSentence');
@@ -17,6 +55,7 @@ const SentenceEditModal = ({
 
   return (
     <>
+      <ToastContainer />
       <div className="fixed z-50 flex items-center justify-center w-full max-w-md pl-8 mt-10 overflow-x-hidden overflow-y-auto outline-none focus:outline-none">
         <div className="relative w-3/4 max-w-xs p-2 bg-white rounded-md md:p-0 md:w-full">
           <button

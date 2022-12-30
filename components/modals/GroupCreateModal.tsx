@@ -1,5 +1,6 @@
 import React from 'react';
 import { useSession } from 'next-auth/react';
+import { useQueryClient } from '@tanstack/react-query';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import * as yup from 'yup';
 import axios from 'axios';
@@ -30,6 +31,7 @@ const GroupCreateModal = ({
   const router = useRouter();
   const { data: session } = useSession();
   const user = session?.user as UserInfo;
+  const queryClient = useQueryClient();
 
   const handleCloseModal = () => {
     setIsOpen(false);
@@ -37,7 +39,6 @@ const GroupCreateModal = ({
 
   const onSubmit = async (value: GroupProps) => {
     const { name } = value;
-
     try {
       const res = await axios.post('/api/group', {
         name,
@@ -49,8 +50,9 @@ const GroupCreateModal = ({
           position: 'top-center',
           autoClose: 1000,
         });
+        queryClient.invalidateQueries({ queryKey: ['groupsData'] });
         setTimeout(() => setIsOpen(false), 1500);
-        setTimeout(() => router.reload(), 1800);
+        setTimeout(() => router.push(`/`), 1800);
       }
     } catch (error) {
       let message;
