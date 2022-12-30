@@ -1,23 +1,47 @@
-import { Field, Form, Formik } from 'formik';
-
 import { Dispatch, SetStateAction } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { Field, Form, Formik } from 'formik';
+import { useSession } from 'next-auth/react';
 import { HiOutlineX } from 'react-icons/hi';
+
+import { getGroupsData } from '@pages/index';
+import { UserInfo } from '@pages/profile';
 
 type Group = {
   group: string;
 };
 
 const SelectGroup = ({
-  groups,
   setShowConfirmModal,
   setIsSelectGroup,
   setShowSelectGroupModal,
 }: {
-  groups: string[];
   setShowConfirmModal: Dispatch<SetStateAction<boolean>>;
   setIsSelectGroup: Dispatch<SetStateAction<string>>;
   setShowSelectGroupModal: Dispatch<SetStateAction<boolean>>;
 }) => {
+  const { data: session } = useSession();
+
+  const fallback: string[] = [];
+
+  const {
+    data: groups = fallback,
+    isLoading,
+    isError,
+    error,
+  } = useQuery(['groupsData', session?.user], () =>
+    getGroupsData(session?.user as UserInfo)
+  );
+
+  if (isLoading) return <h3>Loading...</h3>;
+  if (isError)
+    return (
+      <>
+        <h3>Oops, something went wrong</h3>
+        <p>{error?.toString()}</p>
+      </>
+    );
+
   const onSubmit = async (values: Group) => {
     const { group } = values;
 
@@ -63,7 +87,7 @@ const SelectGroup = ({
                     name="group"
                     className="bg-gray-50 border border-gray-300 text-gray-900 w-full text-sm rounded-lg focus:ring-2 focus:ring-teal-500 focus:ring-offset-1 focus:outline-none  p-2.5"
                   >
-                    {groups.map((group, idx) => (
+                    {groups.map((group: string, idx: number) => (
                       <option key={idx} value={group}>
                         {group}
                       </option>

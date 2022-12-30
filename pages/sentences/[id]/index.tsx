@@ -1,18 +1,55 @@
 import { useState } from 'react';
 import { GetServerSideProps } from 'next';
-import { getSession } from 'next-auth/react';
+import { getSession, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import { ObjectId } from 'mongodb';
+import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query';
+import axios from 'axios';
 import { MdOutlineArrowBackIos } from 'react-icons/md';
 import { HiOutlineBell } from 'react-icons/hi';
 
-import dbConnect from '@lib/db';
 import { UserInfo } from '@pages/profile';
 import Seo from '@components/layout/Seo';
 
-const Sentence = ({ sentenceData }: { sentenceData: any }) => {
+export const getSentenceData = async (
+  user: UserInfo,
+  name: string | string[] | undefined,
+  id: string | string[] | undefined
+) => {
+  const { data } = await axios.post(
+    `${process.env.NEXT_PUBLIC_URL}/api/sentence/list`,
+    {
+      email: user.email,
+      name,
+      id,
+    }
+  );
+  return data;
+};
+
+const Sentence = () => {
   const [open, setOpen] = useState(true);
   const router = useRouter();
+  const { name, id } = router.query;
+  const { data: session } = useSession();
+  const user = session?.user as UserInfo;
+
+  const {
+    data: sentenceData,
+    isError,
+    isLoading,
+    error,
+  } = useQuery(['sentenceListByGroup', user, name, id], () =>
+    getSentenceData(user, name, id)
+  );
+
+  if (isLoading) return;
+  if (isError)
+    return (
+      <>
+        <h3>Oops, something went wrong</h3>
+        <p>{error?.toString()}</p>
+      </>
+    );
 
   const sentenceDetail = sentenceData[0].sentences[0];
 
@@ -60,10 +97,10 @@ const Sentence = ({ sentenceData }: { sentenceData: any }) => {
               )}
 
               <div className="my-5">
-                <div className="flex w-full text-sm leading-relaxed text-gray-400 mt-14 md:text-xl">
+                <div className="flex w-full text-xs leading-relaxed text-gray-400 mt-14 md:text-base">
                   클릭시 문장만 남습니다.
                 </div>
-                <div className="flex w-full mt-2 text-sm leading-relaxed text-gray-400 md:text-xl">
+                <div className="flex w-full mt-2 text-xs leading-relaxed text-gray-400 md:text-base">
                   재클릭시 모든 내용이 표시됩니다.
                 </div>
               </div>
@@ -78,32 +115,19 @@ const Sentence = ({ sentenceData }: { sentenceData: any }) => {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { id, name } = context.query;
   const session = await getSession(context);
-
   const user = session?.user as UserInfo;
 
-  const client = await dbConnect();
-  const db = client.db();
-  const groupsCollection = db.collection('groups');
-  const sentenceData = await groupsCollection
-    .find(
-      { name, email: user.email },
-      {
-        projection: {
-          email: 1,
-          name: 1,
-          createdAt: 1,
-          updatedAt: 1,
-          sentences: { $elemMatch: { id: new ObjectId(`${id}`) } },
-        },
-      }
-    )
-    .toArray();
+  const queryClient = new QueryClient();
 
-  client.close();
+  await queryClient.prefetchQuery({
+    queryKey: ['sentenceListByGroup', user, name, id],
+    queryFn: () => getSentenceData(user, name, id),
+  });
 
   return {
     props: {
-      sentenceData: JSON.parse(JSON.stringify(sentenceData)),
+      session,
+      dehydreatedState: dehydrate(queryClient),
     },
   };
 };

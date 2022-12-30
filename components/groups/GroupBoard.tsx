@@ -10,7 +10,7 @@ import GroupCreateModal from '@components/modals/GroupCreateModal';
 import { UserInfo } from '@pages/profile';
 import Group from '@components/groups/components/Group';
 
-const GroupBoard = ({ groups }: { groups: string[] }) => {
+const GroupBoard = ({ groups }: { groups: string[] | undefined }) => {
   const [isOpen, setIsOpen] = useState(false);
   const { data: session } = useSession();
   const user = session?.user as UserInfo;
