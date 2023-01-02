@@ -31,8 +31,6 @@ const AuthPage: NextPage = () => {
     password: false,
   });
 
-  getSession().then((session) => console.log(session, 'SESSION'));
-
   type LoginInfo = {
     email: string;
     password: string;
@@ -58,12 +56,12 @@ const AuthPage: NextPage = () => {
 
   const handleKakaoLogin = () => {
     signIn('kakao', {
-      callbackUrl: 'http://localhost:3000',
+      callbackUrl: `${process.env.NEXTAUTH_URL}`,
     });
   };
 
   const handleGoogleLogin = async () => {
-    signIn('google', { callbackUrl: 'http://localhost:3000' });
+    signIn('google', { callbackUrl: `${process.env.NEXTAUTH_URL}` });
   };
 
   return (
