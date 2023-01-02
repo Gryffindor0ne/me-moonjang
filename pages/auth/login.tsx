@@ -56,12 +56,12 @@ const AuthPage: NextPage = () => {
 
   const handleKakaoLogin = () => {
     signIn('kakao', {
-      callbackUrl: `${process.env.NEXTAUTH_URL}`,
+      callbackUrl: `${process.env.NEXT_PUBLIC_URL}`,
     });
   };
 
   const handleGoogleLogin = async () => {
-    signIn('google', { callbackUrl: `${process.env.NEXTAUTH_URL}` });
+    signIn('google', { callbackUrl: `${process.env.NEXT_PUBLIC_URL}` });
   };
 
   return (
