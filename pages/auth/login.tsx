@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import type { NextPage } from 'next';
 import Link from 'next/link';
-import { signIn, getSession } from 'next-auth/react';
+import { signIn } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import * as yup from 'yup';
