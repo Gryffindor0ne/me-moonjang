@@ -32,7 +32,7 @@ const deleteSentence = async (req: NextApiRequest, res: NextApiResponse) => {
       };
     });
 
-    const deleteSentence = await groupsCollection.bulkWrite(bulkOps);
+    await groupsCollection.bulkWrite(bulkOps);
 
     res.status(201).json({ message: 'Sentence deleted' });
   } catch (error) {

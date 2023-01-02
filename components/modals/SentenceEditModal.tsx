@@ -1,5 +1,3 @@
-import { UserInfo } from '@pages/profile';
-import { getGroupDetail } from '@pages/[groupName]';
 import { useQuery } from '@tanstack/react-query';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
@@ -7,6 +5,9 @@ import { Dispatch, SetStateAction } from 'react';
 import { HiOutlineRefresh, HiOutlineTrash, HiOutlineX } from 'react-icons/hi';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+
+import { UserInfo } from '@pages/profile';
+import { getGroupDetail } from '@pages/[groupName]';
 
 const SentenceEditModal = ({
   setIsOpen,

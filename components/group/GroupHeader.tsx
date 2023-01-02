@@ -1,6 +1,7 @@
-import { GroupInfo } from '@pages/[groupName]';
 import { useRouter } from 'next/router';
 import { HiOutlinePlus } from 'react-icons/hi';
+
+import { GroupInfo } from '@pages/[groupName]';
 
 const GroupHeader = ({
   name,
