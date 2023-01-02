@@ -1,8 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { ObjectId } from 'mongodb';
 
 import dbConnect from '@lib/db';
 import { SentenceDetailInfo } from '@components/group/Sentence';
-import { ObjectId } from 'mongodb';
 
 const moveSentence = async (req: NextApiRequest, res: NextApiResponse) => {
   const { name, email, sentences } = req.body;
@@ -36,7 +36,7 @@ const moveSentence = async (req: NextApiRequest, res: NextApiResponse) => {
       };
     });
 
-    const moveSentence = await groupsCollection.bulkWrite(bulkOps);
+    await groupsCollection.bulkWrite(bulkOps);
 
     res.status(201).json({ message: 'Sentence was moved' });
   } catch (error) {

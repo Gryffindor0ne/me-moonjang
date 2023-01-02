@@ -1,4 +1,3 @@
-import { GetServerSideProps } from 'next';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useQuery } from '@tanstack/react-query';
