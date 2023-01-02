@@ -40,7 +40,7 @@ const GroupCreateModal = ({
   const onSubmit = async (value: GroupProps) => {
     const { name } = value;
     try {
-      const res = await axios.post('/api/group', {
+      const res = await axios.post('api/group', {
         name,
         email: user.email,
       });
