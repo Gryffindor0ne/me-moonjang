@@ -32,7 +32,7 @@ const ProfilePage = () => {
       });
 
       if (res.status === 200) {
-        signOut({ callbackUrl: `${process.env.NEXT_PUBLIC_URL}` });
+        signOut({ callbackUrl: 'http://localhost:3000' });
       }
     } catch (error) {
       console.log(error);
@@ -60,7 +60,7 @@ const ProfilePage = () => {
             autoClose: 1500,
           });
           setTimeout(
-            () => signOut({ callbackUrl: `${process.env.NEXT_PUBLIC_URL}` }),
+            () => signOut({ callbackUrl: 'http://localhost:3000' }),
             2000
           );
         }
