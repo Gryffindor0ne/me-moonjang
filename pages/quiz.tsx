@@ -1,7 +1,8 @@
-import Layout from '@components/layout/Layout';
-import Seo from '@components/layout/Seo';
 import { useRouter } from 'next/router';
 import { MdOutlineArrowBackIos } from 'react-icons/md';
+
+import Layout from '@components/layout/Layout';
+import Seo from '@components/layout/Seo';
 
 const QuizPage = () => {
   const router = useRouter();
@@ -9,15 +10,15 @@ const QuizPage = () => {
     <>
       <Seo title="퀴즈" />
       <Layout>
-        <section className="w-full mx-auto flex flex-col gap-5 p-5">
+        <section className="flex flex-col w-full gap-5 p-5 mx-auto">
           <div className="flex">
             <span
               onClick={() => router.back()}
-              className="flex justify-center items-center px-4 text-2xl cursor-pointer"
+              className="flex items-center justify-center px-4 text-2xl cursor-pointer"
             >
               <MdOutlineArrowBackIos />
             </span>
-            <h1 className="flex mx-auto text-gray-800 text-4xl font-bold pr-4 py-2 my-16">
+            <h1 className="flex py-2 pr-4 mx-auto my-16 text-4xl font-bold text-gray-800">
               Quiz
             </h1>
           </div>

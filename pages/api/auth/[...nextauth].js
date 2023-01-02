@@ -14,10 +14,6 @@ const refreshAccessToken = async (token) => {
       user: token.user,
     });
 
-    if (response.status !== 200) {
-      // 로그아웃
-    }
-
     const { accessToken } = response.data;
 
     return {
@@ -85,12 +81,9 @@ export default NextAuth({
       }
       if (account.provider === 'kakao') {
         try {
-          const res = await axios.post(
-            `${process.env.NEXTAUTH_URL}/api/auth/login`,
-            {
-              email: user.email,
-            }
-          );
+          await axios.post(`${process.env.NEXTAUTH_URL}/api/auth/login`, {
+            email: user.email,
+          });
 
           return true;
         } catch (error) {
@@ -106,12 +99,9 @@ export default NextAuth({
             );
 
             if (result.status == 201) {
-              const login = await axios.post(
-                `${process.env.NEXTAUTH_URL}/api/auth/login`,
-                {
-                  email: user.email,
-                }
-              );
+              await axios.post(`${process.env.NEXTAUTH_URL}/api/auth/login`, {
+                email: user.email,
+              });
             }
 
             return true;
@@ -122,12 +112,9 @@ export default NextAuth({
       }
       if (account.provider === 'google') {
         try {
-          const res = await axios.post(
-            `${process.env.NEXTAUTH_URL}/api/auth/login`,
-            {
-              email: user.email,
-            }
-          );
+          await axios.post(`${process.env.NEXTAUTH_URL}/api/auth/login`, {
+            email: user.email,
+          });
           return true;
         } catch (error) {
           if (error.response?.status === 404) {
@@ -142,12 +129,9 @@ export default NextAuth({
             );
 
             if (result.status == 201) {
-              const login = await axios.post(
-                `${process.env.NEXTAUTH_URL}/api/auth/login`,
-                {
-                  email: user.email,
-                }
-              );
+              await axios.post(`${process.env.NEXTAUTH_URL}/api/auth/login`, {
+                email: user.email,
+              });
             }
 
             return true;

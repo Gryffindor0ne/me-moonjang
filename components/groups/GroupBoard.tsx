@@ -21,7 +21,7 @@ const GroupBoard = ({ groups }: { groups: string[] | undefined }) => {
       {isOpen && <GroupCreateModal setIsOpen={setIsOpen} />}
       <div className="flex items-center justify-between w-full p-2">
         <div className="flex justify-start p-2 my-2 text-base font-bold text-gray-700 md:text-lg md:p-4">
-          {user?.username.toUpperCase()}'s memoonjang
+          {`${user?.username.toUpperCase()}'s memoonjang`}
         </div>
         <div
           onClick={() => setIsOpen((prev) => !prev)}
