@@ -79,7 +79,7 @@ const SelectGroup = ({
                   className="pl-3 text-xs font-light tracking-wide text-gray-500"
                   htmlFor="groups"
                 >
-                  그룹 선택
+                  문장집 선택
                 </label>
                 <div>
                   <Field
@@ -98,7 +98,7 @@ const SelectGroup = ({
                   className="flex justify-center w-full p-2 tracking-wide text-gray-600 truncate border-l-4 border-transparent border-gray-300 cursor-pointer text-md focus:outline-none hover:bg-gray-50 hover:text-gray-800 hover:border-teal-500"
                   type="submit"
                 >
-                  그룹 선택
+                  문장집 선택
                 </button>
               </Form>
             )}

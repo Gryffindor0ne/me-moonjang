@@ -129,7 +129,7 @@ const SentenceInputPage = () => {
                   {!name && (
                     <>
                       <label className={styles.label} htmlFor="groups">
-                        그룹 선택
+                        문장집 선택
                       </label>
                       <div>
                         <Field
@@ -213,7 +213,7 @@ const SentenceInputPage = () => {
                 <HiOutlineExclamationCircle />
               </div>
               <div className="flex p-2 mx-auto text-base font-bold text-teal-500 md:text-xl">
-                생성된 그룹이 없습니다.
+                생성된 문장집이 없습니다.
               </div>
             </div>
           )}

@@ -11,7 +11,7 @@ const MainNavigation = () => {
             className="flex flex-col items-center justify-center px-4 py-2 mx-2 text-2xl font-bold text-center text-gray-800"
           >
             <CiGrid41 />
-            <span className="block mt-1 text-xs tab">그룹</span>
+            <span className="block mt-1 text-xs tab">문장집</span>
           </Link>
 
           <Link
