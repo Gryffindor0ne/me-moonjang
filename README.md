@@ -1,34 +1,119 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Me-moonjang
 
-## Getting Started
+> 영어문장을 단어장처럼 문장집으로 만들어 공부하는 앱을 구현하였습니다.
 
-First, run the development server:
+<br>
 
-```bash
-npm run dev
-# or
+## 🚀 [배포링크](https://me-moonjang.vercel.app/)
+
+<br>
+
+- [빠른 시작](#빠른-시작)
+- [기능 개발 범위](#기능-개발-범위)
+- [페이지 및 상세 기능](#페이지-및-상세-기능)
+- [기술 스택](#기술-스택)
+
+<br>
+
+# 빠른 시작
+
+```
+git clone https://github.com/Gryffindor0ne/me-moonjang.git
+yarn install
 yarn dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+<br>
 
-You can start editing the page by modifying `pages/index.tsx`. The page auto-updates as you edit the file.
+# 기능 개발 범위
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.ts`.
+> `문장집`(문장집 목록), `문장`(문장 등록페이지), `퀴즈`(진행 중), `내 정보`(프로필 페이지) 총 4가지의 메뉴로 구성되어 있습니다.
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+<br>
 
-## Learn More
+1. 소셜 로그인 & 이메일 로그인
 
-To learn more about Next.js, take a look at the following resources:
+2. 문장집 등록
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+3. 문장 등록, 이동, 삭제가 가능합니다.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+4. 문장집별 문장 모아보기
 
-## Deploy on Vercel
+5. 문장의 상세 내용 조회(영문장, 해설, 추가 설명)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+   - 문장 학습을 위해 클릭시 문장만 보여지게 할 수 있고, 재클릭시 모든 내용이 다시 나타납니다.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+<br>
+
+# 페이지 및 상세 기능
+
+### 문장집 메인페이지('/')
+
+- me-moonjang 앱의 메인페이지입니다.
+
+- 유저가 등록한 모든 문장집 리스트가 보여집니다.
+
+- 우측 상단의 버튼을 클릭하면 새 문장집을 등록할 모달창이 띄워지며 새 문장집 이름을 입력하고 등록하면 새로운 문장집이 생성됩니다.
+
+- 원하는 문장집을 클릭하면 해당 문장집의 상세페이지로 이동합니다.
+
+### 문장집 문장 상세페이지('/[문장집 이름]')
+
+- 선택한 문장집에 등록되어 있는 모든 문장을 볼 수 있습니다.
+
+- 우측 상단의 2개의 버튼이 존재합니다.
+
+  - `+` 버튼은 새로운 문장을 등록할 때 사용됩니다. 해당 버튼 클릭시 문장 등록페이지로 이동합니다.
+  - 이미 문장집은 선택되어 있는 상태라서 문장집 선택 버튼은 보여지지 않습니다.
+
+  - `...` 버튼은 문장의 문장집 변경 및 문장 삭제 메뉴로 구성된 모달창을 띄웁니다. 원하는 메뉴를 고르면 문장 선택 컴포넌트가 활성화 됩니다.
+
+  - 문장집 변경의 경우 1개 이상의 문장 선택 후 변경 버튼을 누르면 문장집 선택 창이 띄워지고 이동할 문장집을 선택하면 문장집 변경을 재차 확인하는 창이 띄워집니다. 확인버튼을 누르면 문장의 문장집 변경이 완료됩니다.
+
+  - 문장 삭제의 경우 1개 이상의 문장 선택 후 삭제 버튼을 누르면 삭제 확인 창이 띄워지고 확인버튼을 누르면 바로 삭제됩니다.
+
+- 보고 싶은 문장을 클릭하면 해당 문장의 상세페이지로 이동합니다.
+
+### 문장의 상세페이지 ('/sentence/[해당 문장 아이디]')
+
+- 선택된 문장의 상세내용을 볼 수 있습니다.
+
+- 해당 문장의 내용, 해석, 그리고 설명(존재시)을 보여줍니다.
+
+- 해당 문장을 클릭하면 문장만 보여지고, 재클릭시 해당 문장의 전체 내용이 보여지도록 구현하였습니다.
+
+### 프로필 페이지('/profile')
+
+- 메인페에지 하단 메뉴바에서 `내 정보` 메뉴를 클릭하면 프로필페이지로 이동합니다.
+
+- 프로필페이지에서는 유저의 로그인방식, 이메일, 유저 이름 그리고 로그아웃, 회원탈퇴 버튼이 보여집니다.
+
+  - 로그인방식은 일반 이메일로그인은 `MEMOONJANG`, 카카오 로그인은 `KAKAO`, 구글 로그인은 `GOOGLE`로 표시됩니다.
+
+- 로그아웃은 로그아웃 메뉴 우측의 버튼을 통해 가능합니다. 해당 버튼 클릭시 로그아웃을 확인하는 창이 뜨며 확인버튼 클릭시 로그아웃됩니다.
+
+- 회원탈퇴는 회원탈퇴 텍스트를 누르면 확인하는 창이 띄워지고 확인버튼 클릭시 회원탈퇴가 이루어집니다.
+
+### 문장 등록 페이지('/newsentence')
+
+- 하단 네비게이션바의 문장 메뉴를 클릭하면 문장 등록페이지로 이동합니다.
+
+- 문장 등록페이지에서 현재 존재하는 유저의 모든 문장집 중 하나를 선택하여 새로운 문장을 등록할 수 있습니다.
+
+- 문장 등록은 문장집 선택, 문장, 해석, 설명(옵션)을 입력하고 문장 등록버튼을 클릭하여 등록합니다.
+
+- 문장이 등록되면 해당 문장을 등록한 문장집으로 이동합니다.
+
+<br>
+
+# 기술 스택
+
+<p align='center'>
+   <img src="https://img.shields.io/badge/TypeScript-^4.8.4-darkblue?logo=TypeScript"/>
+    <img src="https://img.shields.io/badge/NextJS-^13.0.2-black?logo=Next.js"/>
+    <img src="https://img.shields.io/badge/React-^18.2.0-blue?logo=React"/>
+    <img src="https://img.shields.io/badge/Node.js-v16.15.0-green?logo=Node.js"/>
+    <img src="https://img.shields.io/badge/React Query-%5E4.20.4-red?logo=React Query"/>
+    <img src="https://img.shields.io/badge/Tailwind CSS-^5.3.5-skyblue?logo=Tailwind CSS"/>
+   
+</p>
