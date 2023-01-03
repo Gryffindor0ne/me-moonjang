@@ -92,7 +92,7 @@ const SentenceEditModal = ({
                   id="changeGroup"
                   className="ml-4 text-sm tracking-wide truncate"
                 >
-                  그룹 변경
+                  문장집 변경
                 </span>
               </div>
             </li>
