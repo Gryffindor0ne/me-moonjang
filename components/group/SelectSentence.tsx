@@ -89,7 +89,7 @@ const SelectSentence = ({
               focus:ring-2 rounded-md shadow-sm border border-transparent mt-5 focus:outline-none focus:ring-teal-300 focus:ring-offset-1 font-medium px-5 py-2.5 sm:ml-3 sm:w-auto sm:text-lg"
               type="submit"
             >
-              {option === 'changeGroup' ? `그룹변경` : `삭제`}
+              {option === 'changeGroup' ? `문장집 변경` : `삭제`}
             </button>
             <button
               type="button"

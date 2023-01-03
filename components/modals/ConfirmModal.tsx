@@ -54,8 +54,8 @@ const ConfirmModal = ({
     },
     {
       btn: 'changeGroup',
-      title: '그룹변경',
-      description: '선택한 문장의 그룹을 변경하시겠습니까?',
+      title: '문장집 변경',
+      description: '선택한 문장의 문장집을 변경하시겠습니까?',
       handler: handler,
     },
   ];
