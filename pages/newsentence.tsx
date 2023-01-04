@@ -97,15 +97,15 @@ const SentenceInputPage = () => {
       <ToastContainer />
       <Seo title="문장등록" />
       <Layout>
-        <section className="flex flex-col w-full gap-5 p-4 mx-auto">
-          <div className="flex pr-8">
+        <section className="flex flex-col w-full gap-5 p-5 mx-auto">
+          <div className="flex">
             <span
               onClick={() => router.back()}
-              className="flex items-center justify-center pl-4 text-2xl cursor-pointer"
+              className="flex items-center justify-center px-2 text-lg cursor-pointer"
             >
               <MdOutlineArrowBackIos />
             </span>
-            <h1 className="flex py-2 mx-auto my-16 text-xl font-bold text-gray-800 md:2xl">
+            <h1 className="flex py-2 pr-4 mx-auto my-8 text-xl font-bold text-gray-800 md:text-2xl">
               문장 등록
             </h1>
           </div>
