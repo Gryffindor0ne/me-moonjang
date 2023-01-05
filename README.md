@@ -8,6 +8,14 @@
 
 <br>
 
+<p>
+<img src ="https://user-images.githubusercontent.com/79234473/210736495-32fe577b-2487-40f0-8042-5753266b11ec.gif" width="270" height="550"/>
+ &nbsp; &nbsp; &nbsp;
+<img src ="https://user-images.githubusercontent.com/79234473/210742125-53a9d30f-146d-4cd2-95fc-e8edf392f109.gif" width="270" height="550"/>
+</p>
+
+<br>
+
 - [빠른 시작](#빠른-시작)
 - [기능 개발 범위](#기능-개발-범위)
 - [페이지 및 상세 기능](#페이지-및-상세-기능)
