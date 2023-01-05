@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import {
   HiOutlineCollection,
   HiOutlineExclamationCircle,
 } from 'react-icons/hi';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 import GroupsNavbar from '@components/groups/components/GroupsNavbar';
 import GroupCreateModal from '@components/modals/GroupCreateModal';
@@ -12,13 +14,27 @@ import Group from '@components/groups/components/Group';
 
 const GroupBoard = ({ groups }: { groups: string[] | undefined }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [isCreated, setIsCreated] = useState(false);
   const { data: session } = useSession();
   const user = session?.user as UserInfo;
 
+  useEffect(() => {
+    if (isCreated) {
+      toast.success('새 문장집 등록완료', {
+        position: 'top-center',
+        autoClose: 900,
+      });
+      setIsCreated((prev) => !prev);
+    }
+  }, [isCreated]);
+
   return (
     <>
+      <ToastContainer />
       <GroupsNavbar />
-      {isOpen && <GroupCreateModal setIsOpen={setIsOpen} />}
+      {isOpen && (
+        <GroupCreateModal setIsOpen={setIsOpen} setIsCreated={setIsCreated} />
+      )}
       <div className="flex items-center justify-between w-full p-2">
         <div className="flex justify-start p-2 my-2 text-base font-bold text-gray-700 md:text-lg md:p-4">
           {`${user?.username.toUpperCase()}'s memoonjang`}
