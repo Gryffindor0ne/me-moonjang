@@ -10,7 +10,6 @@ import {
 import Link from 'next/link';
 import axios from 'axios';
 
-import styles from '@styles/Home.module.css';
 import Layout from '@components/layout/Layout';
 import Seo from '@components/layout/Seo';
 import GroupBoard from '@components/groups/GroupBoard';
@@ -62,7 +61,7 @@ const Home = () => {
     );
 
   return (
-    <div className={styles.container}>
+    <div>
       <Seo title="Home" />
 
       {session ? mainPage({ groups }) : gate()}
@@ -72,15 +71,12 @@ const Home = () => {
 
 const gate = () => {
   return (
-    <>
-      <Link href="/auth/login" className={styles.main}>
-        <span className="text-4xl font-bold text-gray-600">Me Moonjang</span>
-      </Link>
-
-      <footer className={styles.footer}>
-        <p>© me-moonjang</p>
-      </footer>
-    </>
+    <Link
+      href="/auth/login"
+      className="flex items-center justify-center w-full h-screen"
+    >
+      <span className="text-4xl font-bold text-gray-600">Me Moonjang</span>
+    </Link>
   );
 };
 

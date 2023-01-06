@@ -68,8 +68,8 @@ const AuthPage: NextPage = () => {
     <>
       <Seo title="로그인" />
       <ToastContainer />
-      <section className="flex flex-col w-full gap-5 p-6 mx-auto">
-        <h1 className="flex py-4 mx-auto my-16 text-4xl font-bold text-gray-800">
+      <section className="flex flex-col w-full gap-5 p-10 mx-auto md:gap-12">
+        <h1 className="flex py-2 mx-auto my-4 text-2xl font-bold text-gray-800 md:my-10 md:text-3xl">
           Me Moonjang
         </h1>
         <Formik
@@ -81,7 +81,10 @@ const AuthPage: NextPage = () => {
           validationSchema={loginSchema}
         >
           {(props) => (
-            <Form className="flex flex-col gap-2" onSubmit={props.handleSubmit}>
+            <Form
+              className="flex flex-col gap-2 md:gap-5"
+              onSubmit={props.handleSubmit}
+            >
               <label className={styles.label} htmlFor="email">
                 이메일
               </label>
@@ -128,30 +131,30 @@ const AuthPage: NextPage = () => {
             </Form>
           )}
         </Formik>
-        <p className="flex flex-col items-center mx-2 mt-12 text-lg font-bold text-gray-600 ">
+        <p className="flex flex-col items-center mx-2 mt-2 text-lg font-bold text-gray-600 ">
           또는
         </p>
         <div className="flex items-center justify-center gap-8">
           <span
             onClick={handleKakaoLogin}
-            className="p-2 text-4xl bg-yellow-300 rounded-full cursor-pointer"
+            className="p-2 text-2xl bg-yellow-300 rounded-full cursor-pointer md:text-4xl"
           >
             <RiKakaoTalkFill />
           </span>
           <span
             onClick={handleGoogleLogin}
-            className="p-2 text-4xl text-white rounded-full cursor-pointer bg-gradient-to-r from-red-600 via-yellow-300 to-green-600"
+            className="p-2 text-2xl text-white rounded-full cursor-pointer md:text-4xl bg-gradient-to-r from-red-600 via-yellow-300 to-green-600"
           >
             <AiOutlineGoogle />
           </span>
         </div>
 
-        <p className="flex items-center justify-center gap-12 mx-2 mt-24 text-lg font-bold text-gray-600 ">
+        <p className="flex items-center justify-center gap-10 mx-2 mt-10 text-sm font-bold text-gray-600 md:text-base">
           계정이 없으신가요?
           <Link href="/auth/register">
             <span
               data-testid="register-btn"
-              className="flex items-center justify-center px-10 py-2 bg-white border-2 border-gray-300 rounded-full cursor-pointer hover:bg-gray-200"
+              className="flex items-center justify-center px-6 py-2 bg-white border-2 border-gray-300 rounded-full cursor-pointer hover:bg-gray-200"
             >
               회원가입
             </span>
