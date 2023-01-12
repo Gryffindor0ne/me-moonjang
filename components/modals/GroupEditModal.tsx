@@ -3,12 +3,14 @@ import { HiOutlineRefresh, HiOutlineTrash, HiOutlineX } from 'react-icons/hi';
 
 const GroupEditModal = ({
   id,
+  setIsOpen,
   setIsSelectGroupName,
   setIsOpenGroupEdit,
   setIsSelectBtn,
   setShowConfirmModal,
 }: {
   id: string;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
   setIsSelectGroupName: Dispatch<SetStateAction<string>>;
   setIsOpenGroupEdit: Dispatch<SetStateAction<boolean>>;
   setIsSelectBtn: Dispatch<SetStateAction<string>>;
@@ -17,13 +19,16 @@ const GroupEditModal = ({
   const handleClickModal = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
     setIsOpenGroupEdit((prev) => !prev);
+    setIsSelectGroupName(id);
 
     const purpose = (event.target as any).id;
-    if (purpose === 'updateGroup') setIsSelectBtn('updateGroup');
+    if (purpose === 'updateGroup') {
+      setIsSelectBtn('updateGroup');
+      setIsOpen((prev) => !prev);
+    }
     if (purpose === 'deleteGroup') {
       setIsSelectBtn('deleteGroup');
       setShowConfirmModal((prev) => !prev);
-      setIsSelectGroupName(id);
     }
   };
 

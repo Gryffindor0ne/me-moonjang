@@ -13,7 +13,7 @@ import { UserInfo } from '@pages/profile';
 export const userSchema = yup.object().shape({
   name: yup
     .string()
-    .max(15, '문장집 이름은 최대 15자 이내이어야 합니다.')
+    .max(20, '문장집 이름은 최대 20자 이내이어야 합니다.')
     .min(2, '문장집 이름을 2자 이상 입력해주세요.')
     .required('문장집 이름을 입력해주세요.'),
 });
@@ -22,25 +22,85 @@ type GroupProps = {
   name: string;
 };
 
-const GroupCreateModal = ({
+const GroupNameModal = ({
+  selectBtn,
+  selectGroupName,
   setIsOpen,
+  setIsSelectBtn,
   setIsCreated,
+  setIsSelectGroupName,
 }: {
+  selectBtn?: string;
+  selectGroupName?: string;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
+  setIsSelectBtn: Dispatch<SetStateAction<string>>;
   setIsCreated: Dispatch<SetStateAction<boolean>>;
+  setIsSelectGroupName: Dispatch<SetStateAction<string>>;
 }) => {
   const { data: session } = useSession();
   const user = session?.user as UserInfo;
   const queryClient = useQueryClient();
 
+  const messageSet = [
+    {
+      btn: 'createGroup',
+      title: '문장집 추가',
+      description: '새로운 문장집 이름을 입력하세요.',
+    },
+    {
+      btn: 'updateGroup',
+      title: '문장집 이름변경',
+      description: '변경할 문장집 이름을 입력하세요.',
+    },
+  ];
+
   const handleCloseModal = () => {
     setIsOpen(false);
+    setIsSelectBtn('');
+    setIsSelectGroupName('');
+  };
+
+  const changeGroupName = async (value: GroupProps) => {
+    const { name } = value;
+
+    try {
+      const res = await axios.post(`api/group/update`, {
+        previouseName: selectGroupName,
+        name,
+        email: user.email,
+      });
+
+      if (res.status === 201) {
+        toast.success('문장집 변경완료', {
+          position: 'top-center',
+          autoClose: 500,
+        });
+        setIsOpen((prev) => !prev);
+        setIsSelectBtn('');
+        setIsSelectGroupName('');
+        queryClient.invalidateQueries({ queryKey: ['groupsData'] });
+      }
+    } catch (error) {
+      let message;
+      if (axios.isAxiosError(error) && error.response) {
+        message = error.response.data.message;
+        console.error(message);
+        if (error.response.status === 422) {
+          toast.warning('동일한 문장집 이름이 존재합니다.', {
+            position: 'top-center',
+            autoClose: 1000,
+          });
+        }
+      } else message = String(error);
+      console.error(message);
+    }
   };
 
   const onSubmit = async (value: GroupProps) => {
     const { name } = value;
+
     try {
-      const res = await axios.post('api/group', {
+      const res = await axios.post(`api/group`, {
         name,
         email: user.email,
       });
@@ -65,13 +125,11 @@ const GroupCreateModal = ({
       console.error(message);
     }
   };
+
   return (
     <>
       <ToastContainer />
-      <div
-        id="group-created-modal"
-        className="fixed z-50 flex items-center justify-center outline-none md:p-10 focus:outline-none"
-      >
+      <div className="fixed z-50 flex items-center justify-center outline-none md:p-10 focus:outline-none">
         <div className="relative w-full h-auto max-w-sm p-20 md:ml-8 md:p-10">
           <div className="relative bg-white rounded-lg shadow">
             <button
@@ -85,13 +143,17 @@ const GroupCreateModal = ({
             </button>
             <div className="px-6 py-6 lg:px-8">
               <h3 className="mb-4 text-lg font-medium text-gray-900 md:text-xl ">
-                문장집 추가
+                {selectBtn === 'updateGroup'
+                  ? messageSet[1].title
+                  : messageSet[0].title}
               </h3>
               <Formik
                 initialValues={{
-                  name: '',
+                  name: selectGroupName ? `${selectGroupName}` : '',
                 }}
-                onSubmit={onSubmit}
+                onSubmit={
+                  selectBtn === 'updateGroup' ? changeGroupName : onSubmit
+                }
                 validationSchema={userSchema}
               >
                 {(props) => (
@@ -103,7 +165,9 @@ const GroupCreateModal = ({
                       className="block mb-2 text-sm font-medium text-gray-900"
                       htmlFor="name"
                     >
-                      새로운 문장집 이름을 입력하세요.
+                      {selectBtn === 'updateGroup'
+                        ? messageSet[1].description
+                        : messageSet[0].description}
                     </label>
                     <div>
                       <Field
@@ -126,7 +190,9 @@ const GroupCreateModal = ({
                     text-center"
                       type="submit"
                     >
-                      문장집 추가
+                      {selectBtn === 'updateGroup'
+                        ? messageSet[1].title
+                        : messageSet[0].title}
                     </button>
                   </Form>
                 )}
@@ -143,4 +209,4 @@ const GroupCreateModal = ({
   );
 };
 
-export default GroupCreateModal;
+export default GroupNameModal;

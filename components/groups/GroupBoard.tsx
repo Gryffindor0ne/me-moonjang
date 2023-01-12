@@ -10,7 +10,7 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import GroupsNavbar from '@components/groups/components/GroupsNavbar';
-import GroupCreateModal from '@components/modals/GroupCreateModal';
+import GroupNameModal from '@components/modals/GroupNameModal';
 import { UserInfo } from '@pages/profile';
 import Group from '@components/groups/components/Group';
 import ConfirmModal from '@components/modals/ConfirmModal';
@@ -37,8 +37,6 @@ const GroupBoard = ({ groups }: { groups: string[] | undefined }) => {
       setIsCreated((prev) => !prev);
     }
   }, [isCreated]);
-
-  const handleUpdateGroup = async (): Promise<void> => {};
 
   const handleDeleteGroup = async (): Promise<void> => {
     try {
@@ -77,7 +75,6 @@ const GroupBoard = ({ groups }: { groups: string[] | undefined }) => {
         <ConfirmModal
           btn={selectBtn}
           setShowModal={setShowConfirmModal}
-          handler={handleUpdateGroup}
           deleteHandler={handleDeleteGroup}
         />
       )}
@@ -95,7 +92,14 @@ const GroupBoard = ({ groups }: { groups: string[] | undefined }) => {
       </div>
 
       {isOpen && (
-        <GroupCreateModal setIsOpen={setIsOpen} setIsCreated={setIsCreated} />
+        <GroupNameModal
+          selectBtn={selectBtn}
+          setIsSelectBtn={setIsSelectBtn}
+          setIsOpen={setIsOpen}
+          selectGroupName={selectGroupName}
+          setIsCreated={setIsCreated}
+          setIsSelectGroupName={setIsSelectGroupName}
+        />
       )}
 
       {groups?.length !== 0 ? (
@@ -104,6 +108,7 @@ const GroupBoard = ({ groups }: { groups: string[] | undefined }) => {
             <Group
               key={idx}
               groupName={group}
+              setIsOpen={setIsOpen}
               setIsSelectBtn={setIsSelectBtn}
               setIsSelectGroupName={setIsSelectGroupName}
               setShowConfirmModal={setShowConfirmModal}
