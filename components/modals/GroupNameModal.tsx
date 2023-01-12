@@ -129,20 +129,20 @@ const GroupNameModal = ({
   return (
     <>
       <ToastContainer />
-      <div className="fixed z-50 flex items-center justify-center outline-none md:p-10 focus:outline-none">
-        <div className="relative w-full h-auto max-w-sm p-20 md:ml-8 md:p-10">
+      <div className="fixed z-50 flex items-center justify-center w-full max-w-md pr-6 outline-none md:h-[50vh] md:p-0 md:ml-6 focus:outline-none">
+        <div className="relative w-full h-auto max-w-sm p-10 md:p-2">
           <div className="relative bg-white rounded-lg shadow">
             <button
               onClick={handleCloseModal}
               type="button"
               className="absolute top-3 right-2.5 text-gray-400 bg-transparent
-           hover:bg-gray-200 hover:text-gray-900 rounded-lg text-lg  p-2.5 ml-auto 
+           hover:bg-gray-200 hover:text-gray-900 rounded-lg text-lg p-2.5 ml-auto 
            inline-flex items-center"
             >
               <HiOutlineX />
             </button>
             <div className="px-6 py-6 lg:px-8">
-              <h3 className="mb-4 text-lg font-medium text-gray-900 md:text-xl ">
+              <h3 className="mb-4 text-xl font-medium text-gray-900 md:text-xl">
                 {selectBtn === 'updateGroup'
                   ? messageSet[1].title
                   : messageSet[0].title}
@@ -162,7 +162,7 @@ const GroupNameModal = ({
                     onSubmit={props.handleSubmit}
                   >
                     <label
-                      className="block mb-2 text-sm font-medium text-gray-900"
+                      className="block mb-2 font-medium text-gray-900"
                       htmlFor="name"
                     >
                       {selectBtn === 'updateGroup'
@@ -171,7 +171,7 @@ const GroupNameModal = ({
                     </label>
                     <div>
                       <Field
-                        className="bg-gray-50 border-b-2 border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
+                        className="bg-gray-50 border-b-2 border-gray-300 text-gray-900 text-base rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5"
                         name="name"
                         type="text"
                         placeholder="문장집 이름 입력"
@@ -186,7 +186,7 @@ const GroupNameModal = ({
 
                     <button
                       className="w-full text-white bg-teal-500 hover:bg-teal-600 focus:ring-4 
-                     focus:outline-none focus:ring-teal-300 font-medium rounded-lg text-sm px-5 py-2.5 
+                     focus:outline-none focus:ring-teal-300 font-medium rounded-lg text-base px-5 py-2.5 
                     text-center"
                       type="submit"
                     >
