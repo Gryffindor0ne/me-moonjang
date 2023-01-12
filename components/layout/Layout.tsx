@@ -6,7 +6,7 @@ type MemoonjangLayoutProps = {
 const Layout = (props: MemoonjangLayoutProps) => {
   return (
     <>
-      <main className="pb-20">{props.children}</main>
+      <main className="px-3 pb-36">{props.children}</main>
       <MainNavigation />
     </>
   );

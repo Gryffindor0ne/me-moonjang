@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
+import { useQueryClient } from '@tanstack/react-query';
 import {
   HiOutlineCollection,
   HiOutlineExclamationCircle,
 } from 'react-icons/hi';
+import axios from 'axios';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
@@ -11,12 +13,20 @@ import GroupsNavbar from '@components/groups/components/GroupsNavbar';
 import GroupCreateModal from '@components/modals/GroupCreateModal';
 import { UserInfo } from '@pages/profile';
 import Group from '@components/groups/components/Group';
+import ConfirmModal from '@components/modals/ConfirmModal';
 
 const GroupBoard = ({ groups }: { groups: string[] | undefined }) => {
+  const SERVER_ERROR = 'There was an error contacting the server.';
+
   const [isOpen, setIsOpen] = useState(false);
+  const [selectBtn, setIsSelectBtn] = useState('');
   const [isCreated, setIsCreated] = useState(false);
+  const [showConfirmModal, setShowConfirmModal] = useState(false);
+  const [selectGroupName, setIsSelectGroupName] = useState('');
+
   const { data: session } = useSession();
   const user = session?.user as UserInfo;
+  const queryClient = useQueryClient();
 
   useEffect(() => {
     if (isCreated) {
@@ -28,13 +38,50 @@ const GroupBoard = ({ groups }: { groups: string[] | undefined }) => {
     }
   }, [isCreated]);
 
+  const handleUpdateGroup = async (): Promise<void> => {};
+
+  const handleDeleteGroup = async (): Promise<void> => {
+    try {
+      const deleteResponse = await axios.delete(`/api/group/delete`, {
+        data: {
+          email: user.email,
+          name: selectGroupName,
+        },
+      });
+
+      if (deleteResponse.status === 201) {
+        toast.success('문장집 삭제완료', {
+          position: 'top-center',
+          autoClose: 500,
+        });
+        queryClient.invalidateQueries({ queryKey: ['groupsData'] });
+        setShowConfirmModal((prev) => !prev);
+      }
+    } catch (errorResponse) {
+      const message =
+        axios.isAxiosError(errorResponse) &&
+        errorResponse?.response?.data?.message
+          ? errorResponse?.response?.data?.message
+          : SERVER_ERROR;
+
+      console.error(message);
+    }
+  };
+
   return (
     <>
       <ToastContainer />
       <GroupsNavbar />
-      {isOpen && (
-        <GroupCreateModal setIsOpen={setIsOpen} setIsCreated={setIsCreated} />
+
+      {showConfirmModal && (
+        <ConfirmModal
+          btn={selectBtn}
+          setShowModal={setShowConfirmModal}
+          handler={handleUpdateGroup}
+          deleteHandler={handleDeleteGroup}
+        />
       )}
+
       <div className="flex items-center justify-between w-full p-2">
         <div className="flex justify-start p-2 my-2 text-base font-bold text-gray-700 md:text-lg md:p-4">
           {`${user?.username.toUpperCase()}'s memoonjang`}
@@ -47,9 +94,21 @@ const GroupBoard = ({ groups }: { groups: string[] | undefined }) => {
         </div>
       </div>
 
+      {isOpen && (
+        <GroupCreateModal setIsOpen={setIsOpen} setIsCreated={setIsCreated} />
+      )}
+
       {groups?.length !== 0 ? (
         groups?.map((group, idx) => {
-          return <Group key={idx} groupName={group} />;
+          return (
+            <Group
+              key={idx}
+              groupName={group}
+              setIsSelectBtn={setIsSelectBtn}
+              setIsSelectGroupName={setIsSelectGroupName}
+              setShowConfirmModal={setShowConfirmModal}
+            />
+          );
         })
       ) : (
         <div className="flex flex-col items-center justify-center p-2 mt-10 text-xl text-center">
