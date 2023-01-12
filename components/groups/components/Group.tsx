@@ -8,11 +8,13 @@ const Group = ({
   groupName,
   setIsSelectBtn,
   setIsSelectGroupName,
+  setIsOpen,
   setShowConfirmModal,
 }: {
   groupName: string;
   setIsSelectBtn: Dispatch<SetStateAction<string>>;
   setIsSelectGroupName: Dispatch<SetStateAction<string>>;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
   setShowConfirmModal: Dispatch<SetStateAction<boolean>>;
 }) => {
   const router = useRouter();
@@ -47,6 +49,7 @@ const Group = ({
             setIsSelectGroupName={setIsSelectGroupName}
             setIsOpenGroupEdit={setIsOpenGroupEdit}
             setIsSelectBtn={setIsSelectBtn}
+            setIsOpen={setIsOpen}
             setShowConfirmModal={setShowConfirmModal}
           />
         )}
