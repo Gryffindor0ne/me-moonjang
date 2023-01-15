@@ -12,14 +12,9 @@ const deleteRefreshToken = async (
     const client = await dbConnect();
     const db = client.db();
     const tokensCollection = db.collection('tokens');
-    const response = await tokensCollection.deleteOne({
+    await tokensCollection.deleteOne({
       userId: id,
     });
-
-    if (response.deletedCount === 0) {
-      client.close();
-      throw new Error('No token deleted');
-    }
 
     res.status(200).json({ message: 'Token deleted' });
     client.close();
