@@ -3,11 +3,11 @@
 }
 
 .field {
-  @apply w-full px-4 py-2 text-sm text-gray-700 border-t-0 border-b-2 border-l-0 border-r-0 border-gray-300 rounded focus:ring-transparent focus:outline-none focus:ring-0;
+  @apply w-full px-4 py-2 text-base text-gray-700 border-t-0 border-b-2 border-l-0 border-r-0 border-gray-300 rounded focus:ring-transparent focus:outline-none focus:ring-0;
 }
 .errorMsg {
   @apply m-1 text-xs text-red-500 md:text-sm;
 }
 .button {
-  @apply w-1/2 px-2 py-2 mx-auto mt-8 text-sm font-bold text-white bg-gray-700 md:text-base md:py-3 md:w-full rounded-3xl hover:bg-gray-600;
+  @apply w-full px-2 py-2 mx-auto mt-4 text-sm font-bold text-white bg-gray-700 md:text-base md:py-3 md:w-full rounded-3xl hover:bg-gray-600;
 }

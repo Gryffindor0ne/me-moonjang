@@ -1,5 +1,10 @@
+import { useSession } from 'next-auth/react';
 import { Dispatch, SetStateAction } from 'react';
 import { HiOutlineRefresh, HiOutlineTrash, HiOutlineX } from 'react-icons/hi';
+import { toast, ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
+import { UserInfo } from '@pages/profile';
 
 const GroupEditModal = ({
   id,
@@ -16,12 +21,22 @@ const GroupEditModal = ({
   setIsSelectBtn: Dispatch<SetStateAction<string>>;
   setShowConfirmModal: Dispatch<SetStateAction<boolean>>;
 }) => {
+  const { data: session } = useSession();
+  const user = session?.user as UserInfo;
+
   const handleClickModal = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
     setIsOpenGroupEdit((prev) => !prev);
     setIsSelectGroupName(id);
 
     const purpose = (event.target as any).id;
+    if (purpose === 'deleteGroup' && user.email === 'guest@memoonjang.com') {
+      toast.warning('게스트는 삭제권한이 없습니다!', {
+        position: 'top-center',
+        autoClose: 1500,
+      });
+      return;
+    }
     if (purpose === 'updateGroup') {
       setIsSelectBtn('updateGroup');
       setIsOpen((prev) => !prev);
@@ -34,6 +49,7 @@ const GroupEditModal = ({
 
   return (
     <>
+      <ToastContainer />
       <div className="absolute z-50 flex justify-end w-full max-w-xs p-2 overflow-x-hidden overflow-y-auto outline-none md:max-w-md focus:outline-none">
         <div className="relative max-w-xs p-1 bg-white rounded-md md:p-0 md:w-1/4 ">
           <button

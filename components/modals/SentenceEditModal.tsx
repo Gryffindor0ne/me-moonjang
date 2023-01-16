@@ -50,6 +50,7 @@ const SentenceEditModal = ({
       return;
     }
     const purpose = (event.target as any).id;
+
     if (purpose === 'changeGroup') setIsOption('changeGroup');
     if (purpose === 'deleteSentence') setIsOption('deleteSentence');
   };

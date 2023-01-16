@@ -87,7 +87,7 @@ const Register: NextPage = () => {
     <>
       <Seo title="회원가입" />
       <ToastContainer />
-      <section className="flex flex-col w-full gap-5 p-10 mx-auto">
+      <section className="flex flex-col w-full gap-3 p-10 mx-auto">
         <h1 className="flex py-2 mx-auto my-4 text-2xl font-bold text-gray-800 md:my-10 md:text-3xl">
           회원가입
         </h1>
@@ -194,10 +194,10 @@ const Register: NextPage = () => {
             </Form>
           )}
         </Formik>
-        <p className="flex items-center justify-center gap-10 mx-2 mt-10 text-sm font-bold text-gray-600 md:text-base">
+        <p className="flex items-center justify-center gap-6 mx-2 mt-4 text-sm font-bold text-gray-600 md:text-base">
           계정이 있으신가요?
           <Link href="/auth/login">
-            <span className="flex items-center justify-center px-4 py-2 bg-white border-2 border-gray-300 rounded-full cursor-pointer hover:bg-gray-200">
+            <span className="flex items-center justify-center px-6 py-2 text-base text-gray-700 cursor-pointer md:text-lg hover:text-gray-500">
               로그인하러가기
             </span>
           </Link>

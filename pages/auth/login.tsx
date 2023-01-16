@@ -64,11 +64,19 @@ const AuthPage: NextPage = () => {
     signIn('google', { callbackUrl: `${process.env.NEXT_PUBLIC_URL}` });
   };
 
+  const handleGuestLogin = () => {
+    const guestLoginValues: LoginInfo = {
+      email: 'guest@memoonjang.com',
+      password: '123!qwe',
+    };
+    onSubmit(guestLoginValues);
+  };
+
   return (
     <>
       <Seo title="로그인" />
       <ToastContainer />
-      <section className="flex flex-col w-full gap-5 p-10 mx-auto md:gap-12">
+      <section className="flex flex-col w-full gap-3 p-10 mx-auto md:gap-12">
         <h1 className="flex py-2 mx-auto my-4 text-2xl font-bold text-gray-800 md:my-10 md:text-3xl">
           Me Moonjang
         </h1>
@@ -131,9 +139,12 @@ const AuthPage: NextPage = () => {
             </Form>
           )}
         </Formik>
-        <p className="flex flex-col items-center mx-2 mt-2 text-lg font-bold text-gray-600 ">
-          또는
-        </p>
+        <div className="inline-flex items-center justify-center w-full">
+          <hr className="w-64 h-px my-8 bg-gray-200 border-0 rounded" />
+          <span className="absolute px-4 font-medium text-gray-900 -translate-x-1/2 bg-white left-1/2">
+            또는
+          </span>
+        </div>
         <div className="flex items-center justify-center gap-8">
           <span
             onClick={handleKakaoLogin}
@@ -149,12 +160,20 @@ const AuthPage: NextPage = () => {
           </span>
         </div>
 
-        <p className="flex items-center justify-center gap-10 mx-2 mt-10 text-sm font-bold text-gray-600 md:text-base">
+        <p className="flex items-center justify-center mx-2 text-sm font-bold text-gray-600 md:text-base">
+          <span
+            onClick={handleGuestLogin}
+            className="flex items-center justify-center w-full px-6 py-2 mx-auto mt-4 text-white bg-teal-500 rounded-full cursor-pointer md:text-base md:py-3 hover:bg-teal-400"
+          >
+            게스트 로그인
+          </span>
+        </p>
+        <p className="flex items-center justify-center gap-6 mx-2 mt-4 text-sm font-bold text-gray-600 md:text-base">
           계정이 없으신가요?
           <Link href="/auth/register">
             <span
               data-testid="register-btn"
-              className="flex items-center justify-center px-6 py-2 bg-white border-2 border-gray-300 rounded-full cursor-pointer hover:bg-gray-200"
+              className="flex items-center justify-center px-6 py-2 text-base text-gray-700 cursor-pointer md:text-lg hover:text-gray-500"
             >
               회원가입
             </span>
