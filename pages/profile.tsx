@@ -40,6 +40,13 @@ const ProfilePage = () => {
   };
 
   const handleClickBtn = (value: string) => {
+    if (value === 'deleteAccount' && user.email === 'guest@memoonjang.com') {
+      toast.warning('게스트는 회원탈퇴 할 수 없습니다!', {
+        position: 'top-center',
+        autoClose: 1500,
+      });
+      return;
+    }
     setSelectBtn(value);
     setShowModal((prev) => !prev);
   };
@@ -74,7 +81,6 @@ const ProfilePage = () => {
     <>
       <Seo title="회원정보" />
       {showModal && (
-        //@ts-ignore
         <ConfirmModal
           btn={selectBtn}
           setShowModal={setShowModal}

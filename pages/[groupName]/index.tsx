@@ -187,7 +187,7 @@ const SentenceByGroup = () => {
           setIsSelectedSentenceIds={setIsSelectedSentenceIds}
         />
       )}
-      <section className="flex flex-col w-full gap-3 p-4 mx-auto">
+      <section className="flex flex-col w-full gap-3 p-4 pb-32 mx-auto">
         <GroupNavbar name={groupData[0].name} setIsOpen={setIsOpen} />
         {isOpen && (
           <SentenceEditModal setIsOpen={setIsOpen} setIsOption={setIsOption} />

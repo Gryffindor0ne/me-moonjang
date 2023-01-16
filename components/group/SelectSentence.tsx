@@ -1,9 +1,11 @@
 import { Dispatch, SetStateAction } from 'react';
+import { useSession } from 'next-auth/react';
 import { Field, Form, Formik } from 'formik';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import Sentence, { SentenceDetailInfo } from '@components/group/Sentence';
+import { UserInfo } from '@pages/profile';
 
 type SelectSentenceInfo = {
   selected: string[];
@@ -30,6 +32,8 @@ const SelectSentence = ({
   setIsSelectedSentence: Dispatch<SetStateAction<SentenceDetailInfo[]>>;
   setShowSelectGroupModal: Dispatch<SetStateAction<boolean>>;
 }) => {
+  const { data: session } = useSession();
+  const user = session?.user as UserInfo;
   const handleCancel = () => {
     setIsOption('');
   };
@@ -51,6 +55,14 @@ const SelectSentence = ({
 
     setSelectBtn(`${option}`);
     setIsSelectedSentenceIds(selected);
+
+    if (option === 'deleteSentence' && user.email === 'guest@memoonjang.com') {
+      toast.warning('게스트는 삭제권한이 없습니다!', {
+        position: 'top-center',
+        autoClose: 1500,
+      });
+      return;
+    }
 
     if (option === 'changeGroup') {
       setShowSelectGroupModal((prev) => !prev);
