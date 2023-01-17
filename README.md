@@ -6,8 +6,6 @@
 
 ## 🚀 [배포링크](https://me-moonjang.vercel.app/)
 
-<br>
-
 <p>
 <img src ="https://user-images.githubusercontent.com/79234473/210736495-32fe577b-2487-40f0-8042-5753266b11ec.gif" width="270" height="550"/>
  &nbsp; &nbsp; &nbsp;
