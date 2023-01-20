@@ -1,18 +1,3 @@
-.trailsText {
-  position: relative;
-  width: 100%;
-  height: 60px;
-  line-height: 80px;
-  letter-spacing: -0.05em;
-  will-change: transform, opacity;
-  overflow: hidden;
-}
-
-.trailsText > div {
-  padding-right: 0.05em;
-  overflow: hidden;
-}
-
 .splash {
   height: calc(var(--vh, 1vh) * 100);
   /* height: 100vh; */
