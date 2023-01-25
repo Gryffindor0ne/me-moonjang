@@ -10,6 +10,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import Seo from '@components/layout/Seo';
 import ConfirmModal from '@components/modals/ConfirmModal';
+import Layout from '@components/layout/Layout';
 
 export type UserInfo = {
   id: string;
@@ -89,54 +90,55 @@ const ProfilePage = () => {
         />
       )}
       <ToastContainer />
-
-      <section className="flex flex-col w-full gap-4 p-5 mx-auto">
-        <div className="flex">
-          <span
-            onClick={() => router.back()}
-            className="flex items-center justify-center px-2 text-lg cursor-pointer"
-          >
-            <MdOutlineArrowBackIos />
-          </span>
-          <h1 className="flex py-2 pr-4 mx-auto my-8 text-xl font-bold text-gray-800 md:text-2xl">
-            회원정보
-          </h1>
-        </div>
-        <div className="flex items-center justify-between px-5 py-3 font-mono border-b border-gray-100 md:text-lg">
-          <div className="text-sm text-gray-600 md:text-lg">로그인방식</div>
-          <div className="text-sm md:text-lg">
-            {user.authType.toUpperCase()}
+      <Layout>
+        <section className="flex flex-col w-full gap-4 p-5 mx-auto">
+          <div className="flex">
+            <span
+              onClick={() => router.back()}
+              className="flex items-center justify-center px-2 text-lg cursor-pointer"
+            >
+              <MdOutlineArrowBackIos />
+            </span>
+            <h1 className="flex py-2 pr-4 mx-auto my-8 text-xl font-bold text-gray-800 md:text-2xl">
+              회원정보
+            </h1>
           </div>
-        </div>
-
-        <div className="flex items-center justify-between px-5 py-3 font-mono border-b border-gray-100 md:text-lg">
-          <div className="text-sm text-gray-600 md:text-lg">이름</div>
-          <div className="text-sm md:text-lg">{user.username}</div>
-        </div>
-        <div className="flex items-center justify-between px-5 py-3 font-mono border-b border-gray-100 md:text-lg">
-          <div className="text-sm text-gray-600 md:text-lg">이메일</div>
-          <div className="text-sm md:text-lg">{user.email}</div>
-        </div>
-
-        <div className="flex items-center justify-between px-5 py-3 border-b border-gray-100 md:text-lg">
-          <div className="text-sm text-gray-600 md:text-lg">로그아웃</div>
-          <div
-            onClick={() => handleClickBtn('logout')}
-            className="px-4 py-2 text-xl text-orange-500 rounded-sm cursor-pointer sm:text-2xl"
-          >
-            <CiLogout />
+          <div className="flex items-center justify-between px-5 py-3 font-mono border-b border-gray-100 md:text-lg">
+            <div className="text-sm text-gray-600 md:text-lg">로그인방식</div>
+            <div className="text-xs md:text-lg">
+              {user.authType.toUpperCase()}
+            </div>
           </div>
-        </div>
 
-        <div className="fixed inset-x-0 flex flex-col gap-4 px-4 py-4 bottom-4 sm:px-6 sm:relative">
-          <span
-            onClick={() => handleClickBtn('deleteAccount')}
-            className="p-6 text-sm text-gray-600 border-b cursor-pointer md:text-lg md:mt-20 md:py-4 md:px-0 md:border-b-0"
-          >
-            회원탈퇴
-          </span>
-        </div>
-      </section>
+          <div className="flex items-center justify-between px-5 py-3 font-mono border-b border-gray-100 md:text-lg">
+            <div className="text-sm text-gray-600 md:text-lg">이름</div>
+            <div className="text-xs md:text-lg">{user.username}</div>
+          </div>
+          <div className="flex items-center justify-between px-5 py-3 font-mono border-b border-gray-100 md:text-lg">
+            <div className="text-sm text-gray-600 md:text-lg">이메일</div>
+            <div className="text-xs md:text-lg">{user.email}</div>
+          </div>
+
+          <div className="flex items-center justify-between px-5 py-3 border-b border-gray-100 md:text-lg">
+            <div className="text-sm text-gray-600 md:text-lg">로그아웃</div>
+            <div
+              onClick={() => handleClickBtn('logout')}
+              className="px-4 py-2 text-lg text-orange-500 rounded-sm cursor-pointer sm:text-2xl"
+            >
+              <CiLogout />
+            </div>
+          </div>
+
+          <div className="px-5 py-3 border-b border-gray-100 md:text-lg">
+            <div
+              onClick={() => handleClickBtn('deleteAccount')}
+              className="mt-20 text-sm text-gray-600 cursor-pointer md:text-lg"
+            >
+              회원탈퇴
+            </div>
+          </div>
+        </section>
+      </Layout>
     </>
   );
 };
