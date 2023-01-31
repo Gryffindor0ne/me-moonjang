@@ -90,7 +90,7 @@ const SentenceByGroup = () => {
 
   const handleChangeGroup = async (): Promise<void> => {
     try {
-      const response = await axios.post(`api/sentence/move`, {
+      const response = await axios.post(`api/sentence/changed-group`, {
         email: groupData[0].email,
         name: selectedGroup,
         sentences: selectedSentence,
@@ -98,7 +98,7 @@ const SentenceByGroup = () => {
 
       if (response.status === 201) {
         try {
-          const deleteResponse = await axios.delete(`/api/sentence/delete`, {
+          const deleteResponse = await axios.delete(`/api/sentence/deleted`, {
             data: {
               email: groupData[0].email,
               name: groupData[0].name,
@@ -141,7 +141,7 @@ const SentenceByGroup = () => {
 
   const handleDeleteSentence = async (): Promise<void> => {
     try {
-      const deleteResponse = await axios.delete(`/api/sentence/delete`, {
+      const deleteResponse = await axios.delete(`/api/sentence/deleted`, {
         data: {
           email: groupData[0].email,
           name: groupData[0].name,

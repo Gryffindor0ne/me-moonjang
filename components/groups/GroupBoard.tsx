@@ -40,14 +40,14 @@ const GroupBoard = ({ groups }: { groups: string[] | undefined }) => {
 
   const handleDeleteGroup = async (): Promise<void> => {
     try {
-      const deleteResponse = await axios.delete(`/api/group/delete`, {
+      const deleteResponse = await axios.delete(`/api/group/deleted`, {
         data: {
           email: user.email,
           name: selectGroupName,
         },
       });
 
-      if (deleteResponse.status === 201) {
+      if (deleteResponse.status === 200) {
         toast.success('문장집 삭제완료', {
           position: 'top-center',
           autoClose: 500,

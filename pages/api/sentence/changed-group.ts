@@ -4,7 +4,10 @@ import { ObjectId } from 'mongodb';
 import dbConnect from '@lib/db';
 import { SentenceDetailInfo } from '@components/group/Sentence';
 
-const moveSentence = async (req: NextApiRequest, res: NextApiResponse) => {
+const changeSentenceGroup = async (
+  req: NextApiRequest,
+  res: NextApiResponse
+) => {
   const { name, email, sentences } = req.body;
   const client = await dbConnect();
 
@@ -46,4 +49,4 @@ const moveSentence = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-export default moveSentence;
+export default changeSentenceGroup;

@@ -18,7 +18,7 @@ const deleteGroup = async (req: NextApiRequest, res: NextApiResponse) => {
       .toArray();
 
     if (findGroup.length === 0) {
-      res.status(422).json({ message: 'Group do not exists' });
+      res.status(404).json({ message: 'Group do not exists' });
       return;
     }
 
@@ -26,7 +26,7 @@ const deleteGroup = async (req: NextApiRequest, res: NextApiResponse) => {
       _id: new ObjectId(`${findGroup[0]._id}`),
     });
 
-    res.status(201).json({ message: 'Group deleted' });
+    res.status(200).json({ message: 'Group deleted' });
   } catch (error) {
     console.log(error);
   } finally {
