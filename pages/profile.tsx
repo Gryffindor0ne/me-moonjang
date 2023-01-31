@@ -54,23 +54,28 @@ const ProfilePage = () => {
 
   const handleDeleteAccount = async (): Promise<void> => {
     try {
-      const res = await axios.post(`api/auth/logout`, {
+      const logoutResponse = await axios.post(`api/auth/logout`, {
         id: user.id,
       });
-      if (res.status === 200) {
-        const deleteResponse = await axios.post(`api/auth/deleteuser`, {
+      if (logoutResponse.status === 200) {
+        const deleteUserResponse = await axios.post(`api/auth/deleteuser`, {
           email: user.email,
         });
 
-        if (deleteResponse.status === 200) {
-          toast.success('회원탈퇴가 완료되었습니다.', {
-            position: 'top-center',
-            autoClose: 1500,
+        if (deleteUserResponse.status === 200) {
+          const deleteAllResponse = await axios.post(`api/group/delete/all`, {
+            email: user.email,
           });
-          setTimeout(
-            () => signOut({ callbackUrl: `${process.env.NEXT_PUBLIC_URL}` }),
-            2000
-          );
+          if (deleteAllResponse.status === 200) {
+            toast.success('회원탈퇴가 완료되었습니다.', {
+              position: 'top-center',
+              autoClose: 1500,
+            });
+            setTimeout(
+              () => signOut({ callbackUrl: `${process.env.NEXT_PUBLIC_URL}` }),
+              2000
+            );
+          }
         }
       }
     } catch (error) {

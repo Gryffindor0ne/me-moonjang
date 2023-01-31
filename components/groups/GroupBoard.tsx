@@ -47,7 +47,7 @@ const GroupBoard = ({ groups }: { groups: string[] | undefined }) => {
         },
       });
 
-      if (deleteResponse.status === 201) {
+      if (deleteResponse.status === 200) {
         toast.success('문장집 삭제완료', {
           position: 'top-center',
           autoClose: 500,
