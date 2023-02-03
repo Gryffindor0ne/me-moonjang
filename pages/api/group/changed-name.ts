@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 
 import dbConnect from '@lib/db';
 
-const updateGroup = async (req: NextApiRequest, res: NextApiResponse) => {
+const changeGroupName = async (req: NextApiRequest, res: NextApiResponse) => {
   const { name, email, previouseName } = req.body;
   const client = await dbConnect();
 
@@ -42,4 +42,4 @@ const updateGroup = async (req: NextApiRequest, res: NextApiResponse) => {
   }
 };
 
-export default updateGroup;
+export default changeGroupName;
