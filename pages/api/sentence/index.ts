@@ -36,6 +36,7 @@ const createSentence = async (req: NextApiRequest, res: NextApiResponse) => {
             sentence,
             interpretation,
             explanation,
+            learningState: false,
             createdAt: Date.now(),
             updatedAt: Date.now(),
           },

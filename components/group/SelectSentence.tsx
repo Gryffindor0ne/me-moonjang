@@ -21,6 +21,7 @@ const SelectSentence = ({
   setIsSelectedSentence,
   setIsSelectedSentenceIds,
   setShowSelectGroupModal,
+  changeLearningState,
 }: {
   option: string;
   groupName: string;
@@ -31,6 +32,13 @@ const SelectSentence = ({
   setIsSelectedSentenceIds: Dispatch<SetStateAction<string[]>>;
   setIsSelectedSentence: Dispatch<SetStateAction<SentenceDetailInfo[]>>;
   setShowSelectGroupModal: Dispatch<SetStateAction<boolean>>;
+  changeLearningState: ({
+    data,
+    learningComplete,
+  }: {
+    data: SentenceDetailInfo;
+    learningComplete: boolean;
+  }) => Promise<void>;
 }) => {
   const { data: session } = useSession();
   const user = session?.user as UserInfo;
@@ -91,7 +99,11 @@ const SelectSentence = ({
                     type="checkbox"
                     value={sentence.id}
                   />
-                  <Sentence data={sentence} groupName={groupName} />
+                  <Sentence
+                    data={sentence}
+                    groupName={groupName}
+                    changeLearningState={changeLearningState}
+                  />
                 </label>
               );
             })}

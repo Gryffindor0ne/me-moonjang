@@ -30,6 +30,7 @@ const changeSentenceGroup = async (
                 explanation: sentence.explanation,
                 createdAt: sentence.createdAt,
                 updatedAt: Date.now(),
+                learningState: sentence.learningState,
               },
             },
 

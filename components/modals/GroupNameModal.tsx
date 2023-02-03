@@ -64,7 +64,7 @@ const GroupNameModal = ({
     const { name } = value;
 
     try {
-      const res = await axios.post(`api/group/update`, {
+      const res = await axios.post(`api/group/changed-name`, {
         previouseName: selectGroupName,
         name,
         email: user.email,
