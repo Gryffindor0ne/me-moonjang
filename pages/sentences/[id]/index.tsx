@@ -3,15 +3,10 @@ import { GetServerSideProps } from 'next';
 import { getSession, useSession } from 'next-auth/react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
-import {
-  dehydrate,
-  QueryClient,
-  useQuery,
-  useQueryClient,
-} from '@tanstack/react-query';
+import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query';
 import { MdOutlineArrowBackIos } from 'react-icons/md';
 import { HiOutlineBell } from 'react-icons/hi';
-import { toast, ToastContainer } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { UserInfo } from '@pages/profile';
@@ -36,7 +31,6 @@ export const getSentenceData = async (
 };
 
 const Sentence = () => {
-  const SERVER_ERROR = 'There was an error contacting the server.';
   const [open, setOpen] = useState(true);
 
   const router = useRouter();
@@ -44,8 +38,6 @@ const Sentence = () => {
 
   const { data: session } = useSession();
   const user = session?.user as UserInfo;
-
-  const queryClient = useQueryClient();
 
   const {
     data: sentenceData,
@@ -71,49 +63,6 @@ const Sentence = () => {
     setOpen((prev) => !prev);
   };
 
-  const changeLearningState = async ({
-    data,
-    learningComplete,
-  }: {
-    data: SentenceDetailInfo;
-    learningComplete: boolean;
-  }) => {
-    try {
-      const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_URL}/api/sentence/learning-state`,
-        {
-          email: sentenceData[0].email,
-          name: sentenceData[0].name,
-          sentenceId: data.id,
-          learningState: learningComplete,
-        }
-      );
-
-      if (response.status === 201) {
-        if (learningComplete) {
-          toast.success('문장 학습완료', {
-            position: 'top-center',
-            autoClose: 300,
-          });
-        } else {
-          toast.warning('문장 학습 미완료', {
-            position: 'top-center',
-            autoClose: 300,
-          });
-        }
-        queryClient.invalidateQueries({ queryKey: ['sentenceListByGroup'] });
-      }
-    } catch (errorResponse) {
-      const message =
-        axios.isAxiosError(errorResponse) &&
-        errorResponse?.response?.data?.message
-          ? errorResponse?.response?.data?.message
-          : SERVER_ERROR;
-
-      console.error(message);
-    }
-  };
-
   return (
     <>
       <ToastContainer />
@@ -136,7 +85,8 @@ const Sentence = () => {
         >
           <LearningState
             data={sentenceDetail}
-            changeLearningState={changeLearningState}
+            groupInfo={sentenceData[0]}
+            sentenceDetail={true}
           />
           <div className="flex p-2 text-2xl font-bold font-Lora md:text-3xl">
             {sentenceDetail.sentence}

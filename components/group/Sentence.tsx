@@ -2,6 +2,7 @@ import { useRouter } from 'next/router';
 
 import { writtenDate } from '@utils/dayjs';
 import LearningState from '@components/common/LearningState';
+import { GroupInfo } from '@pages/[groupName]';
 
 export type SentenceDetailInfo = {
   id: string;
@@ -15,23 +16,17 @@ export type SentenceDetailInfo = {
 
 const Sentence = ({
   data,
-  groupName,
-  changeLearningState,
+  groupInfo,
 }: {
   data: SentenceDetailInfo;
-  groupName: string;
-  changeLearningState: ({
-    data,
-    learningComplete,
-  }: {
-    data: SentenceDetailInfo;
-    learningComplete: boolean;
-  }) => Promise<void>;
+  groupInfo: GroupInfo;
 }) => {
   const router = useRouter();
 
   const handleClickGroupName = (event: React.MouseEvent<HTMLElement>) => {
-    router.push(`/sentences/${(event.target as any).id}?name=${groupName}`);
+    router.push(
+      `/sentences/${(event.target as any).id}?name=${groupInfo.name}`
+    );
   };
 
   return (
@@ -45,7 +40,11 @@ const Sentence = ({
           {writtenDate(data.createdAt)}
         </div>
 
-        <LearningState data={data} changeLearningState={changeLearningState} />
+        <LearningState
+          data={data}
+          groupInfo={groupInfo}
+          sentenceDetail={false}
+        />
       </div>
       <div id={data.id} className="font-bold text-md md:text-xl">
         {data.sentence}

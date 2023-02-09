@@ -3,28 +3,28 @@ import { useState } from 'react';
 import { MdOutlineFaceRetouchingNatural } from 'react-icons/md';
 
 import { SentenceDetailInfo } from '@components/group/Sentence';
+import useSentence from '@hooks/useSentence';
+import { GroupInfo } from '@pages/[groupName]';
 
 const LearningState = ({
   data,
-  changeLearningState,
+  groupInfo,
+  sentenceDetail,
 }: {
   data: SentenceDetailInfo;
-  changeLearningState: ({
-    data,
-    learningComplete,
-  }: {
-    data: SentenceDetailInfo;
-    learningComplete: boolean;
-  }) => Promise<void>;
+  groupInfo: GroupInfo;
+  sentenceDetail: boolean;
 }) => {
   const [learningComplete, setLearingComplete] = useState(
     !data.learningState ?? false
   );
 
+  const { changeLearningState } = useSentence();
+
   const handleClickLearningState = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
     setLearingComplete((prev) => !prev);
-    changeLearningState({ data, learningComplete });
+    changeLearningState(data, learningComplete, groupInfo, sentenceDetail);
   };
 
   return (

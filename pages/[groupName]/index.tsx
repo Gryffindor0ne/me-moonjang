@@ -173,46 +173,6 @@ const SentenceByGroup = () => {
     }
   };
 
-  const changeLearningState = async ({
-    data,
-    learningComplete,
-  }: {
-    data: SentenceDetailInfo;
-    learningComplete: boolean;
-  }) => {
-    try {
-      const response = await axios.post(`api/sentence/learning-state`, {
-        email: groupData[0].email,
-        name: groupData[0].name,
-        sentenceId: data.id,
-        learningState: learningComplete,
-      });
-
-      if (response.status === 201) {
-        if (learningComplete) {
-          toast.success('문장 학습완료', {
-            position: 'top-center',
-            autoClose: 300,
-          });
-        } else {
-          toast.warning('문장 학습 미완료', {
-            position: 'top-center',
-            autoClose: 300,
-          });
-        }
-        queryClient.invalidateQueries({ queryKey: ['groupDetailInfo'] });
-      }
-    } catch (errorResponse) {
-      const message =
-        axios.isAxiosError(errorResponse) &&
-        errorResponse?.response?.data?.message
-          ? errorResponse?.response?.data?.message
-          : SERVER_ERROR;
-
-      console.error(message);
-    }
-  };
-
   return (
     <>
       <ToastContainer />
@@ -246,23 +206,17 @@ const SentenceByGroup = () => {
           <SelectSentence
             option={option}
             sentences={descendingSort(groupData[0].sentences)}
-            groupName={groupData[0].name}
+            groupInfo={groupData[0]}
             setIsOption={setIsOption}
             setSelectBtn={setSelectBtn}
             setShowConfirmModal={setShowConfirmModal}
             setIsSelectedSentenceIds={setIsSelectedSentenceIds}
             setIsSelectedSentence={setIsSelectedSentence}
             setShowSelectGroupModal={setShowSelectGroupModal}
-            changeLearningState={changeLearningState}
           />
         ) : groupData[0].sentences && groupData[0].sentences.length !== 0 ? (
           descendingSort(groupData[0].sentences).map((sentenceInfo, idx) => (
-            <Sentence
-              key={idx}
-              data={sentenceInfo}
-              groupName={groupData[0].name}
-              changeLearningState={changeLearningState}
-            />
+            <Sentence key={idx} data={sentenceInfo} groupInfo={groupData[0]} />
           ))
         ) : (
           <div className="flex flex-col items-center justify-center p-2 mt-10 text-xl text-center">
