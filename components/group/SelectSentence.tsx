@@ -6,6 +6,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import Sentence, { SentenceDetailInfo } from '@components/group/Sentence';
 import { UserInfo } from '@pages/profile';
+import { GroupInfo } from '@pages/[groupName]';
 
 type SelectSentenceInfo = {
   selected: string[];
@@ -13,7 +14,7 @@ type SelectSentenceInfo = {
 
 const SelectSentence = ({
   option,
-  groupName,
+  groupInfo,
   sentences,
   setIsOption,
   setSelectBtn,
@@ -21,10 +22,9 @@ const SelectSentence = ({
   setIsSelectedSentence,
   setIsSelectedSentenceIds,
   setShowSelectGroupModal,
-  changeLearningState,
 }: {
   option: string;
-  groupName: string;
+  groupInfo: GroupInfo;
   sentences: SentenceDetailInfo[];
   setIsOption: Dispatch<SetStateAction<string>>;
   setSelectBtn: Dispatch<SetStateAction<string>>;
@@ -32,13 +32,6 @@ const SelectSentence = ({
   setIsSelectedSentenceIds: Dispatch<SetStateAction<string[]>>;
   setIsSelectedSentence: Dispatch<SetStateAction<SentenceDetailInfo[]>>;
   setShowSelectGroupModal: Dispatch<SetStateAction<boolean>>;
-  changeLearningState: ({
-    data,
-    learningComplete,
-  }: {
-    data: SentenceDetailInfo;
-    learningComplete: boolean;
-  }) => Promise<void>;
 }) => {
   const { data: session } = useSession();
   const user = session?.user as UserInfo;
@@ -99,11 +92,7 @@ const SelectSentence = ({
                     type="checkbox"
                     value={sentence.id}
                   />
-                  <Sentence
-                    data={sentence}
-                    groupName={groupName}
-                    changeLearningState={changeLearningState}
-                  />
+                  <Sentence data={sentence} groupInfo={groupInfo} />
                 </label>
               );
             })}
