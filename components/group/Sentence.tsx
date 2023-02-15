@@ -2,7 +2,7 @@ import { useRouter } from 'next/router';
 
 import { writtenDate } from '@utils/dayjs';
 import LearningState from '@components/common/LearningState';
-import { GroupInfo } from '@pages/[groupName]';
+import { GroupInfo } from '@pages/[groupId]';
 
 export type SentenceDetailInfo = {
   id: string;
@@ -25,7 +25,7 @@ const Sentence = ({
 
   const handleClickGroupName = (event: React.MouseEvent<HTMLElement>) => {
     router.push(
-      `/sentences/${(event.target as any).id}?name=${groupInfo.name}`
+      `/sentences/${(event.target as any).id}?groupId=${groupInfo._id}`
     );
   };
 

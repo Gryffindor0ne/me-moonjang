@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { GetServerSideProps } from 'next';
-import { getSession, useSession } from 'next-auth/react';
+import { getSession } from 'next-auth/react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query';
@@ -9,21 +9,19 @@ import { HiOutlineBell } from 'react-icons/hi';
 import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import { UserInfo } from '@pages/profile';
 import Seo from '@components/layout/Seo';
 import LearningState from '@components/common/LearningState';
 import { SentenceDetailInfo } from '@components/group/Sentence';
+import { queryKeys } from '@react-query/constants';
 
 export const getSentenceData = async (
-  user: UserInfo,
-  name: string | string[] | undefined,
+  groupId: string | string[] | undefined,
   id: string | string[] | undefined
 ) => {
   const { data } = await axios.post(
-    `${process.env.NEXT_PUBLIC_URL}/api/sentence/list`,
+    `${process.env.NEXT_PUBLIC_URL}/api/sentence`,
     {
-      email: user.email,
-      name,
+      groupId,
       id,
     }
   );
@@ -34,18 +32,15 @@ const Sentence = () => {
   const [open, setOpen] = useState(true);
 
   const router = useRouter();
-  const { name, id } = router.query;
-
-  const { data: session } = useSession();
-  const user = session?.user as UserInfo;
+  const { groupId, id } = router.query;
 
   const {
     data: sentenceData,
     isError,
     isLoading,
     error,
-  } = useQuery(['sentenceListByGroup', user, name, id], () =>
-    getSentenceData(user, name, id)
+  } = useQuery([queryKeys.sentenceDetail, groupId, id], () =>
+    getSentenceData(groupId, id)
   );
 
   if (isLoading) return;
@@ -125,15 +120,14 @@ const Sentence = () => {
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { id, name } = context.query;
+  const { groupId, id } = context.query;
   const session = await getSession(context);
-  const user = session?.user as UserInfo;
 
   const queryClient = new QueryClient();
 
   await queryClient.prefetchQuery({
-    queryKey: ['sentenceListByGroup', user, name, id],
-    queryFn: () => getSentenceData(user, name, id),
+    queryKey: [queryKeys.sentenceDetail, groupId, id],
+    queryFn: () => getSentenceData(groupId, id),
   });
 
   return {

@@ -3,17 +3,18 @@ import React, { Dispatch, SetStateAction, useState } from 'react';
 import { HiOutlineDotsHorizontal } from 'react-icons/hi';
 
 import GroupEditModal from '@components/modals/GroupEditModal';
+import { GroupInfo } from '@pages/[groupId]';
 
 const Group = ({
-  groupName,
+  group,
   setIsSelectBtn,
-  setIsSelectGroupName,
+  setIsSelectGroupId,
   setIsOpen,
   setShowConfirmModal,
 }: {
-  groupName: string;
+  group: GroupInfo;
   setIsSelectBtn: Dispatch<SetStateAction<string>>;
-  setIsSelectGroupName: Dispatch<SetStateAction<string>>;
+  setIsSelectGroupId: Dispatch<SetStateAction<string>>;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   setShowConfirmModal: Dispatch<SetStateAction<boolean>>;
 }) => {
@@ -31,13 +32,13 @@ const Group = ({
   return (
     <>
       <div
-        id={groupName}
+        id={group._id}
         onClick={handleClickGroupName}
         className="z-0 flex justify-between p-4 mx-2 my-4 text-teal-100 rounded-md cursor-pointer md:text-lg md:p-5 bg-gradient-to-r from-teal-500 via-teal-400 to-teal-200 text-md text-bold"
       >
-        {groupName}
+        {group.name}
         <span
-          id={groupName}
+          id={group.name}
           onClick={handleModalForGroupEdit}
           className="z-0 flex items-center justify-center pr-2 text-xl cursor-pointer"
         >
@@ -45,8 +46,8 @@ const Group = ({
         </span>
         {isOpenGroupEdit && (
           <GroupEditModal
-            id={groupName}
-            setIsSelectGroupName={setIsSelectGroupName}
+            id={group._id}
+            setIsSelectGroupId={setIsSelectGroupId}
             setIsOpenGroupEdit={setIsOpenGroupEdit}
             setIsSelectBtn={setIsSelectBtn}
             setIsOpen={setIsOpen}

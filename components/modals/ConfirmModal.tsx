@@ -13,15 +13,15 @@ const ConfirmModal = ({
   setShowModal,
   handler,
   deleteHandler,
-  selectedSentenceIds,
-  setIsSelectedSentenceIds,
+  selectSentenceIds,
+  setIsSelectSentenceIds,
 }: {
   btn: string;
   setShowModal: Dispatch<SetStateAction<boolean>>;
   handler?: () => Promise<void>;
   deleteHandler: () => Promise<void>;
-  selectedSentenceIds?: string[];
-  setIsSelectedSentenceIds?: Dispatch<SetStateAction<string[] | []>>;
+  selectSentenceIds?: string[];
+  setIsSelectSentenceIds?: Dispatch<SetStateAction<string[] | []>>;
 }) => {
   const [open, setOpen] = useState(true);
 
@@ -30,7 +30,7 @@ const ConfirmModal = ({
   const handleCancel = () => {
     setOpen((prev) => !prev);
     setShowModal((prev) => !prev);
-    if (selectedSentenceIds) setIsSelectedSentenceIds!([]);
+    if (selectSentenceIds) setIsSelectSentenceIds!([]);
   };
 
   const confirmMessageSet = [

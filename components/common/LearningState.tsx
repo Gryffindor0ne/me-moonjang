@@ -4,7 +4,7 @@ import { MdOutlineFaceRetouchingNatural } from 'react-icons/md';
 
 import { SentenceDetailInfo } from '@components/group/Sentence';
 import useSentence from '@hooks/useSentence';
-import { GroupInfo } from '@pages/[groupName]';
+import { GroupInfo } from '@pages/[groupId]';
 
 const LearningState = ({
   data,

@@ -15,13 +15,14 @@ import Layout from '@components/layout/Layout';
 import Seo from '@components/layout/Seo';
 import GroupBoard from '@components/groups/GroupBoard';
 import { UserInfo } from '@pages/profile';
-import { getGroupDetail } from '@pages/[groupName]';
+import { getGroupData, GroupInfo } from '@pages/[groupId]';
+import { queryKeys } from '@react-query/constants';
 
 export const getGroupsData = async (
   user: UserInfo
-): Promise<string[] | undefined> => {
+): Promise<GroupInfo[] | undefined> => {
   const { data } = await axios.post(
-    `${process.env.NEXT_PUBLIC_URL}/api/group/list`,
+    `${process.env.NEXT_PUBLIC_URL}/api/groups`,
     {
       email: user?.email,
     }
@@ -48,13 +49,13 @@ const Home = () => {
     isLoading,
     isError,
     error,
-  } = useQuery(['groupsData', user], () => getGroupsData(user));
+  } = useQuery([queryKeys.groupsData, user], () => getGroupsData(user));
 
   useEffect(() => {
     if (groups) {
       groups.forEach((group) => {
-        queryClient.prefetchQuery(['groupDetailInfo', user, group], () =>
-          getGroupDetail(user, group)
+        queryClient.prefetchQuery([queryKeys.groupDetailData, group._id], () =>
+          getGroupData(group._id)
         );
       });
     }
@@ -96,7 +97,7 @@ const Splash = ({ router }: { router: any }) => {
   );
 };
 
-const Main = ({ groups }: { groups: string[] | undefined }) => {
+const Main = ({ groups }: { groups: GroupInfo[] | undefined }) => {
   return (
     <Layout>
       <GroupBoard groups={groups} />
@@ -111,7 +112,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const queryClient = new QueryClient();
 
   await queryClient.prefetchQuery({
-    queryKey: ['groupsData'],
+    queryKey: [queryKeys.groupsData],
     queryFn: () => getGroupsData(user),
   });
 

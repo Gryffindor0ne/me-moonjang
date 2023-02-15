@@ -14,15 +14,17 @@ import GroupNameModal from '@components/modals/GroupNameModal';
 import { UserInfo } from '@pages/profile';
 import Group from '@components/groups/components/Group';
 import ConfirmModal from '@components/modals/ConfirmModal';
+import { GroupInfo } from '@pages/[groupId]';
+import { queryKeys } from '@react-query/constants';
 
-const GroupBoard = ({ groups }: { groups: string[] | undefined }) => {
+const GroupBoard = ({ groups }: { groups: GroupInfo[] | undefined }) => {
   const SERVER_ERROR = 'There was an error contacting the server.';
 
   const [isOpen, setIsOpen] = useState(false);
   const [selectBtn, setIsSelectBtn] = useState('');
   const [isCreated, setIsCreated] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [selectGroupName, setIsSelectGroupName] = useState('');
+  const [selectGroupId, setIsSelectGroupId] = useState('');
 
   const { data: session } = useSession();
   const user = session?.user as UserInfo;
@@ -40,11 +42,8 @@ const GroupBoard = ({ groups }: { groups: string[] | undefined }) => {
 
   const handleDeleteGroup = async (): Promise<void> => {
     try {
-      const deleteResponse = await axios.delete(`/api/group/deleted`, {
-        data: {
-          email: user.email,
-          name: selectGroupName,
-        },
+      const deleteResponse = await axios.delete(`/api/groups/deleted`, {
+        data: { id: selectGroupId },
       });
 
       if (deleteResponse.status === 200) {
@@ -52,7 +51,7 @@ const GroupBoard = ({ groups }: { groups: string[] | undefined }) => {
           position: 'top-center',
           autoClose: 500,
         });
-        queryClient.invalidateQueries({ queryKey: ['groupsData'] });
+        queryClient.invalidateQueries({ queryKey: [queryKeys.groupsData] });
         setShowConfirmModal((prev) => !prev);
       }
     } catch (errorResponse) {
@@ -70,7 +69,6 @@ const GroupBoard = ({ groups }: { groups: string[] | undefined }) => {
     <>
       <ToastContainer />
       <GroupsNavbar />
-
       {showConfirmModal && (
         <ConfirmModal
           btn={selectBtn}
@@ -78,7 +76,6 @@ const GroupBoard = ({ groups }: { groups: string[] | undefined }) => {
           deleteHandler={handleDeleteGroup}
         />
       )}
-
       <div className="flex items-center justify-between w-full p-2">
         <div className="flex justify-start p-2 my-2 text-base font-bold text-gray-700 md:text-lg md:p-4">
           {`${user?.username.toUpperCase()}'s memoonjang`}
@@ -90,27 +87,26 @@ const GroupBoard = ({ groups }: { groups: string[] | undefined }) => {
           <HiOutlineCollection />
         </div>
       </div>
-
       {isOpen && (
+        //@ts-ignore
         <GroupNameModal
           selectBtn={selectBtn}
           setIsSelectBtn={setIsSelectBtn}
           setIsOpen={setIsOpen}
-          selectGroupName={selectGroupName}
+          selectGroupId={selectGroupId}
           setIsCreated={setIsCreated}
-          setIsSelectGroupName={setIsSelectGroupName}
+          setIsSelectGroupId={setIsSelectGroupId}
         />
       )}
-
       {groups?.length !== 0 ? (
         groups?.map((group, idx) => {
           return (
             <Group
               key={idx}
-              groupName={group}
+              group={group}
               setIsOpen={setIsOpen}
               setIsSelectBtn={setIsSelectBtn}
-              setIsSelectGroupName={setIsSelectGroupName}
+              setIsSelectGroupId={setIsSelectGroupId}
               setShowConfirmModal={setShowConfirmModal}
             />
           );

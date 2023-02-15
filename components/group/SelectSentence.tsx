@@ -6,31 +6,30 @@ import 'react-toastify/dist/ReactToastify.css';
 
 import Sentence, { SentenceDetailInfo } from '@components/group/Sentence';
 import { UserInfo } from '@pages/profile';
-import { GroupInfo } from '@pages/[groupName]';
+import { GroupInfo } from '@pages/[groupId]';
+import { descendingSort } from '@utils/dayjs';
 
 type SelectSentenceInfo = {
-  selected: string[];
+  sentenceIds: string[];
 };
 
 const SelectSentence = ({
   option,
   groupInfo,
-  sentences,
   setIsOption,
   setSelectBtn,
   setShowConfirmModal,
-  setIsSelectedSentence,
-  setIsSelectedSentenceIds,
+  setIsSelectSentence,
+  setIsSelectSentenceIds,
   setShowSelectGroupModal,
 }: {
   option: string;
   groupInfo: GroupInfo;
-  sentences: SentenceDetailInfo[];
   setIsOption: Dispatch<SetStateAction<string>>;
   setSelectBtn: Dispatch<SetStateAction<string>>;
   setShowConfirmModal: Dispatch<SetStateAction<boolean>>;
-  setIsSelectedSentenceIds: Dispatch<SetStateAction<string[]>>;
-  setIsSelectedSentence: Dispatch<SetStateAction<SentenceDetailInfo[]>>;
+  setIsSelectSentenceIds: Dispatch<SetStateAction<string[]>>;
+  setIsSelectSentence: Dispatch<SetStateAction<SentenceDetailInfo[]>>;
   setShowSelectGroupModal: Dispatch<SetStateAction<boolean>>;
 }) => {
   const { data: session } = useSession();
@@ -40,9 +39,9 @@ const SelectSentence = ({
   };
 
   const onSubmit = (value: SelectSentenceInfo) => {
-    const { selected } = value;
+    const { sentenceIds } = value;
 
-    if (selected.length === 0) {
+    if (sentenceIds.length === 0) {
       toast.warning('선택된 문장이 없습니다!', {
         position: 'top-center',
         autoClose: 1500,
@@ -50,12 +49,14 @@ const SelectSentence = ({
       return;
     }
 
-    const selectedSentences: SentenceDetailInfo[] = sentences.filter(
-      (sentence: SentenceDetailInfo) => selected.includes(sentence.id)
+    const selectSentences: SentenceDetailInfo[] = descendingSort(
+      groupInfo.sentences
+    ).filter((sentence: SentenceDetailInfo) =>
+      sentenceIds.includes(sentence.id)
     );
 
     setSelectBtn(`${option}`);
-    setIsSelectedSentenceIds(selected);
+    setIsSelectSentenceIds(sentenceIds);
 
     if (option === 'deleteSentence' && user.email === 'guest@memoonjang.com') {
       toast.warning('게스트는 삭제권한이 없습니다!', {
@@ -67,7 +68,7 @@ const SelectSentence = ({
 
     if (option === 'changeGroup') {
       setShowSelectGroupModal((prev) => !prev);
-      setIsSelectedSentence(selectedSentences);
+      setIsSelectSentence(selectSentences);
     }
     if (option === 'deleteSentence') setShowConfirmModal((prev) => !prev);
   };
@@ -77,18 +78,18 @@ const SelectSentence = ({
       <ToastContainer />
       <Formik
         initialValues={{
-          selected: [],
+          sentenceIds: [],
         }}
         onSubmit={onSubmit}
       >
         {(props) => (
           <Form className="flex flex-col gap-4" onSubmit={props.handleSubmit}>
-            {sentences.map((sentence) => {
+            {descendingSort(groupInfo.sentences).map((sentence) => {
               return (
                 <label key={sentence.id} className="inline-flex items-center">
                   <Field
                     className="w-5 h-5 ml-2 mr-4 text-teal-600 rounded-md border-1 focus:ring-0"
-                    name="selected"
+                    name="sentenceIds"
                     type="checkbox"
                     value={sentence.id}
                   />

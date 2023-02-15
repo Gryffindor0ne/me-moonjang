@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { GetServerSideProps } from 'next';
-import { getSession, useSession } from 'next-auth/react';
+import { getSession } from 'next-auth/react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import {
@@ -14,7 +14,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
 
 import { descendingSort } from '@utils/dayjs';
-import { UserInfo } from '@pages/profile';
+
 import Sentence, { SentenceDetailInfo } from '@components/group/Sentence';
 import Seo from '@components/layout/Seo';
 import GroupNavbar from '@components/group/GroupNavbar';
@@ -23,6 +23,7 @@ import ConfirmModal from '@components/modals/ConfirmModal';
 import SelectSentence from '@components/group/SelectSentence';
 import GroupHeader from '@components/group/GroupHeader';
 import SelectGroup from '@components/group/SelectGroup';
+import { queryKeys } from '@react-query/constants';
 
 export type GroupInfo = {
   _id: string;
@@ -33,16 +34,9 @@ export type GroupInfo = {
   sentences: SentenceDetailInfo[];
 };
 
-export const getGroupDetail = async (
-  user: UserInfo,
-  groupName: string | string[] | undefined
-) => {
-  const { data } = await axios.post(
-    `${process.env.NEXT_PUBLIC_URL}/api/group/detail`,
-    {
-      email: user.email,
-      name: groupName,
-    }
+export const getGroupData = async (groupId: string | undefined) => {
+  const { data } = await axios.get(
+    `${process.env.NEXT_PUBLIC_URL}/api/groups/detail/${groupId}`
   );
   return data;
 };
@@ -54,20 +48,15 @@ const SentenceByGroup = () => {
   const [showSelectGroupModal, setShowSelectGroupModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [selectBtn, setSelectBtn] = useState('');
-  const [selectedSentenceIds, setIsSelectedSentenceIds] = useState<string[]>(
+  const [selectSentenceIds, setIsSelectSentenceIds] = useState<string[]>([]);
+  const [selectSentence, setIsSelectSentence] = useState<SentenceDetailInfo[]>(
     []
   );
-  const [selectedSentence, setIsSelectedSentence] = useState<
-    SentenceDetailInfo[]
-  >([]);
-  const [selectedGroup, setIsSelectGroup] = useState('');
+  const [selectGroup, setIsSelectGroup] = useState<GroupInfo | undefined>();
   const [option, setIsOption] = useState('');
 
   const router = useRouter();
-  const { groupName } = router.query;
-
-  const { data: session } = useSession();
-  const user = session?.user as UserInfo;
+  const { groupId } = router.query;
 
   const queryClient = useQueryClient();
   const {
@@ -75,8 +64,8 @@ const SentenceByGroup = () => {
     isLoading,
     isError,
     error,
-  } = useQuery(['groupDetailInfo', user, groupName], () =>
-    getGroupDetail(user, groupName)
+  } = useQuery([queryKeys.groupDetailData, groupId], () =>
+    getGroupData(groupId as string)
   );
 
   if (isLoading) return;
@@ -91,18 +80,16 @@ const SentenceByGroup = () => {
   const handleChangeGroup = async (): Promise<void> => {
     try {
       const response = await axios.post(`api/sentence/changed-group`, {
-        email: groupData[0].email,
-        name: selectedGroup,
-        sentences: selectedSentence,
+        id: selectGroup?._id,
+        sentences: selectSentence,
       });
 
       if (response.status === 201) {
         try {
           const deleteResponse = await axios.delete(`/api/sentence/deleted`, {
             data: {
-              email: groupData[0].email,
-              name: groupData[0].name,
-              sentences: selectedSentenceIds,
+              groupId: groupData[0]._id,
+              sentences: selectSentenceIds,
             },
           });
           if (deleteResponse.status === 201) {
@@ -110,12 +97,14 @@ const SentenceByGroup = () => {
               position: 'top-center',
               autoClose: 500,
             });
-            queryClient.invalidateQueries({ queryKey: ['groupDetailInfo'] });
+            queryClient.invalidateQueries({
+              queryKey: [queryKeys.groupDetailData],
+            });
             setShowConfirmModal((prev) => !prev);
             setIsOption('');
             setIsOpen(false);
             setTimeout(() => {
-              router.push(`/${groupData[0].name}`);
+              router.push(`/${groupData[0]._id}`);
             }, 100);
           }
         } catch (errorResponse) {
@@ -143,9 +132,8 @@ const SentenceByGroup = () => {
     try {
       const deleteResponse = await axios.delete(`/api/sentence/deleted`, {
         data: {
-          email: groupData[0].email,
-          name: groupData[0].name,
-          sentences: selectedSentenceIds,
+          groupId: groupData[0]._id,
+          sentences: selectSentenceIds,
         },
       });
 
@@ -154,12 +142,14 @@ const SentenceByGroup = () => {
           position: 'top-center',
           autoClose: 500,
         });
-        queryClient.invalidateQueries({ queryKey: ['groupDetailInfo'] });
+        queryClient.invalidateQueries({
+          queryKey: [queryKeys.groupDetailData],
+        });
         setShowConfirmModal((prev) => !prev);
         setIsOption('');
         setIsOpen(false);
         setTimeout(() => {
-          router.push(`/${groupData[0].name}`);
+          router.push(`/${groupData[0]._id}`);
         }, 100);
       }
     } catch (errorResponse) {
@@ -183,8 +173,8 @@ const SentenceByGroup = () => {
           setShowModal={setShowConfirmModal}
           handler={handleChangeGroup}
           deleteHandler={handleDeleteSentence}
-          selectedSentenceIds={selectedSentenceIds}
-          setIsSelectedSentenceIds={setIsSelectedSentenceIds}
+          selectSentenceIds={selectSentenceIds}
+          setIsSelectSentenceIds={setIsSelectSentenceIds}
         />
       )}
       <section className="flex flex-col w-full gap-3 p-4 pb-32 mx-auto">
@@ -200,18 +190,17 @@ const SentenceByGroup = () => {
             setIsSelectGroup={setIsSelectGroup}
           />
         )}
-        <GroupHeader groupData={groupData} name={groupData[0].name} />
+        <GroupHeader groupData={groupData} />
 
         {option && groupData[0].sentences ? (
           <SelectSentence
             option={option}
-            sentences={descendingSort(groupData[0].sentences)}
             groupInfo={groupData[0]}
             setIsOption={setIsOption}
             setSelectBtn={setSelectBtn}
             setShowConfirmModal={setShowConfirmModal}
-            setIsSelectedSentenceIds={setIsSelectedSentenceIds}
-            setIsSelectedSentence={setIsSelectedSentence}
+            setIsSelectSentenceIds={setIsSelectSentenceIds}
+            setIsSelectSentence={setIsSelectSentence}
             setShowSelectGroupModal={setShowSelectGroupModal}
           />
         ) : groupData[0].sentences && groupData[0].sentences.length !== 0 ? (
@@ -234,15 +223,14 @@ const SentenceByGroup = () => {
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const groupName = context.params?.groupName;
+  const groupId = context.params?.groupId;
   const session = await getSession(context);
-  const user = session?.user as UserInfo;
 
   const queryClient = new QueryClient();
 
   await queryClient.prefetchQuery({
-    queryKey: ['groupDetailInfo'],
-    queryFn: () => getGroupDetail(user, groupName),
+    queryKey: [queryKeys.groupDetailData],
+    queryFn: () => getGroupData(groupId as string),
   });
 
   return {

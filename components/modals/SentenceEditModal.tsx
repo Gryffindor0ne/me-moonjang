@@ -1,13 +1,12 @@
 import { useQuery } from '@tanstack/react-query';
-import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { Dispatch, SetStateAction } from 'react';
 import { HiOutlineRefresh, HiOutlineTrash, HiOutlineX } from 'react-icons/hi';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import { UserInfo } from '@pages/profile';
-import { getGroupDetail } from '@pages/[groupName]';
+import { getGroupData } from '@pages/[groupId]';
+import { queryKeys } from '@react-query/constants';
 
 const SentenceEditModal = ({
   setIsOpen,
@@ -17,18 +16,15 @@ const SentenceEditModal = ({
   setIsOption: Dispatch<SetStateAction<string>>;
 }) => {
   const router = useRouter();
-  const { groupName } = router.query;
-
-  const { data: session } = useSession();
-  const user = session?.user as UserInfo;
+  const { groupId } = router.query;
 
   const {
     data: groupData,
     isLoading,
     isError,
     error,
-  } = useQuery(['groupDetailInfo', user, groupName], () =>
-    getGroupDetail(user, groupName)
+  } = useQuery([queryKeys.groupDetailData, groupId], () =>
+    getGroupData(groupId as string)
   );
 
   if (isLoading) return null;

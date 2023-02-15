@@ -9,14 +9,14 @@ import { UserInfo } from '@pages/profile';
 const GroupEditModal = ({
   id,
   setIsOpen,
-  setIsSelectGroupName,
+  setIsSelectGroupId,
   setIsOpenGroupEdit,
   setIsSelectBtn,
   setShowConfirmModal,
 }: {
   id: string;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
-  setIsSelectGroupName: Dispatch<SetStateAction<string>>;
+  setIsSelectGroupId: Dispatch<SetStateAction<string>>;
   setIsOpenGroupEdit: Dispatch<SetStateAction<boolean>>;
   setIsSelectBtn: Dispatch<SetStateAction<string>>;
   setShowConfirmModal: Dispatch<SetStateAction<boolean>>;
@@ -27,7 +27,7 @@ const GroupEditModal = ({
   const handleClickModal = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
     setIsOpenGroupEdit((prev) => !prev);
-    setIsSelectGroupName(id);
+    setIsSelectGroupId(id);
 
     const purpose = (event.target as any).id;
     if (purpose === 'deleteGroup' && user.email === 'guest@memoonjang.com') {

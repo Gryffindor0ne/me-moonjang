@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction } from 'react';
 import { useSession } from 'next-auth/react';
-import { useQueryClient } from '@tanstack/react-query';
+import { useQuery, useQueryClient } from '@tanstack/react-query';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import * as yup from 'yup';
 import axios from 'axios';
@@ -9,6 +9,8 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { UserInfo } from '@pages/profile';
+import { getGroupsData } from '@pages/index';
+import { queryKeys } from '@react-query/constants';
 
 export const userSchema = yup.object().shape({
   name: yup
@@ -24,23 +26,19 @@ type GroupProps = {
 
 const GroupNameModal = ({
   selectBtn,
-  selectGroupName,
+  selectGroupId,
   setIsOpen,
   setIsSelectBtn,
   setIsCreated,
-  setIsSelectGroupName,
+  setIsSelectGroupId,
 }: {
   selectBtn?: string;
-  selectGroupName?: string;
+  selectGroupId?: string;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   setIsSelectBtn: Dispatch<SetStateAction<string>>;
   setIsCreated: Dispatch<SetStateAction<boolean>>;
-  setIsSelectGroupName: Dispatch<SetStateAction<string>>;
+  setIsSelectGroupId: Dispatch<SetStateAction<string>>;
 }) => {
-  const { data: session } = useSession();
-  const user = session?.user as UserInfo;
-  const queryClient = useQueryClient();
-
   const messageSet = [
     {
       btn: 'createGroup',
@@ -54,20 +52,39 @@ const GroupNameModal = ({
     },
   ];
 
+  const { data: session } = useSession();
+  const user = session?.user as UserInfo;
+
+  const queryClient = useQueryClient();
+
+  const {
+    data: groups,
+    isLoading,
+    isError,
+    error,
+  } = useQuery([queryKeys.groupsData, user], () => getGroupsData(user));
+  if (isLoading) return;
+  if (isError)
+    return (
+      <>
+        <h3>Oops, something went wrong</h3>
+        <p>{error?.toString()}</p>
+      </>
+    );
+
   const handleCloseModal = () => {
     setIsOpen(false);
     setIsSelectBtn('');
-    setIsSelectGroupName('');
+    setIsSelectGroupId('');
   };
 
   const changeGroupName = async (value: GroupProps) => {
     const { name } = value;
 
     try {
-      const res = await axios.post(`api/group/changed-name`, {
-        previouseName: selectGroupName,
+      const res = await axios.post(`api/groups/changed-name`, {
         name,
-        email: user.email,
+        groupId: selectGroupId,
       });
 
       if (res.status === 201) {
@@ -77,8 +94,8 @@ const GroupNameModal = ({
         });
         setIsOpen((prev) => !prev);
         setIsSelectBtn('');
-        setIsSelectGroupName('');
-        queryClient.invalidateQueries({ queryKey: ['groupsData'] });
+        setIsSelectGroupId('');
+        queryClient.invalidateQueries({ queryKey: [queryKeys.groupsData] });
       }
     } catch (error) {
       let message;
@@ -100,7 +117,7 @@ const GroupNameModal = ({
     const { name } = value;
 
     try {
-      const res = await axios.post(`api/group`, {
+      const res = await axios.post(`api/groups/create`, {
         name,
         email: user.email,
       });
@@ -108,7 +125,7 @@ const GroupNameModal = ({
       if (res.status === 201) {
         setIsCreated((prev) => !prev);
         setIsOpen((prev) => !prev);
-        queryClient.invalidateQueries({ queryKey: ['groupsData'] });
+        queryClient.invalidateQueries({ queryKey: [queryKeys.groupsData] });
       }
     } catch (error) {
       let message;
@@ -149,7 +166,13 @@ const GroupNameModal = ({
               </h3>
               <Formik
                 initialValues={{
-                  name: selectGroupName ? `${selectGroupName}` : '',
+                  name: selectGroupId
+                    ? `${
+                        groups?.filter(
+                          (group) => group._id === selectGroupId
+                        )[0].name
+                      }`
+                    : '',
                 }}
                 onSubmit={
                   selectBtn === 'updateGroup' ? changeGroupName : onSubmit

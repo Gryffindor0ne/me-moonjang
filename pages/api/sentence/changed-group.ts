@@ -8,7 +8,7 @@ const changeSentenceGroup = async (
   req: NextApiRequest,
   res: NextApiResponse
 ) => {
-  const { name, email, sentences } = req.body;
+  const { id, sentences } = req.body;
   const client = await dbConnect();
 
   try {
@@ -18,8 +18,7 @@ const changeSentenceGroup = async (
       return {
         updateOne: {
           filter: {
-            name,
-            email,
+            _id: new ObjectId(`${id}`),
           },
           update: {
             $push: {

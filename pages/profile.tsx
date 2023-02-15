@@ -63,7 +63,7 @@ const ProfilePage = () => {
         });
 
         if (deleteUserResponse.status === 200) {
-          const deleteAllResponse = await axios.post(`api/group/deleted/all`, {
+          const deleteAllResponse = await axios.post(`api/groups/deleted/all`, {
             email: user.email,
           });
           if (deleteAllResponse.status === 200) {

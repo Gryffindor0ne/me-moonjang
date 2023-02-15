@@ -7,7 +7,7 @@ const changeSentenceLearningState = async (
   req: NextApiRequest,
   res: NextApiResponse
 ) => {
-  const { email, name, sentenceId, learningState } = req.body;
+  const { id, sentenceId, learningState } = req.body;
 
   const client = await dbConnect();
 
@@ -17,8 +17,7 @@ const changeSentenceLearningState = async (
 
     await groupsCollection.updateOne(
       {
-        email,
-        name,
+        _id: new ObjectId(`${id}`),
         sentences: { $elemMatch: { id: new ObjectId(`${sentenceId}`) } },
       },
       {
