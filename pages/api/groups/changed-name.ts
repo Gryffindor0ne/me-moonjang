@@ -1,30 +1,19 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { ObjectId } from 'mongodb';
 
 import dbConnect from '@lib/db';
 
 const changeGroupName = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { name, email, previouseName } = req.body;
+  const { name, groupId } = req.body;
   const client = await dbConnect();
 
   try {
     const db = client.db();
     const groupsCollection = db.collection('groups');
-    const findGroup = await groupsCollection
-      .find({
-        email,
-        name: previouseName,
-      })
-      .toArray();
-
-    if (findGroup.length === 0) {
-      res.status(422).json({ message: 'Group do not exists' });
-      return;
-    }
 
     await groupsCollection.updateOne(
       {
-        name: previouseName,
-        email,
+        _id: new ObjectId(`${groupId}`),
       },
       {
         $set: {

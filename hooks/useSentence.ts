@@ -3,7 +3,8 @@ import { toast } from 'react-toastify';
 import { useQueryClient } from '@tanstack/react-query';
 
 import { SentenceDetailInfo } from '@components/group/Sentence';
-import { GroupInfo } from '@pages/[groupName]';
+import { GroupInfo } from '@pages/[groupId]';
+import { queryKeys } from '@react-query/constants';
 
 const useSentence = () => {
   const SERVER_ERROR = 'There was an error contacting the server.';
@@ -19,8 +20,7 @@ const useSentence = () => {
       const { status } = await axios.post(
         `${process.env.NEXT_PUBLIC_URL}/api/sentence/learning-state`,
         {
-          email: groupInfo.email,
-          name: groupInfo.name,
+          id: groupInfo._id,
           sentenceId: data.id,
           learningState: learningComplete,
         }
@@ -39,9 +39,11 @@ const useSentence = () => {
           });
         }
       }
-      const detail = sentenceDetail ? 'sentenceListByGroup' : 'groupDetailInfo';
+
       queryClient.invalidateQueries({
-        queryKey: [`${detail}`],
+        queryKey: [
+          sentenceDetail ? queryKeys.sentenceDetail : queryKeys.groupDetailData,
+        ],
       });
     } catch (errorResponse) {
       const message =

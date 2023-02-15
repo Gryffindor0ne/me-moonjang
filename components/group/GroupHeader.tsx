@@ -1,18 +1,14 @@
 import { useRouter } from 'next/router';
 import { HiOutlinePlus } from 'react-icons/hi';
 
-import { GroupInfo } from '@pages/[groupName]';
+import { GroupInfo } from '@pages/[groupId]';
 
-const GroupHeader = ({
-  name,
-  groupData,
-}: {
-  name: string;
-  groupData: GroupInfo[];
-}) => {
+const GroupHeader = ({ groupData }: { groupData: GroupInfo[] }) => {
   const router = useRouter();
+  const { groupId } = router.query;
+
   const addSentence = () => {
-    router.push(`/newsentence/?name=${name}`);
+    router.push(`/newsentence/?groupId=${groupId}`);
   };
   return (
     <>

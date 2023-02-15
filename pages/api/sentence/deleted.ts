@@ -4,7 +4,7 @@ import { ObjectId } from 'mongodb';
 import dbConnect from '@lib/db';
 
 const deleteSentence = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { name, email, sentences } = req.body;
+  const { groupId, sentences } = req.body;
   const client = await dbConnect();
 
   const sentenceIds = sentences.map((id: string) => new ObjectId(id));
@@ -16,8 +16,7 @@ const deleteSentence = async (req: NextApiRequest, res: NextApiResponse) => {
       return {
         updateOne: {
           filter: {
-            name,
-            email,
+            _id: new ObjectId(`${groupId}`),
           },
           update: {
             $pull: {

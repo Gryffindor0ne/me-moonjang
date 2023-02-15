@@ -14,9 +14,11 @@ import Seo from '@components/layout/Seo';
 import styles from '@styles/Form.module.css';
 import { UserInfo } from '@pages/profile';
 import { getGroupsData } from '@pages/index';
+import { GroupInfo } from '@pages/[groupId]';
+import { queryKeys } from '@react-query/constants';
 
 export type SentenceInfo = {
-  group: string;
+  groupName: string;
   sentence: string;
   interpretation: string;
   explanation: string;
@@ -37,17 +39,17 @@ export const sentenceSchema = yup.object().shape({
 
 const SentenceInputPage = () => {
   const router = useRouter();
-  const { name } = router.query;
+  const { groupId } = router.query;
   const { data: session } = useSession();
   const user = session?.user as UserInfo;
 
-  const fallback: string[] = [];
+  const fallback: GroupInfo[] = [];
   const {
     data: groups = fallback,
     isLoading,
     isError,
     error,
-  } = useQuery(['groupsData', user], () => getGroupsData(user));
+  } = useQuery([queryKeys.groupsData, user], () => getGroupsData(user));
 
   if (isLoading) return;
   if (isError)
@@ -58,13 +60,16 @@ const SentenceInputPage = () => {
       </>
     );
 
+  const groupNames = groups.map((group) => group.name);
+
   const onSubmit = async (values: SentenceInfo): Promise<void> => {
-    const { group, sentence, interpretation, explanation } = values;
+    const { groupName, sentence, interpretation, explanation } = values;
+    const selectGroupId = groups.filter((group) => group.name === groupName)[0]
+      ._id;
 
     try {
-      const res = await axios.post(`api/sentence`, {
-        email: user.email,
-        group,
+      const res = await axios.post(`api/sentence/create`, {
+        id: groupId ? `${groupId}` : `${selectGroupId}`,
         sentence,
         interpretation,
         explanation,
@@ -75,7 +80,11 @@ const SentenceInputPage = () => {
           position: 'top-center',
           autoClose: 1000,
         });
-        setTimeout(() => router.push(name ? `/${name}` : `${group}`), 1600);
+
+        setTimeout(
+          () => router.push(groupId ? `/${groupId}` : `${selectGroupId}`),
+          1600
+        );
       }
     } catch (error) {
       let message;
@@ -92,6 +101,7 @@ const SentenceInputPage = () => {
       console.error(message);
     }
   };
+
   return (
     <>
       <ToastContainer />
@@ -113,7 +123,13 @@ const SentenceInputPage = () => {
           {groups.length !== 0 ? (
             <Formik
               initialValues={{
-                group: name ? `${name}` : `${groups[0]}`,
+                groupName: groupId
+                  ? `${
+                      groups.filter(
+                        (group: GroupInfo) => group._id === groupId
+                      )[0].name
+                    }`
+                  : `${groupNames[0]}`,
                 sentence: '',
                 interpretation: '',
                 explanation: '',
@@ -126,7 +142,7 @@ const SentenceInputPage = () => {
                   className="flex flex-col gap-2"
                   onSubmit={props.handleSubmit}
                 >
-                  {!name && (
+                  {!groupId && (
                     <>
                       <label className={styles.label} htmlFor="groups">
                         문장집 선택
@@ -134,12 +150,12 @@ const SentenceInputPage = () => {
                       <div>
                         <Field
                           as="select"
-                          name="group"
+                          name="groupName"
                           className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-2 focus:ring-teal-500 focus:ring-offset-1 focus:outline-none w-full p-2.5"
                         >
-                          {groups.map((group, idx) => (
-                            <option key={idx} value={group}>
-                              {group}
+                          {groupNames.map((groupName, idx) => (
+                            <option key={idx} value={groupName}>
+                              {groupName}
                             </option>
                           ))}
                         </Field>

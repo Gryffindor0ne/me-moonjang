@@ -6,9 +6,11 @@ import { HiOutlineX } from 'react-icons/hi';
 
 import { getGroupsData } from '@pages/index';
 import { UserInfo } from '@pages/profile';
+import { GroupInfo } from '@pages/[groupId]';
+import { queryKeys } from '@react-query/constants';
 
 type Group = {
-  group: string;
+  groupName: string;
 };
 
 const SelectGroup = ({
@@ -17,19 +19,19 @@ const SelectGroup = ({
   setShowSelectGroupModal,
 }: {
   setShowConfirmModal: Dispatch<SetStateAction<boolean>>;
-  setIsSelectGroup: Dispatch<SetStateAction<string>>;
+  setIsSelectGroup: Dispatch<SetStateAction<GroupInfo | undefined>>;
   setShowSelectGroupModal: Dispatch<SetStateAction<boolean>>;
 }) => {
   const { data: session } = useSession();
 
-  const fallback: string[] = [];
+  const fallback: GroupInfo[] = [];
 
   const {
     data: groups = fallback,
     isLoading,
     isError,
     error,
-  } = useQuery(['groupsData', session?.user], () =>
+  } = useQuery([queryKeys.groupsData, session?.user], () =>
     getGroupsData(session?.user as UserInfo)
   );
 
@@ -43,10 +45,10 @@ const SelectGroup = ({
     );
 
   const onSubmit = async (values: Group) => {
-    const { group } = values;
+    const { groupName } = values;
 
     setShowConfirmModal((prev) => !prev);
-    setIsSelectGroup(group);
+    setIsSelectGroup(groups.filter((group) => group.name === groupName)[0]);
     setShowSelectGroupModal((prev) => !prev);
   };
 
@@ -66,7 +68,7 @@ const SelectGroup = ({
 
           <Formik
             initialValues={{
-              group: `${groups[0]}`,
+              groupName: `${groups[0].name}`,
             }}
             onSubmit={onSubmit}
           >
@@ -84,14 +86,16 @@ const SelectGroup = ({
                 <div>
                   <Field
                     as="select"
-                    name="group"
+                    name="groupName"
                     className="bg-gray-50 border border-gray-300 text-gray-900 w-full text-sm rounded-lg focus:ring-2 focus:ring-teal-500 focus:ring-offset-1 focus:outline-none  p-2.5"
                   >
-                    {groups.map((group: string, idx: number) => (
-                      <option key={idx} value={group}>
-                        {group}
-                      </option>
-                    ))}
+                    {groups
+                      .map((group) => group.name)
+                      .map((groupName: string, idx: number) => (
+                        <option key={idx} value={groupName}>
+                          {groupName}
+                        </option>
+                      ))}
                   </Field>
                 </div>
                 <button

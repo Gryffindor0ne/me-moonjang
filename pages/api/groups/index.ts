@@ -9,11 +9,9 @@ const getData = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const db = client.db();
     const groupsCollection = db.collection('groups');
-    let groupsData = await groupsCollection
-      .find({ name: { $exists: 1 }, email: email }, { projection: { _id: 0 } })
+    let data = await groupsCollection
+      .find({ name: { $exists: 1 }, email: email })
       .toArray();
-
-    const data: string[] = groupsData.map(({ name }) => name);
 
     return res.status(201).json(data);
   } catch (error) {
