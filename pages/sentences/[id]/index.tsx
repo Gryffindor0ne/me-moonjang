@@ -18,12 +18,8 @@ export const getSentenceData = async (
   groupId: string | string[] | undefined,
   id: string | string[] | undefined
 ) => {
-  const { data } = await axios.post(
-    `${process.env.NEXT_PUBLIC_URL}/api/sentence`,
-    {
-      groupId,
-      id,
-    }
+  const { data } = await axios.get(
+    `${process.env.NEXT_PUBLIC_URL}/api/sentence/?group=${groupId}&sentenceId=${id}`
   );
   return data;
 };
