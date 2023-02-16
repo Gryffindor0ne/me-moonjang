@@ -21,10 +21,12 @@ import { queryKeys } from '@react-query/constants';
 export const getGroupsData = async (
   user: UserInfo
 ): Promise<GroupInfo[] | undefined> => {
-  const { data } = await axios.post(
+  const { data } = await axios.get(
     `${process.env.NEXT_PUBLIC_URL}/api/groups`,
     {
-      email: user?.email,
+      params: {
+        user: user?.email,
+      },
     }
   );
 

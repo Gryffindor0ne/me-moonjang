@@ -68,7 +68,7 @@ const SentenceInputPage = () => {
       ._id;
 
     try {
-      const res = await axios.post(`api/sentence/actions/create`, {
+      const res = await axios.post(`api/sentence`, {
         id: groupId ? `${groupId}` : `${selectGroupId}`,
         sentence,
         interpretation,

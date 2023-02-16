@@ -42,7 +42,7 @@ const GroupBoard = ({ groups }: { groups: GroupInfo[] | undefined }) => {
 
   const handleDeleteGroup = async (): Promise<void> => {
     try {
-      const deleteResponse = await axios.delete(`/api/groups/actions/delete`, {
+      const deleteResponse = await axios.delete(`/api/groups`, {
         data: { id: selectGroupId },
       });
 

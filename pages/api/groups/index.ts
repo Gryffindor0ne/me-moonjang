@@ -1,24 +1,89 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
+import { ObjectId } from 'mongodb';
 
 import dbConnect from '@lib/db';
 
-const getData = async (req: NextApiRequest, res: NextApiResponse) => {
-  const { email } = req.body;
+const groupHandler = async (req: NextApiRequest, res: NextApiResponse) => {
+  const { method } = req;
   const client = await dbConnect();
 
-  try {
-    const db = client.db();
-    const groupsCollection = db.collection('groups');
-    let data = await groupsCollection
-      .find({ name: { $exists: 1 }, email: email })
-      .toArray();
+  switch (method) {
+    case 'GET':
+      const { user } = req.query;
 
-    return res.status(201).json(data);
-  } catch (error) {
-    console.log(error);
-  } finally {
-    client.close();
+      try {
+        const db = client.db();
+        const groupsCollection = db.collection('groups');
+        let data = await groupsCollection
+          .find({ name: { $exists: 1 }, email: user })
+          .toArray();
+
+        return res.status(201).json(data);
+      } catch (error) {
+        console.log(error);
+      } finally {
+        client.close();
+      }
+      break;
+
+    case 'POST':
+      const { name, email } = req.body;
+
+      try {
+        const db = client.db();
+        const groupsCollection = db.collection('groups');
+        const checkExistingGroup = await groupsCollection
+          .find({
+            name,
+            email,
+          })
+          .toArray();
+
+        if (checkExistingGroup.length !== 0) {
+          res.status(422).json({ message: 'Group already exists' });
+          client.close();
+          return;
+        }
+
+        await groupsCollection.insertOne({
+          email,
+          name,
+          createdAt: Date.now(),
+          updatedAt: Date.now(),
+        });
+
+        res.status(201).json({ message: 'Group created' });
+      } catch (error) {
+        console.log(error);
+      } finally {
+        client.close();
+      }
+      break;
+
+    case 'DELETE':
+      const { id } = req.body;
+
+      try {
+        const db = client.db();
+        const groupsCollection = db.collection('groups');
+
+        await groupsCollection.deleteOne({
+          _id: new ObjectId(`${id}`),
+        });
+
+        res.status(200).json({ message: 'Group deleted' });
+      } catch (error) {
+        console.log(error);
+      } finally {
+        client.close();
+      }
+      break;
+
+    default:
+      res.setHeader('Allow', ['GET', 'POST', 'DELETE']);
+      res.status(405).end(`Method ${method} Not Allowed`);
+      break;
   }
 };
 
-export default getData;
+export default groupHandler;
