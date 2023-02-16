@@ -37,14 +37,16 @@ const Group = ({
         className="z-0 flex justify-between p-4 mx-2 my-4 text-teal-100 rounded-md cursor-pointer md:text-lg md:p-5 bg-gradient-to-r from-teal-500 via-teal-400 to-teal-200 text-md text-bold"
       >
         {group.name}
-        <span
-          id={group.name}
-          onClick={handleModalForGroupEdit}
-          className="z-0 flex items-center justify-center pr-2 text-xl cursor-pointer"
-        >
-          <HiOutlineDotsHorizontal />
-        </span>
-        {isOpenGroupEdit && (
+
+        {!isOpenGroupEdit ? (
+          <span
+            id={group.name}
+            onClick={handleModalForGroupEdit}
+            className="z-0 flex items-center justify-center pr-2 text-xl cursor-pointer"
+          >
+            <HiOutlineDotsHorizontal />
+          </span>
+        ) : (
           <GroupEditModal
             id={group._id}
             setIsSelectGroupId={setIsSelectGroupId}
