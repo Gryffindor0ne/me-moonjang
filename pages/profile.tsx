@@ -63,19 +63,14 @@ const ProfilePage = () => {
         });
 
         if (deleteUserResponse.status === 200) {
-          const deleteAllResponse = await axios.post(`api/groups/deleted/all`, {
-            email: user.email,
+          toast.success('회원탈퇴가 완료되었습니다.', {
+            position: 'top-center',
+            autoClose: 1500,
           });
-          if (deleteAllResponse.status === 200) {
-            toast.success('회원탈퇴가 완료되었습니다.', {
-              position: 'top-center',
-              autoClose: 1500,
-            });
-            setTimeout(
-              () => signOut({ callbackUrl: `${process.env.NEXT_PUBLIC_URL}` }),
-              2000
-            );
-          }
+          setTimeout(
+            () => signOut({ callbackUrl: `${process.env.NEXT_PUBLIC_URL}` }),
+            2000
+          );
         }
       }
     } catch (error) {

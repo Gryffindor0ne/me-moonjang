@@ -4,9 +4,9 @@ import dbConnect from '@lib/db';
 
 const deleteUser = async (req: NextApiRequest, res: NextApiResponse) => {
   const { email } = req.body;
+  const client = await dbConnect();
 
   try {
-    const client = await dbConnect();
     const db = client.db();
     const usersCollection = db.collection('users');
     const response = await usersCollection.deleteOne({
@@ -14,13 +14,19 @@ const deleteUser = async (req: NextApiRequest, res: NextApiResponse) => {
     });
 
     if (response.deletedCount === 0) {
-      client.close();
-      throw new Error('No user deleted');
+      throw new Error('User not deleted');
+    } else {
+      const groupsCollection = db.collection('groups');
+      await groupsCollection.deleteMany({
+        email,
+      });
     }
+
     res.status(200).json({ message: 'User deleted' });
-    client.close();
   } catch (error) {
     console.log(error);
+  } finally {
+    client.close();
   }
 };
 
