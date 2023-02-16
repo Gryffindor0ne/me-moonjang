@@ -82,7 +82,7 @@ const GroupNameModal = ({
     const { name } = value;
 
     try {
-      const res = await axios.post(`api/groups/changed-name`, {
+      const res = await axios.post(`api/groups/actions/change-name`, {
         name,
         groupId: selectGroupId,
       });
@@ -117,7 +117,7 @@ const GroupNameModal = ({
     const { name } = value;
 
     try {
-      const res = await axios.post(`api/groups/create`, {
+      const res = await axios.post(`api/groups/actions/create`, {
         name,
         email: user.email,
       });

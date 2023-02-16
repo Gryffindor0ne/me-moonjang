@@ -79,19 +79,22 @@ const SentenceByGroup = () => {
 
   const handleChangeGroup = async (): Promise<void> => {
     try {
-      const response = await axios.post(`api/sentence/changed-group`, {
+      const response = await axios.post(`api/sentence/actions/change-group`, {
         id: selectGroup?._id,
         sentences: selectSentence,
       });
 
       if (response.status === 201) {
         try {
-          const deleteResponse = await axios.delete(`/api/sentence/deleted`, {
-            data: {
-              groupId: groupData[0]._id,
-              sentences: selectSentenceIds,
-            },
-          });
+          const deleteResponse = await axios.delete(
+            `/api/sentence/actions/delete`,
+            {
+              data: {
+                groupId: groupData[0]._id,
+                sentences: selectSentenceIds,
+              },
+            }
+          );
           if (deleteResponse.status === 201) {
             toast.success('문장 이동완료', {
               position: 'top-center',
@@ -130,12 +133,15 @@ const SentenceByGroup = () => {
 
   const handleDeleteSentence = async (): Promise<void> => {
     try {
-      const deleteResponse = await axios.delete(`/api/sentence/deleted`, {
-        data: {
-          groupId: groupData[0]._id,
-          sentences: selectSentenceIds,
-        },
-      });
+      const deleteResponse = await axios.delete(
+        `/api/sentence/actions/delete`,
+        {
+          data: {
+            groupId: groupData[0]._id,
+            sentences: selectSentenceIds,
+          },
+        }
+      );
 
       if (deleteResponse.status === 201) {
         toast.success('문장 삭제완료', {
