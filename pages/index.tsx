@@ -10,13 +10,13 @@ import {
 import { useRouter } from 'next/router';
 import axios from 'axios';
 
-import styles from '@styles/styles.module.css';
 import Layout from '@components/layout/Layout';
 import Seo from '@components/layout/Seo';
 import GroupBoard from '@components/groups/GroupBoard';
 import { UserInfo } from '@pages/profile';
 import { getGroupData, GroupInfo } from '@pages/[groupId]';
 import { queryKeys } from '@react-query/constants';
+import Splash from '@components/layout/Splash';
 
 export const getGroupsData = async (
   user: UserInfo
@@ -76,25 +76,7 @@ const Home = () => {
     <div>
       <Seo title="Home" />
 
-      {session ? Main({ groups }) : Splash({ router })}
-    </div>
-  );
-};
-
-const Splash = ({ router }: { router: any }) => {
-  setTimeout(() => router.push('/auth/login'), 3000);
-
-  return (
-    <div className={styles.splash}>
-      <div className="flex items-center justify-center w-full h-full pb-40 bg-teal-500">
-        <div className="tracking-in-expand-fwd">
-          <div className="blur-out-expand">
-            <span className="text-3xl font-bold text-white md:text-4xl">
-              Me Moonjang
-            </span>
-          </div>
-        </div>
-      </div>
+      {session ? Main({ groups }) : <Splash router={router} />}
     </div>
   );
 };
