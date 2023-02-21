@@ -6,7 +6,7 @@ import { SentenceDetailInfo } from '@components/group/Sentence';
 import { GroupInfo } from '@pages/[groupId]';
 import { queryKeys } from '@react-query/constants';
 
-const useSentence = () => {
+const useSentenceState = () => {
   const SERVER_ERROR = 'There was an error contacting the server.';
   const queryClient = useQueryClient();
 
@@ -68,4 +68,4 @@ const useSentence = () => {
   return { changeLearningState };
 };
 
-export default useSentence;
+export default useSentenceState;

@@ -57,7 +57,9 @@ const GroupNameModal = ({
 
   const queryClient = useQueryClient();
 
-  const { groups } = useGroups();
+  const { groups, isLoading } = useGroups();
+
+  if (isLoading) return null;
 
   const handleCloseModal = () => {
     setIsOpen(false);

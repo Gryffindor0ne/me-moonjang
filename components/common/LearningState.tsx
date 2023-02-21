@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { MdOutlineFaceRetouchingNatural } from 'react-icons/md';
 
 import { SentenceDetailInfo } from '@components/group/Sentence';
-import useSentence from '@hooks/useSentence';
+import useSentenceState from '@hooks/useSentenceState';
 import { GroupInfo } from '@pages/[groupId]';
 
 const LearningState = ({
@@ -19,7 +19,7 @@ const LearningState = ({
     !data.learningState ?? false
   );
 
-  const { changeLearningState } = useSentence();
+  const { changeLearningState } = useSentenceState();
 
   const handleClickLearningState = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();

@@ -4,8 +4,9 @@ import { useSession } from 'next-auth/react';
 import { useEffect } from 'react';
 
 import { UserInfo } from '@pages/profile';
-import { getGroupData, GroupInfo } from '@pages/[groupId]';
+import { GroupInfo } from '@pages/[groupId]';
 import { queryKeys } from '@react-query/constants';
+import { getGroupData } from '@react-query/hooks/useGroup';
 
 export const getGroupsData = async (
   user: UserInfo
