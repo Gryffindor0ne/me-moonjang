@@ -48,7 +48,7 @@ const AuthPage: NextPage = () => {
     });
 
     if (result?.status === 200) {
-      router.replace('/');
+      router.push('/');
     } else {
       toast.warning('이메일 혹은 비밀번호를 확인해주세요!', {
         position: 'top-center',
@@ -58,16 +58,18 @@ const AuthPage: NextPage = () => {
     }
   };
 
-  const handleKakaoLogin = () => {
+  const handleKakaoLogin = async () => {
     setIsLoading((prev) => !prev);
-    signIn('kakao', {
+    await signIn('kakao', {
       callbackUrl: `${process.env.NEXT_PUBLIC_URL}`,
     });
   };
 
   const handleGoogleLogin = async () => {
     setIsLoading((prev) => !prev);
-    signIn('google', { callbackUrl: `${process.env.NEXT_PUBLIC_URL}` });
+    await signIn('google', {
+      callbackUrl: `${process.env.NEXT_PUBLIC_URL}`,
+    });
   };
 
   const handleGuestLogin = async () => {
@@ -79,7 +81,7 @@ const AuthPage: NextPage = () => {
     });
 
     if (result?.status === 200) {
-      router.replace('/');
+      router.push('/');
     }
   };
 

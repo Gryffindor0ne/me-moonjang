@@ -1,7 +1,14 @@
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
+
 import styles from '@styles/styles.module.css';
 
-const Splash = ({ router }: { router: any }) => {
-  setTimeout(() => router.push('/auth/login'), 3000);
+const Splash = () => {
+  const router = useRouter();
+
+  useEffect(() => {
+    setTimeout(() => router.push('/auth/login'), 3000);
+  }, [router]);
 
   return (
     <div className={styles.splash}>
