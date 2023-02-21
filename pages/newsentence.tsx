@@ -1,6 +1,5 @@
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
-import { useQuery } from '@tanstack/react-query';
 import * as yup from 'yup';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import axios from 'axios';
@@ -13,9 +12,8 @@ import Layout from '@components/layout/Layout';
 import Seo from '@components/layout/Seo';
 import styles from '@styles/Form.module.css';
 import { UserInfo } from '@pages/profile';
-import { getGroupsData } from '@pages/index';
 import { GroupInfo } from '@pages/[groupId]';
-import { queryKeys } from '@react-query/constants';
+import { useGroups } from '@react-query/hooks/useGroups';
 
 export type SentenceInfo = {
   groupName: string;
@@ -40,25 +38,8 @@ export const sentenceSchema = yup.object().shape({
 const SentenceInputPage = () => {
   const router = useRouter();
   const { groupId } = router.query;
-  const { data: session } = useSession();
-  const user = session?.user as UserInfo;
 
-  const fallback: GroupInfo[] = [];
-  const {
-    data: groups = fallback,
-    isLoading,
-    isError,
-    error,
-  } = useQuery([queryKeys.groupsData, user], () => getGroupsData(user));
-
-  if (isLoading) return;
-  if (isError)
-    return (
-      <>
-        <h3>Oops, something went wrong</h3>
-        <p>{error?.toString()}</p>
-      </>
-    );
+  const { groups } = useGroups();
 
   const groupNames = groups.map((group) => group.name);
 

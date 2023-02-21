@@ -1,6 +1,6 @@
 import React, { Dispatch, SetStateAction } from 'react';
 import { useSession } from 'next-auth/react';
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQueryClient } from '@tanstack/react-query';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import * as yup from 'yup';
 import axios from 'axios';
@@ -9,8 +9,8 @@ import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { UserInfo } from '@pages/profile';
-import { getGroupsData } from '@pages/index';
 import { queryKeys } from '@react-query/constants';
+import { useGroups } from '@react-query/hooks/useGroups';
 
 export const userSchema = yup.object().shape({
   name: yup
@@ -57,20 +57,7 @@ const GroupNameModal = ({
 
   const queryClient = useQueryClient();
 
-  const {
-    data: groups,
-    isLoading,
-    isError,
-    error,
-  } = useQuery([queryKeys.groupsData, user], () => getGroupsData(user));
-  if (isLoading) return;
-  if (isError)
-    return (
-      <>
-        <h3>Oops, something went wrong</h3>
-        <p>{error?.toString()}</p>
-      </>
-    );
+  const { groups } = useGroups();
 
   const handleCloseModal = () => {
     setIsOpen(false);

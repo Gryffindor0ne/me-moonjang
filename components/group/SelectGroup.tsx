@@ -1,13 +1,9 @@
 import { Dispatch, SetStateAction } from 'react';
-import { useQuery } from '@tanstack/react-query';
 import { Field, Form, Formik } from 'formik';
-import { useSession } from 'next-auth/react';
 import { HiOutlineX } from 'react-icons/hi';
 
-import { getGroupsData } from '@pages/index';
-import { UserInfo } from '@pages/profile';
 import { GroupInfo } from '@pages/[groupId]';
-import { queryKeys } from '@react-query/constants';
+import { useGroups } from '@react-query/hooks/useGroups';
 
 type Group = {
   groupName: string;
@@ -22,27 +18,7 @@ const SelectGroup = ({
   setIsSelectGroup: Dispatch<SetStateAction<GroupInfo | undefined>>;
   setShowSelectGroupModal: Dispatch<SetStateAction<boolean>>;
 }) => {
-  const { data: session } = useSession();
-
-  const fallback: GroupInfo[] = [];
-
-  const {
-    data: groups = fallback,
-    isLoading,
-    isError,
-    error,
-  } = useQuery([queryKeys.groupsData, session?.user], () =>
-    getGroupsData(session?.user as UserInfo)
-  );
-
-  if (isLoading) return <h3>Loading...</h3>;
-  if (isError)
-    return (
-      <>
-        <h3>Oops, something went wrong</h3>
-        <p>{error?.toString()}</p>
-      </>
-    );
+  const { groups } = useGroups();
 
   const onSubmit = async (values: Group) => {
     const { groupName } = values;
