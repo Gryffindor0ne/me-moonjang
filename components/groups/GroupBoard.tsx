@@ -88,7 +88,6 @@ const GroupBoard = ({ groups }: { groups: GroupInfo[] | undefined }) => {
         </div>
       </div>
       {isOpen && (
-        //@ts-ignore
         <GroupNameModal
           selectBtn={selectBtn}
           setIsSelectBtn={setIsSelectBtn}

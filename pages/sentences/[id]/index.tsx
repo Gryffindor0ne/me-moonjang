@@ -1,9 +1,8 @@
 import { useState } from 'react';
 import { GetServerSideProps } from 'next';
 import { getSession } from 'next-auth/react';
-import axios from 'axios';
 import { useRouter } from 'next/router';
-import { dehydrate, QueryClient, useQuery } from '@tanstack/react-query';
+import { dehydrate, QueryClient } from '@tanstack/react-query';
 import { MdOutlineArrowBackIos } from 'react-icons/md';
 import { HiOutlineBell } from 'react-icons/hi';
 import { ToastContainer } from 'react-toastify';
@@ -13,40 +12,16 @@ import Seo from '@components/layout/Seo';
 import LearningState from '@components/common/LearningState';
 import { SentenceDetailInfo } from '@components/group/Sentence';
 import { queryKeys } from '@react-query/constants';
-
-export const getSentenceData = async (
-  groupId: string | string[] | undefined,
-  id: string | string[] | undefined
-) => {
-  const { data } = await axios.get(
-    `${process.env.NEXT_PUBLIC_URL}/api/sentence/?group=${groupId}&sentenceId=${id}`
-  );
-  return data;
-};
+import { getSentenceData, useSentence } from '@react-query/hooks/useSentence';
 
 const Sentence = () => {
   const [open, setOpen] = useState(true);
 
   const router = useRouter();
-  const { groupId, id } = router.query;
 
-  const {
-    data: sentenceData,
-    isError,
-    isLoading,
-    error,
-  } = useQuery([queryKeys.sentenceDetail, groupId, id], () =>
-    getSentenceData(groupId, id)
-  );
+  const { sentenceData, isLoading } = useSentence();
 
   if (isLoading) return;
-  if (isError)
-    return (
-      <>
-        <h3>Oops, something went wrong</h3>
-        <p>{error?.toString()}</p>
-      </>
-    );
 
   const sentenceDetail: SentenceDetailInfo = sentenceData[0].sentences[0];
 

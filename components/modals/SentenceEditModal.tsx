@@ -1,12 +1,9 @@
-import { useQuery } from '@tanstack/react-query';
-import { useRouter } from 'next/router';
 import { Dispatch, SetStateAction } from 'react';
 import { HiOutlineRefresh, HiOutlineTrash, HiOutlineX } from 'react-icons/hi';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import { getGroupData } from '@pages/[groupId]';
-import { queryKeys } from '@react-query/constants';
+import { useGroup } from '@react-query/hooks/useGroup';
 
 const SentenceEditModal = ({
   setIsOpen,
@@ -15,26 +12,9 @@ const SentenceEditModal = ({
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   setIsOption: Dispatch<SetStateAction<string>>;
 }) => {
-  const router = useRouter();
-  const { groupId } = router.query;
-
-  const {
-    data: groupData,
-    isLoading,
-    isError,
-    error,
-  } = useQuery([queryKeys.groupDetailData, groupId], () =>
-    getGroupData(groupId as string)
-  );
+  const { groupData, isLoading } = useGroup();
 
   if (isLoading) return null;
-  if (isError)
-    return (
-      <>
-        <h3>Oops, something went wrong</h3>
-        <p>{error?.toString()}</p>
-      </>
-    );
 
   const handleClickModal = (event: React.MouseEvent<HTMLElement>) => {
     setIsOpen((prev) => !prev);

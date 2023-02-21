@@ -1,20 +1,14 @@
 import { useState } from 'react';
 import { GetServerSideProps } from 'next';
 import { getSession } from 'next-auth/react';
-import axios from 'axios';
 import { useRouter } from 'next/router';
-import {
-  dehydrate,
-  QueryClient,
-  useQuery,
-  useQueryClient,
-} from '@tanstack/react-query';
+import axios from 'axios';
+import { dehydrate, QueryClient, useQueryClient } from '@tanstack/react-query';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
 
 import { descendingSort } from '@utils/dayjs';
-
 import Sentence, { SentenceDetailInfo } from '@components/group/Sentence';
 import Seo from '@components/layout/Seo';
 import GroupNavbar from '@components/group/GroupNavbar';
@@ -24,6 +18,7 @@ import SelectSentence from '@components/group/SelectSentence';
 import GroupHeader from '@components/group/GroupHeader';
 import SelectGroup from '@components/group/SelectGroup';
 import { queryKeys } from '@react-query/constants';
+import { getGroupData, useGroup } from '@react-query/hooks/useGroup';
 
 export type GroupInfo = {
   _id: string;
@@ -32,13 +27,6 @@ export type GroupInfo = {
   createdAt: number;
   updatedAt: number;
   sentences: SentenceDetailInfo[];
-};
-
-export const getGroupData = async (groupId: string | undefined) => {
-  const { data } = await axios.get(
-    `${process.env.NEXT_PUBLIC_URL}/api/groups/detail/${groupId}`
-  );
-  return data;
 };
 
 const SentenceByGroup = () => {
@@ -56,26 +44,10 @@ const SentenceByGroup = () => {
   const [option, setIsOption] = useState('');
 
   const router = useRouter();
-  const { groupId } = router.query;
-
   const queryClient = useQueryClient();
-  const {
-    data: groupData,
-    isLoading,
-    isError,
-    error,
-  } = useQuery([queryKeys.groupDetailData, groupId], () =>
-    getGroupData(groupId as string)
-  );
+  const { groupData, isLoading } = useGroup();
 
   if (isLoading) return;
-  if (isError)
-    return (
-      <>
-        <h3>Oops, something went wrong</h3>
-        <p>{error?.toString()}</p>
-      </>
-    );
 
   const handleChangeGroup = async (): Promise<void> => {
     try {
