@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 import { UserInfo } from '@pages/profile';
 import { GroupInfo } from '@pages/[groupId]';
 import { queryKeys } from '@react-query/constants';
-import { getGroupData } from '@react-query/hooks/useGroup';
+import { getGroupData } from '@react-query/hooks/groups/useGroup';
 
 export const getGroupsData = async (
   user: UserInfo
