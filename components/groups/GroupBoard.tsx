@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { useQueryClient } from '@tanstack/react-query';
 import {
@@ -22,23 +22,12 @@ const GroupBoard = ({ groups }: { groups: GroupInfo[] | undefined }) => {
 
   const [isOpen, setIsOpen] = useState(false);
   const [selectBtn, setIsSelectBtn] = useState('');
-  const [isCreated, setIsCreated] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [selectGroupId, setIsSelectGroupId] = useState('');
 
   const { data: session } = useSession();
   const user = session?.user as UserInfo;
   const queryClient = useQueryClient();
-
-  useEffect(() => {
-    if (isCreated) {
-      toast.success('새 문장집 등록완료', {
-        position: 'top-center',
-        autoClose: 900,
-      });
-      setIsCreated((prev) => !prev);
-    }
-  }, [isCreated]);
 
   const handleDeleteGroup = async (): Promise<void> => {
     try {
@@ -53,6 +42,7 @@ const GroupBoard = ({ groups }: { groups: GroupInfo[] | undefined }) => {
         });
         queryClient.invalidateQueries({ queryKey: [queryKeys.groupsData] });
         setShowConfirmModal((prev) => !prev);
+        setIsSelectGroupId('');
       }
     } catch (errorResponse) {
       const message =
@@ -93,7 +83,6 @@ const GroupBoard = ({ groups }: { groups: GroupInfo[] | undefined }) => {
           setIsSelectBtn={setIsSelectBtn}
           setIsOpen={setIsOpen}
           selectGroupId={selectGroupId}
-          setIsCreated={setIsCreated}
           setIsSelectGroupId={setIsSelectGroupId}
         />
       )}

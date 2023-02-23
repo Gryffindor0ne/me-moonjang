@@ -12,7 +12,10 @@ import Seo from '@components/layout/Seo';
 import LearningState from '@components/common/LearningState';
 import { SentenceDetailInfo } from '@components/group/Sentence';
 import { queryKeys } from '@react-query/constants';
-import { getSentenceData, useSentence } from '@react-query/hooks/useSentence';
+import {
+  getSentenceData,
+  useSentence,
+} from '@react-query/hooks/sentence/useSentence';
 
 const Sentence = () => {
   const [open, setOpen] = useState(true);

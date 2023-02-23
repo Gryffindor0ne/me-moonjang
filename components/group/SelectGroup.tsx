@@ -3,7 +3,7 @@ import { Field, Form, Formik } from 'formik';
 import { HiOutlineX } from 'react-icons/hi';
 
 import { GroupInfo } from '@pages/[groupId]';
-import { useGroups } from '@react-query/hooks/useGroups';
+import { useGroups } from '@react-query/hooks/groups/useGroups';
 
 type Group = {
   groupName: string;

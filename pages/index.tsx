@@ -7,7 +7,7 @@ import Seo from '@components/layout/Seo';
 import { UserInfo } from '@pages/profile';
 import { queryKeys } from '@react-query/constants';
 import Splash from '@components/layout/Splash';
-import { getGroupsData, useGroups } from '@react-query/hooks/useGroups';
+import { getGroupsData, useGroups } from '@react-query/hooks/groups/useGroups';
 import Main from '@components/layout/Main';
 
 const Home = () => {

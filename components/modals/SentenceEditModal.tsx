@@ -3,7 +3,7 @@ import { HiOutlineRefresh, HiOutlineTrash, HiOutlineX } from 'react-icons/hi';
 import { toast, ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-import { useGroup } from '@react-query/hooks/useGroup';
+import { useGroup } from '@react-query/hooks/groups/useGroup';
 
 const SentenceEditModal = ({
   setIsOpen,

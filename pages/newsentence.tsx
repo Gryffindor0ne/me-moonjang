@@ -1,4 +1,3 @@
-import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import * as yup from 'yup';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
@@ -11,9 +10,8 @@ import { HiOutlineExclamationCircle } from 'react-icons/hi';
 import Layout from '@components/layout/Layout';
 import Seo from '@components/layout/Seo';
 import styles from '@styles/Form.module.css';
-import { UserInfo } from '@pages/profile';
 import { GroupInfo } from '@pages/[groupId]';
-import { useGroups } from '@react-query/hooks/useGroups';
+import { useGroups } from '@react-query/hooks/groups/useGroups';
 
 export type SentenceInfo = {
   groupName: string;

@@ -1,16 +1,16 @@
 import React, { Dispatch, SetStateAction } from 'react';
 import { useSession } from 'next-auth/react';
-import { useQueryClient } from '@tanstack/react-query';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import * as yup from 'yup';
-import axios from 'axios';
 import { HiOutlineX } from 'react-icons/hi';
-import { toast, ToastContainer } from 'react-toastify';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import { UserInfo } from '@pages/profile';
-import { queryKeys } from '@react-query/constants';
-import { useGroups } from '@react-query/hooks/useGroups';
+
+import { useGroups } from '@react-query/hooks/groups/useGroups';
+import { useChangeGroupName } from '@react-query/hooks/groups/useChangeGroupName';
+import { useNewGroup } from '@react-query/hooks/groups/useNewGroup';
 
 export const userSchema = yup.object().shape({
   name: yup
@@ -29,14 +29,13 @@ const GroupNameModal = ({
   selectGroupId,
   setIsOpen,
   setIsSelectBtn,
-  setIsCreated,
   setIsSelectGroupId,
 }: {
   selectBtn?: string;
   selectGroupId?: string;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   setIsSelectBtn: Dispatch<SetStateAction<string>>;
-  setIsCreated: Dispatch<SetStateAction<boolean>>;
+
   setIsSelectGroupId: Dispatch<SetStateAction<string>>;
 }) => {
   const messageSet = [
@@ -55,8 +54,8 @@ const GroupNameModal = ({
   const { data: session } = useSession();
   const user = session?.user as UserInfo;
 
-  const queryClient = useQueryClient();
-
+  const changeName = useChangeGroupName();
+  const newGroupRegister = useNewGroup();
   const { groups, isLoading } = useGroups();
 
   if (isLoading) return null;
@@ -67,69 +66,22 @@ const GroupNameModal = ({
     setIsSelectGroupId('');
   };
 
-  const changeGroupName = async (value: GroupProps) => {
+  const changeGroupName = (value: GroupProps) => {
     const { name } = value;
 
-    try {
-      const res = await axios.post(`api/groups/actions/change-name`, {
-        name,
-        groupId: selectGroupId,
-      });
+    changeName({ name, groupId: selectGroupId });
 
-      if (res.status === 201) {
-        toast.success('문장집 변경완료', {
-          position: 'top-center',
-          autoClose: 500,
-        });
-        setIsOpen((prev) => !prev);
-        setIsSelectBtn('');
-        setIsSelectGroupId('');
-        queryClient.invalidateQueries({ queryKey: [queryKeys.groupsData] });
-      }
-    } catch (error) {
-      let message;
-      if (axios.isAxiosError(error) && error.response) {
-        message = error.response.data.message;
-        console.error(message);
-        if (error.response.status === 422) {
-          toast.warning('동일한 문장집 이름이 존재합니다.', {
-            position: 'top-center',
-            autoClose: 1000,
-          });
-        }
-      } else message = String(error);
-      console.error(message);
-    }
+    setIsOpen((prev) => !prev);
+    setIsSelectBtn('');
+    setIsSelectGroupId('');
   };
 
-  const onSubmit = async (value: GroupProps) => {
+  const newGroup = async (value: GroupProps) => {
     const { name } = value;
 
-    try {
-      const res = await axios.post(`api/groups`, {
-        name,
-        email: user.email,
-      });
+    newGroupRegister({ name, email: user.email });
 
-      if (res.status === 201) {
-        setIsCreated((prev) => !prev);
-        setIsOpen((prev) => !prev);
-        queryClient.invalidateQueries({ queryKey: [queryKeys.groupsData] });
-      }
-    } catch (error) {
-      let message;
-      if (axios.isAxiosError(error) && error.response) {
-        message = error.response.data.message;
-        console.error(message);
-        if (error.response.status === 422) {
-          toast.warning('동일한 문장집 이름이 존재합니다.', {
-            position: 'top-center',
-            autoClose: 1000,
-          });
-        }
-      } else message = String(error);
-      console.error(message);
-    }
+    setIsOpen((prev) => !prev);
   };
 
   return (
@@ -164,7 +116,7 @@ const GroupNameModal = ({
                     : '',
                 }}
                 onSubmit={
-                  selectBtn === 'updateGroup' ? changeGroupName : onSubmit
+                  selectBtn === 'updateGroup' ? changeGroupName : newGroup
                 }
                 validationSchema={userSchema}
               >

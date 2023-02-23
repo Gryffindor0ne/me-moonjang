@@ -18,7 +18,7 @@ import SelectSentence from '@components/group/SelectSentence';
 import GroupHeader from '@components/group/GroupHeader';
 import SelectGroup from '@components/group/SelectGroup';
 import { queryKeys } from '@react-query/constants';
-import { getGroupData, useGroup } from '@react-query/hooks/useGroup';
+import { getGroupData, useGroup } from '@react-query/hooks/groups/useGroup';
 
 export type GroupInfo = {
   _id: string;
@@ -51,7 +51,7 @@ const SentenceByGroup = () => {
 
   const handleChangeGroup = async (): Promise<void> => {
     try {
-      const response = await axios.post(`api/sentence/actions/change-group`, {
+      const response = await axios.patch(`api/sentence/actions/change-group`, {
         id: selectGroup?._id,
         sentences: selectSentence,
       });
