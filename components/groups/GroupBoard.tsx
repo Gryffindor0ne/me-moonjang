@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
 import { useSession } from 'next-auth/react';
-import { useQueryClient } from '@tanstack/react-query';
 import {
   HiOutlineCollection,
   HiOutlineExclamationCircle,
 } from 'react-icons/hi';
-import axios from 'axios';
-import { toast, ToastContainer } from 'react-toastify';
+
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
 import GroupsNavbar from '@components/groups/components/GroupsNavbar';
@@ -15,11 +14,9 @@ import { UserInfo } from '@pages/profile';
 import Group from '@components/groups/components/Group';
 import ConfirmModal from '@components/modals/ConfirmModal';
 import { GroupInfo } from '@pages/[groupId]';
-import { queryKeys } from '@react-query/constants';
+import { useRemoveGroup } from '@react-query/hooks/groups/useRemoveGroup';
 
 const GroupBoard = ({ groups }: { groups: GroupInfo[] | undefined }) => {
-  const SERVER_ERROR = 'There was an error contacting the server.';
-
   const [isOpen, setIsOpen] = useState(false);
   const [selectBtn, setIsSelectBtn] = useState('');
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -27,32 +24,13 @@ const GroupBoard = ({ groups }: { groups: GroupInfo[] | undefined }) => {
 
   const { data: session } = useSession();
   const user = session?.user as UserInfo;
-  const queryClient = useQueryClient();
 
-  const handleDeleteGroup = async (): Promise<void> => {
-    try {
-      const deleteResponse = await axios.delete(`/api/groups`, {
-        data: { id: selectGroupId },
-      });
+  const removeGroup = useRemoveGroup();
 
-      if (deleteResponse.status === 200) {
-        toast.success('문장집 삭제완료', {
-          position: 'top-center',
-          autoClose: 500,
-        });
-        queryClient.invalidateQueries({ queryKey: [queryKeys.groupsData] });
-        setShowConfirmModal((prev) => !prev);
-        setIsSelectGroupId('');
-      }
-    } catch (errorResponse) {
-      const message =
-        axios.isAxiosError(errorResponse) &&
-        errorResponse?.response?.data?.message
-          ? errorResponse?.response?.data?.message
-          : SERVER_ERROR;
-
-      console.error(message);
-    }
+  const handleDeleteGroup = () => {
+    setShowConfirmModal((prev) => !prev);
+    removeGroup({ id: selectGroupId });
+    setIsSelectGroupId('');
   };
 
   return (
