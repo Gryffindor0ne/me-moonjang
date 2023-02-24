@@ -19,7 +19,7 @@ const ConfirmModal = ({
   btn: string;
   setShowModal: Dispatch<SetStateAction<boolean>>;
   handler?: () => Promise<void>;
-  deleteHandler: () => Promise<void>;
+  deleteHandler: () => void;
   selectSentenceIds?: string[];
   setIsSelectSentenceIds?: Dispatch<SetStateAction<string[] | []>>;
 }) => {

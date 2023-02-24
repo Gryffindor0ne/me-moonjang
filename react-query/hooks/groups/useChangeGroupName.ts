@@ -34,10 +34,10 @@ export const useChangeGroupName = (): UseMutateFunction<
       onSuccess: () => {
         toast.success('문장집 변경완료', {
           position: 'top-center',
-          autoClose: 500,
+          autoClose: 300,
         });
 
-        queryClient.invalidateQueries({ queryKey: [queryKeys.groupsData] });
+        queryClient.invalidateQueries([queryKeys.groupsData]);
       },
       onError: (error) => {
         let message;

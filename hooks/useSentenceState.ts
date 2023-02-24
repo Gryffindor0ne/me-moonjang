@@ -40,11 +40,9 @@ const useSentenceState = () => {
         }
       }
 
-      queryClient.invalidateQueries({
-        queryKey: [
-          sentenceDetail ? queryKeys.sentenceDetail : queryKeys.groupDetailData,
-        ],
-      });
+      queryClient.invalidateQueries([
+        sentenceDetail ? queryKeys.sentenceDetail : queryKeys.groupDetailData,
+      ]);
     } catch (errorResponse) {
       const message =
         axios.isAxiosError(errorResponse) &&

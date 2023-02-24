@@ -31,11 +31,11 @@ export const useNewGroup = (): UseMutateFunction<
     (newGroup: NewGroup) => createNewGroup(newGroup),
     {
       onSuccess: () => {
+        queryClient.invalidateQueries([queryKeys.groupsData]);
         toast.success('새 문장집 등록완료', {
           position: 'top-center',
-          autoClose: 500,
+          autoClose: 300,
         });
-        queryClient.invalidateQueries({ queryKey: [queryKeys.groupsData] });
       },
       onError: (error) => {
         let message;
