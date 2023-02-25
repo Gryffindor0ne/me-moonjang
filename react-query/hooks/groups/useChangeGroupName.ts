@@ -32,7 +32,7 @@ export const useChangeGroupName = (): UseMutateFunction<
     (newGroupNameData: NewGroupName) => setGroupName(newGroupNameData),
     {
       onSuccess: () => {
-        toast.success('문장집 변경완료', {
+        toast.success('문장집의 이름이 수정되었습니다.', {
           position: 'top-center',
           autoClose: 300,
         });

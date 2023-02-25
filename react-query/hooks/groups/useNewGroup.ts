@@ -32,7 +32,7 @@ export const useNewGroup = (): UseMutateFunction<
     {
       onSuccess: () => {
         queryClient.invalidateQueries([queryKeys.groupsData]);
-        toast.success('새 문장집 등록완료', {
+        toast.success('새 문장집이 생성되었습니다.', {
           position: 'top-center',
           autoClose: 300,
         });

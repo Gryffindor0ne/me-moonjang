@@ -87,13 +87,13 @@ const sentenceHandler = async (req: NextApiRequest, res: NextApiResponse) => {
       break;
 
     case 'DELETE':
-      const { groupId, sentences } = req.body;
-      const sentenceIds = sentences.map((id: string) => new ObjectId(id));
+      const { groupId, sentenceIds } = req.body;
+      const ids = sentenceIds.map((id: string) => new ObjectId(id));
 
       try {
         const db = client.db();
         const groupsCollection = db.collection('groups');
-        const bulkOps = sentenceIds.map((id: any) => {
+        const bulkOps = ids.map((id: any) => {
           return {
             updateOne: {
               filter: {
