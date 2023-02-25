@@ -8,9 +8,11 @@ import { useGroup } from '@react-query/hooks/groups/useGroup';
 const SentenceEditModal = ({
   setIsOpen,
   setIsOption,
+  setRemoveState,
 }: {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   setIsOption: Dispatch<SetStateAction<string>>;
+  setRemoveState: Dispatch<SetStateAction<boolean>>;
 }) => {
   const { groupData, isLoading } = useGroup();
 
@@ -27,8 +29,14 @@ const SentenceEditModal = ({
     }
     const purpose = (event.target as any).id;
 
-    if (purpose === 'changeGroup') setIsOption('changeGroup');
-    if (purpose === 'deleteSentence') setIsOption('deleteSentence');
+    if (purpose === 'changeGroup') {
+      setIsOption('changeGroup');
+      setRemoveState(false);
+    }
+    if (purpose === 'deleteSentence') {
+      setIsOption('deleteSentence');
+      setRemoveState(true);
+    }
   };
 
   return (

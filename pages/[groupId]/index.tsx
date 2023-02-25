@@ -3,8 +3,8 @@ import { GetServerSideProps } from 'next';
 import { getSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
-import { dehydrate, QueryClient, useQueryClient } from '@tanstack/react-query';
-import { toast, ToastContainer } from 'react-toastify';
+import { dehydrate, QueryClient } from '@tanstack/react-query';
+import { ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
 
@@ -19,6 +19,7 @@ import GroupHeader from '@components/group/GroupHeader';
 import SelectGroup from '@components/group/SelectGroup';
 import { queryKeys } from '@react-query/constants';
 import { getGroupData, useGroup } from '@react-query/hooks/groups/useGroup';
+import { useRemoveSentence } from '@react-query/hooks/sentence/useRemoveSentence';
 
 export type GroupInfo = {
   _id: string;
@@ -44,7 +45,7 @@ const SentenceByGroup = () => {
   const [option, setIsOption] = useState('');
 
   const router = useRouter();
-  const queryClient = useQueryClient();
+  const { removeSentenceMutate, setRemoveState } = useRemoveSentence();
   const { groupData, isLoading } = useGroup();
 
   if (isLoading) return;
@@ -57,67 +58,13 @@ const SentenceByGroup = () => {
       });
 
       if (response.status === 201) {
-        try {
-          const deleteResponse = await axios.delete(`/api/sentence`, {
-            data: {
-              groupId: groupData[0]._id,
-              sentences: selectSentenceIds,
-            },
-          });
-          if (deleteResponse.status === 201) {
-            toast.success('문장 이동완료', {
-              position: 'top-center',
-              autoClose: 500,
-            });
-            queryClient.invalidateQueries({
-              queryKey: [queryKeys.groupDetailData],
-            });
-            setShowConfirmModal((prev) => !prev);
-            setIsOption('');
-            setIsOpen(false);
-            setTimeout(() => {
-              router.push(`/${groupData[0]._id}`);
-            }, 100);
-          }
-        } catch (errorResponse) {
-          const message =
-            axios.isAxiosError(errorResponse) &&
-            errorResponse?.response?.data?.message
-              ? errorResponse?.response?.data?.message
-              : SERVER_ERROR;
-
-          console.error(message);
-        }
-      }
-    } catch (errorResponse) {
-      const message =
-        axios.isAxiosError(errorResponse) &&
-        errorResponse?.response?.data?.message
-          ? errorResponse?.response?.data?.message
-          : SERVER_ERROR;
-
-      console.error(message);
-    }
-  };
-
-  const handleDeleteSentence = async (): Promise<void> => {
-    try {
-      const deleteResponse = await axios.delete(`/api/sentence`, {
-        data: {
-          groupId: groupData[0]._id,
-          sentences: selectSentenceIds,
-        },
-      });
-
-      if (deleteResponse.status === 201) {
-        toast.success('문장 삭제완료', {
-          position: 'top-center',
-          autoClose: 500,
-        });
-        queryClient.invalidateQueries({
-          queryKey: [queryKeys.groupDetailData],
-        });
         setShowConfirmModal((prev) => !prev);
+
+        removeSentenceMutate({
+          groupId: groupData[0]._id,
+          sentenceIds: selectSentenceIds,
+        });
+
         setIsOption('');
         setIsOpen(false);
         setTimeout(() => {
@@ -133,6 +80,21 @@ const SentenceByGroup = () => {
 
       console.error(message);
     }
+  };
+
+  const handleDeleteSentence = async () => {
+    setShowConfirmModal((prev) => !prev);
+
+    removeSentenceMutate({
+      groupId: groupData[0]._id,
+      sentenceIds: selectSentenceIds,
+    });
+
+    setIsOption('');
+    setIsOpen(false);
+    setTimeout(() => {
+      router.push(`/${groupData[0]._id}`);
+    }, 100);
   };
 
   return (
@@ -152,7 +114,11 @@ const SentenceByGroup = () => {
       <section className="flex flex-col w-full gap-3 p-4 pb-32 mx-auto">
         <GroupNavbar name={groupData[0].name} setIsOpen={setIsOpen} />
         {isOpen && (
-          <SentenceEditModal setIsOpen={setIsOpen} setIsOption={setIsOption} />
+          <SentenceEditModal
+            setIsOpen={setIsOpen}
+            setIsOption={setIsOption}
+            setRemoveState={setRemoveState}
+          />
         )}
 
         {showSelectGroupModal && (

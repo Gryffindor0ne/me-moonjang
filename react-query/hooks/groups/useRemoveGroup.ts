@@ -32,7 +32,7 @@ export const useRemoveGroup = (): UseMutateFunction<
     {
       onSuccess: () => {
         queryClient.invalidateQueries([queryKeys.groupsData]);
-        toast.success('문장집 삭제완료', {
+        toast.success('문장집을 삭제하였습니다.', {
           position: 'top-center',
           autoClose: 300,
           delay: 100,
