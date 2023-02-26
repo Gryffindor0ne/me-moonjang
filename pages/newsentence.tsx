@@ -12,6 +12,7 @@ import Seo from '@components/layout/Seo';
 import styles from '@styles/Form.module.css';
 import { GroupInfo } from '@pages/[groupId]';
 import { useGroups } from '@react-query/hooks/groups/useGroups';
+import { useNewSentence } from '@react-query/hooks/sentence/useNewSentence';
 
 export type SentenceInfo = {
   groupName: string;
@@ -38,47 +39,26 @@ const SentenceInputPage = () => {
   const { groupId } = router.query;
 
   const { groups } = useGroups();
+  const newSentence = useNewSentence();
 
   const groupNames = groups.map((group) => group.name);
 
-  const onSubmit = async (values: SentenceInfo): Promise<void> => {
+  const onSubmit = async (values: SentenceInfo) => {
     const { groupName, sentence, interpretation, explanation } = values;
     const selectGroupId = groups.filter((group) => group.name === groupName)[0]
       ._id;
 
-    try {
-      const res = await axios.post(`api/sentence`, {
-        id: groupId ? `${groupId}` : `${selectGroupId}`,
-        sentence,
-        interpretation,
-        explanation,
-      });
+    newSentence({
+      id: groupId ? `${groupId}` : `${selectGroupId}`,
+      sentence,
+      interpretation,
+      explanation,
+    });
 
-      if (res.status === 201) {
-        toast.success('문장 등록완료', {
-          position: 'top-center',
-          autoClose: 1000,
-        });
-
-        setTimeout(
-          () => router.push(groupId ? `/${groupId}` : `${selectGroupId}`),
-          1600
-        );
-      }
-    } catch (error) {
-      let message;
-      if (axios.isAxiosError(error) && error.response) {
-        message = error.response.data.message;
-        console.error(message);
-        if (error.response.status === 422) {
-          toast.warning('동일한 문장이 존재합니다.', {
-            position: 'top-center',
-            autoClose: 1000,
-          });
-        }
-      } else message = String(error);
-      console.error(message);
-    }
+    setTimeout(
+      () => router.push(groupId ? `/${groupId}` : `${selectGroupId}`),
+      1600
+    );
   };
 
   return (
