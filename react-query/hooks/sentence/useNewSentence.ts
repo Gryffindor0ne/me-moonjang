@@ -8,33 +8,39 @@ import { toast } from 'react-toastify';
 
 import { queryKeys } from '@react-query/constants';
 
-type NewGroup = {
-  name: string;
-  email: string;
+type NewSentence = {
+  id: string;
+  sentence: string;
+  interpretation: string;
+  explanation: string;
 };
-const createNewGroup = async (newGroup: NewGroup) => {
-  await axios.post(`api/groups`, {
-    name: newGroup.name,
-    email: newGroup.email,
+
+const createNewSentence = async (newSentence: NewSentence) => {
+  await axios.post(`api/sentence`, {
+    id: newSentence.id,
+    sentence: newSentence.sentence,
+    interpretation: newSentence.interpretation,
+    explanation: newSentence.explanation,
   });
 };
 
-export const useNewGroup = (): UseMutateFunction<
+export const useNewSentence = (): UseMutateFunction<
   void,
   unknown,
-  NewGroup,
+  NewSentence,
   unknown
 > => {
   const queryClient = useQueryClient();
 
   const { mutate } = useMutation(
-    (newGroup: NewGroup) => createNewGroup(newGroup),
+    (newSentence: NewSentence) => createNewSentence(newSentence),
     {
       onSuccess: () => {
         queryClient.invalidateQueries([queryKeys.groupsData]);
-        toast.success('새 문장집이 생성되었습니다.', {
+        toast.success('새 문장이 생성되었습니다.', {
           position: 'top-center',
           autoClose: 500,
+          delay: 100,
         });
       },
       onError: (error) => {
@@ -43,9 +49,10 @@ export const useNewGroup = (): UseMutateFunction<
           message = error.response.data.message;
           console.error(message);
           if (error.response.status === 422) {
-            toast.warning('동일한 문장집 이름이 존재합니다.', {
+            toast.warning('동일한 문장이 존재합니다.', {
               position: 'top-center',
               autoClose: 500,
+              delay: 100,
             });
           }
         } else message = String(error);
