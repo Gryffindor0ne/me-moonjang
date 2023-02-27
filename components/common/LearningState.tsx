@@ -3,7 +3,7 @@ import { useState } from 'react';
 import { MdOutlineFaceRetouchingNatural } from 'react-icons/md';
 
 import { SentenceDetailInfo } from '@components/group/Sentence';
-import useSentenceState from '@hooks/useSentenceState';
+import useSentenceState from '@react-query/hooks/sentence/useSentenceState';
 import { GroupInfo } from '@pages/[groupId]';
 
 const LearningState = ({
@@ -19,12 +19,18 @@ const LearningState = ({
     !data.learningState ?? false
   );
 
-  const { changeLearningState } = useSentenceState();
+  const learningStateMutate = useSentenceState();
 
   const handleClickLearningState = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
     setLearingComplete((prev) => !prev);
-    changeLearningState(data, learningComplete, groupInfo, sentenceDetail);
+
+    learningStateMutate({
+      groupId: groupInfo._id,
+      sentenceId: data.id,
+      learningComplete,
+      sentenceDetail,
+    });
   };
 
   return (
