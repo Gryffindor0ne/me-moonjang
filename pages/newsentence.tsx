@@ -1,9 +1,6 @@
 import { useRouter } from 'next/router';
 import * as yup from 'yup';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
-import axios from 'axios';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { MdOutlineArrowBackIos } from 'react-icons/md';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
 
@@ -63,7 +60,6 @@ const SentenceInputPage = () => {
 
   return (
     <>
-      <ToastContainer />
       <Seo title="문장등록" />
       <Layout>
         <section className="flex flex-col w-full p-5 mx-auto">

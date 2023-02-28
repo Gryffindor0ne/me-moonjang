@@ -5,9 +5,6 @@ import {
   HiOutlineExclamationCircle,
 } from 'react-icons/hi';
 
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-
 import GroupsNavbar from '@components/groups/components/GroupsNavbar';
 import GroupNameModal from '@components/modals/GroupNameModal';
 import { UserInfo } from '@pages/profile';
@@ -35,7 +32,6 @@ const GroupBoard = ({ groups }: { groups: GroupInfo[] | undefined }) => {
 
   return (
     <>
-      <ToastContainer />
       <GroupsNavbar />
       {showConfirmModal && (
         <ConfirmModal

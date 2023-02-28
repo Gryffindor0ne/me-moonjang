@@ -1,9 +1,8 @@
 import { Dispatch, SetStateAction } from 'react';
 import { HiOutlineRefresh, HiOutlineTrash, HiOutlineX } from 'react-icons/hi';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 import { useGroup } from '@react-query/hooks/groups/useGroup';
+import { useCustomToast } from '@components/hooks/useCustomToast';
 
 const SentenceEditModal = ({
   setIsOpen,
@@ -14,6 +13,8 @@ const SentenceEditModal = ({
   setIsOption: Dispatch<SetStateAction<string>>;
   setRemoveState: Dispatch<SetStateAction<boolean>>;
 }) => {
+  const toast = useCustomToast();
+
   const { groupData, isLoading } = useGroup();
 
   if (isLoading) return null;
@@ -21,9 +22,9 @@ const SentenceEditModal = ({
   const handleClickModal = (event: React.MouseEvent<HTMLElement>) => {
     setIsOpen((prev) => !prev);
     if (!groupData[0].sentences || groupData[0].sentences.length === 0) {
-      toast.warning('문장이 존재하지 않습니다.', {
-        position: 'top-center',
-        autoClose: 300,
+      toast({
+        title: '문장이 존재하지 않습니다.',
+        status: 'warning',
       });
       return;
     }
@@ -41,7 +42,6 @@ const SentenceEditModal = ({
 
   return (
     <>
-      <ToastContainer />
       <div className="fixed z-50 flex items-center justify-center w-full max-w-md pl-8 mt-10 overflow-x-hidden overflow-y-auto outline-none focus:outline-none">
         <div className="relative w-3/4 max-w-xs p-2 bg-white rounded-md md:p-0 md:w-full">
           <button

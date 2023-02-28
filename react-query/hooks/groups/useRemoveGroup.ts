@@ -4,9 +4,9 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 import axios from 'axios';
-import { toast } from 'react-toastify';
 
 import { queryKeys } from '@react-query/constants';
+import { useCustomToast } from '@components/hooks/useCustomToast';
 
 type TargetId = {
   id: string;
@@ -24,27 +24,18 @@ export const useRemoveGroup = (): UseMutateFunction<
   TargetId,
   unknown
 > => {
-  const SERVER_ERROR = 'There was an error contacting the server.';
   const queryClient = useQueryClient();
+  const toast = useCustomToast();
 
   const { mutate } = useMutation(
     (targetId: TargetId) => removeGroup(targetId),
     {
       onSuccess: () => {
         queryClient.invalidateQueries([queryKeys.groupsData]);
-        toast.success('문장집을 삭제하였습니다.', {
-          position: 'top-center',
-          autoClose: 300,
-          delay: 100,
+        toast({
+          title: '문장집을 삭제하였습니다.',
+          status: 'success',
         });
-      },
-      onError: (error) => {
-        const message =
-          axios.isAxiosError(error) && error?.response?.data?.message
-            ? error?.response?.data?.message
-            : SERVER_ERROR;
-
-        console.error(message);
       },
     }
   );

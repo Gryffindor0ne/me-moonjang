@@ -3,8 +3,6 @@ import { useSession } from 'next-auth/react';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import * as yup from 'yup';
 import { HiOutlineX } from 'react-icons/hi';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 import { UserInfo } from '@pages/profile';
 
@@ -86,7 +84,6 @@ const GroupNameModal = ({
 
   return (
     <>
-      <ToastContainer />
       <div className="fixed z-50 flex items-center justify-center w-full max-w-md pr-6 outline-none md:h-[50vh] md:p-0 md:ml-6 focus:outline-none">
         <div className="relative w-full h-auto max-w-sm p-10 md:p-2">
           <div className="relative bg-white rounded-lg shadow">

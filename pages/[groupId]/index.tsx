@@ -4,8 +4,7 @@ import { getSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
 
 import { descendingSort } from '@utils/dayjs';
@@ -99,7 +98,6 @@ const SentenceByGroup = () => {
 
   return (
     <>
-      <ToastContainer />
       <Seo title={`${groupData[0].name}`} />
       {showConfirmModal && (
         <ConfirmModal

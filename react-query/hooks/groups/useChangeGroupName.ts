@@ -4,9 +4,9 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 import axios from 'axios';
-import { toast } from 'react-toastify';
 
 import { queryKeys } from '@react-query/constants';
+import { useCustomToast } from '@components/hooks/useCustomToast';
 
 type NewGroupName = {
   name: string;
@@ -28,30 +28,18 @@ export const useChangeGroupName = (): UseMutateFunction<
 > => {
   const queryClient = useQueryClient();
 
+  const toast = useCustomToast();
+
   const { mutate } = useMutation(
     (newGroupNameData: NewGroupName) => setGroupName(newGroupNameData),
     {
       onSuccess: () => {
-        toast.success('문장집의 이름이 수정되었습니다.', {
-          position: 'top-center',
-          autoClose: 300,
+        toast({
+          title: '문장집 이름이 수정되었습니다.',
+          status: 'success',
         });
 
         queryClient.invalidateQueries([queryKeys.groupsData]);
-      },
-      onError: (error) => {
-        let message;
-        if (axios.isAxiosError(error) && error.response) {
-          message = error.response.data.message;
-          console.error(message);
-          if (error.response.status === 422) {
-            toast.warning('동일한 문장집 이름이 존재합니다.', {
-              position: 'top-center',
-              autoClose: 1000,
-            });
-          }
-        } else message = String(error);
-        console.error(message);
       },
     }
   );

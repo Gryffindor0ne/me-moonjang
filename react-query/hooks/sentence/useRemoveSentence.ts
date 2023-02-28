@@ -1,13 +1,13 @@
+import { Dispatch, SetStateAction, useState } from 'react';
 import {
   UseMutateFunction,
   useMutation,
   useQueryClient,
 } from '@tanstack/react-query';
 import axios from 'axios';
-import { toast } from 'react-toastify';
-import { Dispatch, SetStateAction, useState } from 'react';
 
 import { queryKeys } from '@react-query/constants';
+import { useCustomToast } from '@components/hooks/useCustomToast';
 
 type Ids = {
   groupId: string;
@@ -30,8 +30,8 @@ const removeSentence = async (ids: Ids) => {
 };
 
 export const useRemoveSentence = (): UseRemoveSentence => {
-  const SERVER_ERROR = 'There was an error contacting the server.';
   const queryClient = useQueryClient();
+  const toast = useCustomToast();
 
   const [removeState, setRemoveState] = useState(true);
 
@@ -40,22 +40,13 @@ export const useRemoveSentence = (): UseRemoveSentence => {
     {
       onSuccess: () => {
         queryClient.invalidateQueries([queryKeys.groupDetailData]);
-        toast.success(
-          removeState ? '문장이 삭제되었습니다.' : '문장집이 변경되었습니다.',
-          {
-            position: 'top-center',
-            autoClose: 300,
-            delay: 100,
-          }
-        );
-      },
-      onError: (error) => {
-        const message =
-          axios.isAxiosError(error) && error?.response?.data?.message
-            ? error?.response?.data?.message
-            : SERVER_ERROR;
+        toast({
+          title: removeState
+            ? '선택한 문장이 삭제되었습니다.'
+            : '선택한 문장이 변경되었습니다.',
 
-        console.error(message);
+          status: 'success',
+        });
       },
     }
   );

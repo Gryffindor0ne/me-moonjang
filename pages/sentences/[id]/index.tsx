@@ -5,8 +5,6 @@ import { useRouter } from 'next/router';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
 import { MdOutlineArrowBackIos } from 'react-icons/md';
 import { HiOutlineBell } from 'react-icons/hi';
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 import Seo from '@components/layout/Seo';
 import LearningState from '@components/common/LearningState';
@@ -34,7 +32,6 @@ const Sentence = () => {
 
   return (
     <>
-      <ToastContainer />
       <Seo title={`${sentenceData[0].name}-상세`} />
       <section className="flex flex-col w-full p-5 mx-auto">
         <div className="flex pr-8">
