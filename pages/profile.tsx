@@ -5,12 +5,11 @@ import { GetServerSideProps } from 'next';
 import axios from 'axios';
 import { MdOutlineArrowBackIos } from 'react-icons/md';
 import { CiLogout } from 'react-icons/ci';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 import Seo from '@components/layout/Seo';
 import ConfirmModal from '@components/modals/ConfirmModal';
 import Layout from '@components/layout/Layout';
+import { useCustomToast } from '@components/hooks/useCustomToast';
 
 export type UserInfo = {
   id: string;
@@ -25,6 +24,8 @@ const ProfilePage = () => {
   const router = useRouter();
   const [showModal, setShowModal] = useState(false);
   const [selectBtn, setSelectBtn] = useState('');
+
+  const toast = useCustomToast();
 
   const handleLogout = async (): Promise<void> => {
     try {
@@ -42,9 +43,9 @@ const ProfilePage = () => {
 
   const handleClickBtn = (value: string) => {
     if (value === 'deleteAccount' && user.email === 'guest@memoonjang.com') {
-      toast.warning('게스트는 회원탈퇴 할 수 없습니다!', {
-        position: 'top-center',
-        autoClose: 1500,
+      toast({
+        title: '게스트는 회원탈퇴 할 수 없습니다!',
+        status: 'warning',
       });
       return;
     }
@@ -63,9 +64,9 @@ const ProfilePage = () => {
         });
 
         if (deleteUserResponse.status === 200) {
-          toast.success('회원탈퇴가 완료되었습니다.', {
-            position: 'top-center',
-            autoClose: 1500,
+          toast({
+            title: '회원탈퇴가 완료되었습니다.',
+            status: 'success',
           });
           setTimeout(
             () => signOut({ callbackUrl: `${process.env.NEXT_PUBLIC_URL}` }),
@@ -89,7 +90,6 @@ const ProfilePage = () => {
           handler={handleLogout}
         />
       )}
-      <ToastContainer />
       <Layout>
         <section className="flex flex-col w-full gap-4 p-5 mx-auto">
           <div className="flex">

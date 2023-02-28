@@ -40,7 +40,7 @@ const groupHandler = async (req: NextApiRequest, res: NextApiResponse) => {
           .toArray();
 
         if (checkExistingGroup.length !== 0) {
-          res.status(422).json({ message: 'Group already exists' });
+          res.status(422).json({ message: '동일한 문장집이 존재합니다.' });
           client.close();
           return;
         }

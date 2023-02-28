@@ -4,9 +4,9 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 import axios from 'axios';
-import { toast } from 'react-toastify';
 
 import { queryKeys } from '@react-query/constants';
+import { useCustomToast } from '@components/hooks/useCustomToast';
 
 type LearningStateData = {
   groupId: string;
@@ -29,7 +29,7 @@ const useSentenceState = (): UseMutateFunction<
   LearningStateData,
   unknown
 > => {
-  const SERVER_ERROR = 'There was an error contacting the server.';
+  const toast = useCustomToast();
 
   const queryClient = useQueryClient();
 
@@ -39,16 +39,14 @@ const useSentenceState = (): UseMutateFunction<
     {
       onSuccess: (data, variables, context) => {
         if (variables.learningComplete) {
-          toast.success('문장 학습 완료', {
-            position: 'top-center',
-            autoClose: 300,
-            delay: 100,
+          toast({
+            title: '문장 학습 완료',
+            status: 'success',
           });
         } else {
-          toast.warning('문장 학습 미완료', {
-            position: 'top-center',
-            autoClose: 300,
-            delay: 100,
+          toast({
+            title: '문장 학습 미완료',
+            status: 'warning',
           });
         }
 
@@ -57,15 +55,6 @@ const useSentenceState = (): UseMutateFunction<
             ? queryKeys.sentenceDetail
             : queryKeys.groupDetailData,
         ]);
-      },
-
-      onError: (error) => {
-        const message =
-          axios.isAxiosError(error) && error?.response?.data?.message
-            ? error?.response?.data?.message
-            : SERVER_ERROR;
-
-        console.error(message);
       },
     }
   );

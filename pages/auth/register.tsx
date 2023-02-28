@@ -6,11 +6,10 @@ import axios from 'axios';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import * as yup from 'yup';
 import { GoEyeClosed, GoEye } from 'react-icons/go';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 import styles from '@styles/Form.module.css';
 import Seo from '@components/layout/Seo';
+import { useCustomToast } from '@components/hooks/useCustomToast';
 
 export type AuthType = 'memoonjang';
 
@@ -49,6 +48,8 @@ const Register: NextPage = () => {
   const router = useRouter();
   const [show, setShow] = useState({ password: false, confirmPassword: false });
 
+  const toast = useCustomToast();
+
   const onSubmit = async (values: UserInputInfo) => {
     const { email, password, username, authType } = values;
 
@@ -61,9 +62,9 @@ const Register: NextPage = () => {
       });
 
       if (res.status === 201) {
-        toast.success('회원가입 완료!', {
-          position: 'top-center',
-          autoClose: 2000,
+        toast({
+          title: '회원가입 완료!',
+          status: 'success',
         });
         setTimeout(() => router.replace('/auth/login'), 2500);
       }
@@ -73,9 +74,9 @@ const Register: NextPage = () => {
         message = error.response.data.message;
         console.error(message);
         if (error.response.status === 422) {
-          toast.warning('동일한 이메일이 존재합니다.', {
-            position: 'top-center',
-            autoClose: 2000,
+          toast({
+            title: '동일한 이메일이 존재합니다.',
+            status: 'warning',
           });
         }
       } else message = String(error);
@@ -86,7 +87,6 @@ const Register: NextPage = () => {
   return (
     <>
       <Seo title="회원가입" />
-      <ToastContainer />
       <section className="flex flex-col w-full gap-2 p-10 mx-auto">
         <h1 className="flex py-2 mx-auto my-4 text-2xl font-bold text-gray-800 md:my-10 md:text-3xl">
           회원가입

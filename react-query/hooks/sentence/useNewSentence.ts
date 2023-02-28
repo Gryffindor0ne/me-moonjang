@@ -4,9 +4,9 @@ import {
   useQueryClient,
 } from '@tanstack/react-query';
 import axios from 'axios';
-import { toast } from 'react-toastify';
 
 import { queryKeys } from '@react-query/constants';
+import { useCustomToast } from '@components/hooks/useCustomToast';
 
 type NewSentence = {
   id: string;
@@ -31,32 +31,17 @@ export const useNewSentence = (): UseMutateFunction<
   unknown
 > => {
   const queryClient = useQueryClient();
+  const toast = useCustomToast();
 
   const { mutate } = useMutation(
     (newSentence: NewSentence) => createNewSentence(newSentence),
     {
       onSuccess: () => {
         queryClient.invalidateQueries([queryKeys.groupsData]);
-        toast.success('새 문장이 생성되었습니다.', {
-          position: 'top-center',
-          autoClose: 500,
-          delay: 100,
+        toast({
+          title: '새 문장이 생성되었습니다.',
+          status: 'success',
         });
-      },
-      onError: (error) => {
-        let message;
-        if (axios.isAxiosError(error) && error.response) {
-          message = error.response.data.message;
-          console.error(message);
-          if (error.response.status === 422) {
-            toast.warning('동일한 문장이 존재합니다.', {
-              position: 'top-center',
-              autoClose: 500,
-              delay: 100,
-            });
-          }
-        } else message = String(error);
-        console.error(message);
       },
     }
   );

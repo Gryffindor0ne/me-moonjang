@@ -1,10 +1,9 @@
 import { useSession } from 'next-auth/react';
 import { Dispatch, SetStateAction } from 'react';
 import { HiOutlineRefresh, HiOutlineTrash, HiOutlineX } from 'react-icons/hi';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 import { UserInfo } from '@pages/profile';
+import { useCustomToast } from '@components/hooks/useCustomToast';
 
 const GroupEditModal = ({
   id,
@@ -23,6 +22,7 @@ const GroupEditModal = ({
 }) => {
   const { data: session } = useSession();
   const user = session?.user as UserInfo;
+  const toast = useCustomToast();
 
   const handleClickModal = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
@@ -31,9 +31,9 @@ const GroupEditModal = ({
 
     const purpose = (event.target as any).id;
     if (purpose === 'deleteGroup' && user.email === 'guest@memoonjang.com') {
-      toast.warning('게스트는 삭제권한이 없습니다!', {
-        position: 'top-center',
-        autoClose: 1500,
+      toast({
+        title: '게스트는 삭제권한이 없습니다!',
+        status: 'warning',
       });
       return;
     }
@@ -49,7 +49,6 @@ const GroupEditModal = ({
 
   return (
     <>
-      <ToastContainer />
       <div className="absolute z-50 flex justify-end w-full max-w-xs p-2 overflow-x-hidden overflow-y-auto outline-none md:max-w-md focus:outline-none">
         <div className="relative max-w-xs p-1 bg-white rounded-md md:p-0 md:w-1/4 ">
           <button

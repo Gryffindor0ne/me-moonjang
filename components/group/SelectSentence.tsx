@@ -1,13 +1,12 @@
 import { Dispatch, SetStateAction } from 'react';
 import { useSession } from 'next-auth/react';
 import { Field, Form, Formik } from 'formik';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 import Sentence, { SentenceDetailInfo } from '@components/group/Sentence';
 import { UserInfo } from '@pages/profile';
 import { GroupInfo } from '@pages/[groupId]';
 import { descendingSort } from '@utils/dayjs';
+import { useCustomToast } from '@components/hooks/useCustomToast';
 
 type SelectSentenceInfo = {
   sentenceIds: string[];
@@ -37,14 +36,15 @@ const SelectSentence = ({
   const handleCancel = () => {
     setIsOption('');
   };
+  const toast = useCustomToast();
 
   const onSubmit = (value: SelectSentenceInfo) => {
     const { sentenceIds } = value;
 
     if (sentenceIds.length === 0) {
-      toast.warning('선택된 문장이 없습니다!', {
-        position: 'top-center',
-        autoClose: 1500,
+      toast({
+        title: '선택된 문장이 없습니다!',
+        status: 'warning',
       });
       return;
     }
@@ -59,9 +59,9 @@ const SelectSentence = ({
     setIsSelectSentenceIds(sentenceIds);
 
     if (option === 'deleteSentence' && user.email === 'guest@memoonjang.com') {
-      toast.warning('게스트는 삭제권한이 없습니다!', {
-        position: 'top-center',
-        autoClose: 1500,
+      toast({
+        title: '게스트는 삭제권한이 없습니다!',
+        status: 'warning',
       });
       return;
     }
@@ -75,7 +75,6 @@ const SelectSentence = ({
 
   return (
     <>
-      <ToastContainer />
       <Formik
         initialValues={{
           sentenceIds: [],

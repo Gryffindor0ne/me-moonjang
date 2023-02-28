@@ -8,12 +8,11 @@ import * as yup from 'yup';
 import { GoEyeClosed, GoEye } from 'react-icons/go';
 import { RiKakaoTalkFill } from 'react-icons/ri';
 import { AiOutlineGoogle } from 'react-icons/ai';
-import { toast, ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 
 import styles from '@styles/Form.module.css';
 import Seo from '@components/layout/Seo';
 import LoginIndicator from '@components/layout/LoginIndicator';
+import { useCustomToast } from '@components/hooks/useCustomToast';
 
 const loginSchema = yup.object().shape({
   email: yup
@@ -34,6 +33,8 @@ const AuthPage: NextPage = () => {
 
   const [loading, setIsLoading] = useState(false);
 
+  const toast = useCustomToast();
+
   type LoginInfo = {
     email: string;
     password: string;
@@ -50,9 +51,9 @@ const AuthPage: NextPage = () => {
     if (result?.status === 200) {
       router.push('/');
     } else {
-      toast.warning('이메일 혹은 비밀번호를 확인해주세요!', {
-        position: 'top-center',
-        autoClose: 1500,
+      toast({
+        title: '이메일 혹은 비밀번호를 확인해주세요!',
+        status: 'warning',
       });
       setTimeout(() => router.reload(), 2000);
     }
@@ -88,7 +89,7 @@ const AuthPage: NextPage = () => {
   return (
     <>
       <Seo title="로그인" />
-      <ToastContainer />
+
       {loading ? (
         <LoginIndicator />
       ) : (

@@ -5,18 +5,15 @@ import {
   HiOutlineExclamationCircle,
 } from 'react-icons/hi';
 
-import { ToastContainer } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
-
 import GroupsNavbar from '@components/groups/components/GroupsNavbar';
 import GroupNameModal from '@components/modals/GroupNameModal';
 import { UserInfo } from '@pages/profile';
 import Group from '@components/groups/components/Group';
 import ConfirmModal from '@components/modals/ConfirmModal';
-import { GroupInfo } from '@pages/[groupId]';
 import { useRemoveGroup } from '@react-query/hooks/groups/useRemoveGroup';
+import { useGroups } from '@react-query/hooks/groups/useGroups';
 
-const GroupBoard = ({ groups }: { groups: GroupInfo[] | undefined }) => {
+const GroupBoard = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [selectBtn, setIsSelectBtn] = useState('');
   const [showConfirmModal, setShowConfirmModal] = useState(false);
@@ -26,6 +23,7 @@ const GroupBoard = ({ groups }: { groups: GroupInfo[] | undefined }) => {
   const user = session?.user as UserInfo;
 
   const removeGroup = useRemoveGroup();
+  const { groups } = useGroups();
 
   const handleDeleteGroup = () => {
     setShowConfirmModal((prev) => !prev);
@@ -35,7 +33,6 @@ const GroupBoard = ({ groups }: { groups: GroupInfo[] | undefined }) => {
 
   return (
     <>
-      <ToastContainer />
       <GroupsNavbar />
       {showConfirmModal && (
         <ConfirmModal
