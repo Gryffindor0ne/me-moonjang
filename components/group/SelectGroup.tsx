@@ -1,29 +1,31 @@
 import { Dispatch, SetStateAction } from 'react';
 import { Field, Form, Formik } from 'formik';
 import { HiOutlineX } from 'react-icons/hi';
+import { useRecoilState } from 'recoil';
 
 import { GroupInfo } from '@pages/[groupId]';
 import { useGroups } from '@react-query/hooks/groups/useGroups';
+import { modalState } from '@recoil/atoms/modals';
 
 type Group = {
   groupName: string;
 };
 
 const SelectGroup = ({
-  setShowConfirmModal,
   setIsSelectGroup,
   setShowSelectGroupModal,
 }: {
-  setShowConfirmModal: Dispatch<SetStateAction<boolean>>;
   setIsSelectGroup: Dispatch<SetStateAction<GroupInfo | undefined>>;
   setShowSelectGroupModal: Dispatch<SetStateAction<boolean>>;
 }) => {
   const { groups } = useGroups();
+  const [showModal, setIsShowModal] = useRecoilState(modalState);
 
   const onSubmit = async (values: Group) => {
     const { groupName } = values;
 
-    setShowConfirmModal((prev) => !prev);
+    setIsShowModal({ confirmModal: !showModal.confirmModal });
+
     setIsSelectGroup(groups.filter((group) => group.name === groupName)[0]);
     setShowSelectGroupModal((prev) => !prev);
   };

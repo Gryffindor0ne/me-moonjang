@@ -5,20 +5,19 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { useRecoilValue } from 'recoil';
+import { useRecoilState, useRecoilValue } from 'recoil';
 import { Dialog, Transition } from '@headlessui/react';
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 
 import { selectContext } from '@recoil/selectors/common';
+import { modalState } from '@recoil/atoms/modals';
 
 const ConfirmModal = ({
-  setShowModal,
   handler,
   deleteHandler,
   selectSentenceIds,
   setIsSelectSentenceIds,
 }: {
-  setShowModal: Dispatch<SetStateAction<boolean>>;
   handler?: () => void;
   deleteHandler: () => void;
   selectSentenceIds?: string[];
@@ -29,10 +28,11 @@ const ConfirmModal = ({
   const cancelButtonRef = useRef(null);
 
   const currentContext = useRecoilValue(selectContext);
+  const [showModal, setIsShowModal] = useRecoilState(modalState);
 
   const handleCancel = () => {
     setOpen((prev) => !prev);
-    setShowModal((prev) => !prev);
+    setIsShowModal({ confirmModal: !showModal.confirmModal });
     if (selectSentenceIds) setIsSelectSentenceIds!([]);
   };
 

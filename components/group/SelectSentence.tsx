@@ -9,6 +9,7 @@ import { GroupInfo } from '@pages/[groupId]';
 import { descendingSort } from '@utils/dayjs';
 import { useCustomToast } from '@components/hooks/useCustomToast';
 import { contextState } from '@recoil/atoms/common';
+import { modalState } from '@recoil/atoms/modals';
 
 type SelectSentenceInfo = {
   sentenceIds: string[];
@@ -16,13 +17,11 @@ type SelectSentenceInfo = {
 
 const SelectSentence = ({
   groupInfo,
-  setShowConfirmModal,
   setIsSelectSentence,
   setIsSelectSentenceIds,
   setShowSelectGroupModal,
 }: {
   groupInfo: GroupInfo;
-  setShowConfirmModal: Dispatch<SetStateAction<boolean>>;
   setIsSelectSentenceIds: Dispatch<SetStateAction<string[]>>;
   setIsSelectSentence: Dispatch<SetStateAction<SentenceDetailInfo[]>>;
   setShowSelectGroupModal: Dispatch<SetStateAction<boolean>>;
@@ -35,6 +34,9 @@ const SelectSentence = ({
   const toast = useCustomToast();
 
   const [context, setContext] = useRecoilState(contextState);
+  const [showModal, setIsShowModal] = useRecoilState(modalState);
+
+  console.log(context, showModal);
 
   const onSubmit = (value: SelectSentenceInfo) => {
     const { sentenceIds } = value;
@@ -67,7 +69,8 @@ const SelectSentence = ({
       setShowSelectGroupModal((prev) => !prev);
       setIsSelectSentence(selectSentences);
     }
-    if (context === 'deleteSentence') setShowConfirmModal((prev) => !prev);
+    if (context === 'deleteSentence')
+      setIsShowModal({ confirmModal: !showModal.confirmModal });
   };
 
   return (

@@ -4,7 +4,7 @@ import {
   HiOutlineCollection,
   HiOutlineExclamationCircle,
 } from 'react-icons/hi';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import GroupsNavbar from '@components/groups/components/GroupsNavbar';
 import GroupNameModal from '@components/modals/GroupNameModal';
@@ -14,10 +14,10 @@ import ConfirmModal from '@components/modals/ConfirmModal';
 import { useRemoveGroup } from '@react-query/hooks/groups/useRemoveGroup';
 import { useGroups } from '@react-query/hooks/groups/useGroups';
 import { contextState } from '@recoil/atoms/common';
+import { modalState } from '@recoil/atoms/modals';
 
 const GroupBoard = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [selectGroupId, setIsSelectGroupId] = useState('');
 
   const { data: session } = useSession();
@@ -25,7 +25,9 @@ const GroupBoard = () => {
 
   const removeGroup = useRemoveGroup();
   const { groups } = useGroups();
+
   const setContext = useSetRecoilState(contextState);
+  const [showModal, setIsShowModal] = useRecoilState(modalState);
 
   const createNewGroup = () => {
     setIsOpen((prev) => !prev);
@@ -33,19 +35,17 @@ const GroupBoard = () => {
   };
 
   const handleDeleteGroup = () => {
-    setShowConfirmModal((prev) => !prev);
+    setIsShowModal({ confirmModal: !showModal.confirmModal });
     removeGroup({ id: selectGroupId });
+    setContext('');
     setIsSelectGroupId('');
   };
 
   return (
     <>
       <GroupsNavbar />
-      {showConfirmModal && (
-        <ConfirmModal
-          setShowModal={setShowConfirmModal}
-          deleteHandler={handleDeleteGroup}
-        />
+      {showModal.confirmModal && (
+        <ConfirmModal deleteHandler={handleDeleteGroup} />
       )}
       <div className="flex items-center justify-between w-full p-2">
         <div className="flex justify-start p-2 my-2 text-base font-bold text-gray-700 md:text-lg md:p-4">
@@ -73,7 +73,6 @@ const GroupBoard = () => {
               group={group}
               setIsOpen={setIsOpen}
               setIsSelectGroupId={setIsSelectGroupId}
-              setShowConfirmModal={setShowConfirmModal}
             />
           );
         })
