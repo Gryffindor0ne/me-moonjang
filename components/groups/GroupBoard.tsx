@@ -4,6 +4,7 @@ import {
   HiOutlineCollection,
   HiOutlineExclamationCircle,
 } from 'react-icons/hi';
+import { useSetRecoilState } from 'recoil';
 
 import GroupsNavbar from '@components/groups/components/GroupsNavbar';
 import GroupNameModal from '@components/modals/GroupNameModal';
@@ -12,10 +13,10 @@ import Group from '@components/groups/components/Group';
 import ConfirmModal from '@components/modals/ConfirmModal';
 import { useRemoveGroup } from '@react-query/hooks/groups/useRemoveGroup';
 import { useGroups } from '@react-query/hooks/groups/useGroups';
+import { contextState } from '@recoil/atoms/common';
 
 const GroupBoard = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectBtn, setIsSelectBtn] = useState('');
   const [showConfirmModal, setShowConfirmModal] = useState(false);
   const [selectGroupId, setIsSelectGroupId] = useState('');
 
@@ -24,6 +25,12 @@ const GroupBoard = () => {
 
   const removeGroup = useRemoveGroup();
   const { groups } = useGroups();
+  const setContext = useSetRecoilState(contextState);
+
+  const createNewGroup = () => {
+    setIsOpen((prev) => !prev);
+    setContext('createGroup');
+  };
 
   const handleDeleteGroup = () => {
     setShowConfirmModal((prev) => !prev);
@@ -36,7 +43,6 @@ const GroupBoard = () => {
       <GroupsNavbar />
       {showConfirmModal && (
         <ConfirmModal
-          btn={selectBtn}
           setShowModal={setShowConfirmModal}
           deleteHandler={handleDeleteGroup}
         />
@@ -46,7 +52,7 @@ const GroupBoard = () => {
           {`${user?.username.toUpperCase()}'s memoonjang`}
         </div>
         <div
-          onClick={() => setIsOpen((prev) => !prev)}
+          onClick={createNewGroup}
           className="p-2 text-3xl text-center text-teal-400 cursor-pointer md:text-4xl md:p-4"
         >
           <HiOutlineCollection />
@@ -54,8 +60,6 @@ const GroupBoard = () => {
       </div>
       {isOpen && (
         <GroupNameModal
-          selectBtn={selectBtn}
-          setIsSelectBtn={setIsSelectBtn}
           setIsOpen={setIsOpen}
           selectGroupId={selectGroupId}
           setIsSelectGroupId={setIsSelectGroupId}
@@ -68,7 +72,6 @@ const GroupBoard = () => {
               key={idx}
               group={group}
               setIsOpen={setIsOpen}
-              setIsSelectBtn={setIsSelectBtn}
               setIsSelectGroupId={setIsSelectGroupId}
               setShowConfirmModal={setShowConfirmModal}
             />

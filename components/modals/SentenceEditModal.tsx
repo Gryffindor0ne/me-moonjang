@@ -1,21 +1,22 @@
 import { Dispatch, SetStateAction } from 'react';
 import { HiOutlineRefresh, HiOutlineTrash, HiOutlineX } from 'react-icons/hi';
+import { useSetRecoilState } from 'recoil';
 
 import { useGroup } from '@react-query/hooks/groups/useGroup';
 import { useCustomToast } from '@components/hooks/useCustomToast';
+import { contextState } from '@recoil/atoms/common';
 
 const SentenceEditModal = ({
   setIsOpen,
-  setIsOption,
   setRemoveState,
 }: {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
-  setIsOption: Dispatch<SetStateAction<string>>;
   setRemoveState: Dispatch<SetStateAction<boolean>>;
 }) => {
   const toast = useCustomToast();
-
   const { groupData, isLoading } = useGroup();
+
+  const setContext = useSetRecoilState(contextState);
 
   if (isLoading) return null;
 
@@ -31,11 +32,11 @@ const SentenceEditModal = ({
     const purpose = (event.target as any).id;
 
     if (purpose === 'changeGroup') {
-      setIsOption('changeGroup');
+      setContext('changeGroup');
       setRemoveState(false);
     }
     if (purpose === 'deleteSentence') {
-      setIsOption('deleteSentence');
+      setContext('deleteSentence');
       setRemoveState(true);
     }
   };

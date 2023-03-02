@@ -22,7 +22,8 @@
       "@styles/*": ["styles/*"],
       "@utils/*": ["utils/*"],
       "@hooks/*": ["hooks/*"],
-      "@react-query/*": ["react-query/*"]
+      "@react-query/*": ["react-query/*"],
+      "@recoil/*": ["recoil/*"]
     }
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "lib/db.ts"],

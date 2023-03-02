@@ -7,13 +7,13 @@ import { GroupInfo } from '@pages/[groupId]';
 
 const Group = ({
   group,
-  setIsSelectBtn,
+
   setIsSelectGroupId,
   setIsOpen,
   setShowConfirmModal,
 }: {
   group: GroupInfo;
-  setIsSelectBtn: Dispatch<SetStateAction<string>>;
+
   setIsSelectGroupId: Dispatch<SetStateAction<string>>;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   setShowConfirmModal: Dispatch<SetStateAction<boolean>>;
@@ -51,7 +51,6 @@ const Group = ({
             id={group._id}
             setIsSelectGroupId={setIsSelectGroupId}
             setIsOpenGroupEdit={setIsOpenGroupEdit}
-            setIsSelectBtn={setIsSelectBtn}
             setIsOpen={setIsOpen}
             setShowConfirmModal={setShowConfirmModal}
           />
