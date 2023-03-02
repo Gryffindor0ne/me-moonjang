@@ -3,12 +3,14 @@ import { useSession } from 'next-auth/react';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import * as yup from 'yup';
 import { HiOutlineX } from 'react-icons/hi';
+import { useRecoilState, useRecoilValue } from 'recoil';
 
 import { UserInfo } from '@pages/profile';
-
 import { useGroups } from '@react-query/hooks/groups/useGroups';
 import { useChangeGroupName } from '@react-query/hooks/groups/useChangeGroupName';
 import { useNewGroup } from '@react-query/hooks/groups/useNewGroup';
+import { contextState } from '@recoil/atoms/common';
+import { selectContext } from '@recoil/selectors/common';
 
 export const userSchema = yup.object().shape({
   name: yup
@@ -23,32 +25,16 @@ type GroupProps = {
 };
 
 const GroupNameModal = ({
-  selectBtn,
   selectGroupId,
   setIsOpen,
-  setIsSelectBtn,
+
   setIsSelectGroupId,
 }: {
-  selectBtn?: string;
   selectGroupId?: string;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
-  setIsSelectBtn: Dispatch<SetStateAction<string>>;
 
   setIsSelectGroupId: Dispatch<SetStateAction<string>>;
 }) => {
-  const messageSet = [
-    {
-      btn: 'createGroup',
-      title: '문장집 추가',
-      description: '새로운 문장집 이름을 입력하세요.',
-    },
-    {
-      btn: 'updateGroup',
-      title: '문장집 이름변경',
-      description: '변경할 문장집 이름을 입력하세요.',
-    },
-  ];
-
   const { data: session } = useSession();
   const user = session?.user as UserInfo;
 
@@ -56,11 +42,14 @@ const GroupNameModal = ({
   const newGroupRegister = useNewGroup();
   const { groups, isLoading } = useGroups();
 
+  const [context, setContext] = useRecoilState(contextState);
+  const currentContext = useRecoilValue(selectContext);
+
   if (isLoading) return null;
 
   const handleCloseModal = () => {
     setIsOpen(false);
-    setIsSelectBtn('');
+    setContext('');
     setIsSelectGroupId('');
   };
 
@@ -70,7 +59,7 @@ const GroupNameModal = ({
     changeName({ name, groupId: selectGroupId });
 
     setIsOpen((prev) => !prev);
-    setIsSelectBtn('');
+    setContext('');
     setIsSelectGroupId('');
   };
 
@@ -98,9 +87,7 @@ const GroupNameModal = ({
             </button>
             <div className="px-6 py-6 lg:px-8">
               <h3 className="mb-4 text-xl font-medium text-gray-900 md:text-xl">
-                {selectBtn === 'updateGroup'
-                  ? messageSet[1].title
-                  : messageSet[0].title}
+                {currentContext?.title}
               </h3>
               <Formik
                 initialValues={{
@@ -113,7 +100,7 @@ const GroupNameModal = ({
                     : '',
                 }}
                 onSubmit={
-                  selectBtn === 'updateGroup' ? changeGroupName : newGroup
+                  context === 'updateGroup' ? changeGroupName : newGroup
                 }
                 validationSchema={userSchema}
               >
@@ -126,9 +113,7 @@ const GroupNameModal = ({
                       className="block mb-2 font-medium text-gray-900"
                       htmlFor="name"
                     >
-                      {selectBtn === 'updateGroup'
-                        ? messageSet[1].description
-                        : messageSet[0].description}
+                      {currentContext?.description}
                     </label>
                     <div>
                       <Field
@@ -151,9 +136,7 @@ const GroupNameModal = ({
                     text-center"
                       type="submit"
                     >
-                      {selectBtn === 'updateGroup'
-                        ? messageSet[1].title
-                        : messageSet[0].title}
+                      {currentContext?.title}
                     </button>
                   </Form>
                 )}

@@ -5,11 +5,13 @@ import { GetServerSideProps } from 'next';
 import axios from 'axios';
 import { MdOutlineArrowBackIos } from 'react-icons/md';
 import { CiLogout } from 'react-icons/ci';
+import { useSetRecoilState } from 'recoil';
 
 import Seo from '@components/layout/Seo';
 import ConfirmModal from '@components/modals/ConfirmModal';
 import Layout from '@components/layout/Layout';
 import { useCustomToast } from '@components/hooks/useCustomToast';
+import { contextState } from '@recoil/atoms/common';
 
 export type UserInfo = {
   id: string;
@@ -23,9 +25,10 @@ const ProfilePage = () => {
   const user = session?.user as UserInfo;
   const router = useRouter();
   const [showModal, setShowModal] = useState(false);
-  const [selectBtn, setSelectBtn] = useState('');
 
   const toast = useCustomToast();
+
+  const setContext = useSetRecoilState(contextState);
 
   const handleLogout = async (): Promise<void> => {
     try {
@@ -49,7 +52,7 @@ const ProfilePage = () => {
       });
       return;
     }
-    setSelectBtn(value);
+    setContext(value);
     setShowModal((prev) => !prev);
   };
 
@@ -84,7 +87,6 @@ const ProfilePage = () => {
       <Seo title="회원정보" />
       {showModal && (
         <ConfirmModal
-          btn={selectBtn}
           setShowModal={setShowModal}
           deleteHandler={handleDeleteAccount}
           handler={handleLogout}

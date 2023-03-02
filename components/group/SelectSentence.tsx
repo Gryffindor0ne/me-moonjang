@@ -1,31 +1,27 @@
 import { Dispatch, SetStateAction } from 'react';
 import { useSession } from 'next-auth/react';
 import { Field, Form, Formik } from 'formik';
+import { useRecoilState } from 'recoil';
 
 import Sentence, { SentenceDetailInfo } from '@components/group/Sentence';
 import { UserInfo } from '@pages/profile';
 import { GroupInfo } from '@pages/[groupId]';
 import { descendingSort } from '@utils/dayjs';
 import { useCustomToast } from '@components/hooks/useCustomToast';
+import { contextState } from '@recoil/atoms/common';
 
 type SelectSentenceInfo = {
   sentenceIds: string[];
 };
 
 const SelectSentence = ({
-  option,
   groupInfo,
-  setIsOption,
-  setSelectBtn,
   setShowConfirmModal,
   setIsSelectSentence,
   setIsSelectSentenceIds,
   setShowSelectGroupModal,
 }: {
-  option: string;
   groupInfo: GroupInfo;
-  setIsOption: Dispatch<SetStateAction<string>>;
-  setSelectBtn: Dispatch<SetStateAction<string>>;
   setShowConfirmModal: Dispatch<SetStateAction<boolean>>;
   setIsSelectSentenceIds: Dispatch<SetStateAction<string[]>>;
   setIsSelectSentence: Dispatch<SetStateAction<SentenceDetailInfo[]>>;
@@ -34,9 +30,11 @@ const SelectSentence = ({
   const { data: session } = useSession();
   const user = session?.user as UserInfo;
   const handleCancel = () => {
-    setIsOption('');
+    setContext('');
   };
   const toast = useCustomToast();
+
+  const [context, setContext] = useRecoilState(contextState);
 
   const onSubmit = (value: SelectSentenceInfo) => {
     const { sentenceIds } = value;
@@ -55,10 +53,9 @@ const SelectSentence = ({
       sentenceIds.includes(sentence.id)
     );
 
-    setSelectBtn(`${option}`);
     setIsSelectSentenceIds(sentenceIds);
 
-    if (option === 'deleteSentence' && user.email === 'guest@memoonjang.com') {
+    if (context === 'deleteSentence' && user.email === 'guest@memoonjang.com') {
       toast({
         title: '게스트는 삭제권한이 없습니다!',
         status: 'warning',
@@ -66,11 +63,11 @@ const SelectSentence = ({
       return;
     }
 
-    if (option === 'changeGroup') {
+    if (context === 'changeGroup') {
       setShowSelectGroupModal((prev) => !prev);
       setIsSelectSentence(selectSentences);
     }
-    if (option === 'deleteSentence') setShowConfirmModal((prev) => !prev);
+    if (context === 'deleteSentence') setShowConfirmModal((prev) => !prev);
   };
 
   return (
@@ -102,7 +99,7 @@ const SelectSentence = ({
               focus:ring-2 rounded-md shadow-sm border border-transparent mt-5 focus:outline-none focus:ring-teal-300 focus:ring-offset-1 font-medium px-5 py-2.5 sm:ml-3 sm:w-auto sm:text-lg"
               type="submit"
             >
-              {option === 'changeGroup' ? `문장집 변경` : `삭제`}
+              {context === 'changeGroup' ? `문장집 변경` : `삭제`}
             </button>
             <button
               type="button"

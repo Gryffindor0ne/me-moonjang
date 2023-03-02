@@ -4,8 +4,8 @@ import { getSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
-
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
+import { useRecoilState } from 'recoil';
 
 import { descendingSort } from '@utils/dayjs';
 import Sentence, { SentenceDetailInfo } from '@components/group/Sentence';
@@ -19,6 +19,7 @@ import SelectGroup from '@components/group/SelectGroup';
 import { queryKeys } from '@react-query/constants';
 import { getGroupData, useGroup } from '@react-query/hooks/groups/useGroup';
 import { useRemoveSentence } from '@react-query/hooks/sentence/useRemoveSentence';
+import { contextState } from '@recoil/atoms/common';
 
 export type GroupInfo = {
   _id: string;
@@ -35,17 +36,18 @@ const SentenceByGroup = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [showSelectGroupModal, setShowSelectGroupModal] = useState(false);
   const [showConfirmModal, setShowConfirmModal] = useState(false);
-  const [selectBtn, setSelectBtn] = useState('');
+
   const [selectSentenceIds, setIsSelectSentenceIds] = useState<string[]>([]);
   const [selectSentence, setIsSelectSentence] = useState<SentenceDetailInfo[]>(
     []
   );
   const [selectGroup, setIsSelectGroup] = useState<GroupInfo | undefined>();
-  const [option, setIsOption] = useState('');
 
   const router = useRouter();
   const { removeSentenceMutate, setRemoveState } = useRemoveSentence();
   const { groupData, isLoading } = useGroup();
+
+  const [context, setContext] = useRecoilState(contextState);
 
   if (isLoading) return;
 
@@ -64,7 +66,7 @@ const SentenceByGroup = () => {
           sentenceIds: selectSentenceIds,
         });
 
-        setIsOption('');
+        setContext('');
         setIsOpen(false);
         setTimeout(() => {
           router.push(`/${groupData[0]._id}`);
@@ -89,7 +91,7 @@ const SentenceByGroup = () => {
       sentenceIds: selectSentenceIds,
     });
 
-    setIsOption('');
+    setContext('');
     setIsOpen(false);
     setTimeout(() => {
       router.push(`/${groupData[0]._id}`);
@@ -101,7 +103,6 @@ const SentenceByGroup = () => {
       <Seo title={`${groupData[0].name}`} />
       {showConfirmModal && (
         <ConfirmModal
-          btn={selectBtn}
           setShowModal={setShowConfirmModal}
           handler={handleChangeGroup}
           deleteHandler={handleDeleteSentence}
@@ -114,7 +115,6 @@ const SentenceByGroup = () => {
         {isOpen && (
           <SentenceEditModal
             setIsOpen={setIsOpen}
-            setIsOption={setIsOption}
             setRemoveState={setRemoveState}
           />
         )}
@@ -128,12 +128,9 @@ const SentenceByGroup = () => {
         )}
         <GroupHeader groupData={groupData} />
 
-        {option && groupData[0].sentences ? (
+        {context && groupData[0].sentences ? (
           <SelectSentence
-            option={option}
             groupInfo={groupData[0]}
-            setIsOption={setIsOption}
-            setSelectBtn={setSelectBtn}
             setShowConfirmModal={setShowConfirmModal}
             setIsSelectSentenceIds={setIsSelectSentenceIds}
             setIsSelectSentence={setIsSelectSentence}

@@ -1,28 +1,30 @@
 import { useSession } from 'next-auth/react';
 import { Dispatch, SetStateAction } from 'react';
 import { HiOutlineRefresh, HiOutlineTrash, HiOutlineX } from 'react-icons/hi';
+import { useSetRecoilState } from 'recoil';
 
 import { UserInfo } from '@pages/profile';
 import { useCustomToast } from '@components/hooks/useCustomToast';
+import { contextState } from '@recoil/atoms/common';
 
 const GroupEditModal = ({
   id,
   setIsOpen,
   setIsSelectGroupId,
   setIsOpenGroupEdit,
-  setIsSelectBtn,
   setShowConfirmModal,
 }: {
   id: string;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   setIsSelectGroupId: Dispatch<SetStateAction<string>>;
   setIsOpenGroupEdit: Dispatch<SetStateAction<boolean>>;
-  setIsSelectBtn: Dispatch<SetStateAction<string>>;
   setShowConfirmModal: Dispatch<SetStateAction<boolean>>;
 }) => {
   const { data: session } = useSession();
   const user = session?.user as UserInfo;
   const toast = useCustomToast();
+
+  const setContext = useSetRecoilState(contextState);
 
   const handleClickModal = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
@@ -30,6 +32,7 @@ const GroupEditModal = ({
     setIsSelectGroupId(id);
 
     const purpose = (event.target as any).id;
+
     if (purpose === 'deleteGroup' && user.email === 'guest@memoonjang.com') {
       toast({
         title: '게스트는 삭제권한이 없습니다!',
@@ -38,11 +41,11 @@ const GroupEditModal = ({
       return;
     }
     if (purpose === 'updateGroup') {
-      setIsSelectBtn('updateGroup');
+      setContext('updateGroup');
       setIsOpen((prev) => !prev);
     }
     if (purpose === 'deleteGroup') {
-      setIsSelectBtn('deleteGroup');
+      setContext('deleteGroup');
       setShowConfirmModal((prev) => !prev);
     }
   };
