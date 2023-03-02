@@ -20,6 +20,7 @@ import { queryKeys } from '@react-query/constants';
 import { getGroupData, useGroup } from '@react-query/hooks/groups/useGroup';
 import { useRemoveSentence } from '@react-query/hooks/sentence/useRemoveSentence';
 import { contextState } from '@recoil/atoms/common';
+import { modalState } from '@recoil/atoms/modals';
 
 export type GroupInfo = {
   _id: string;
@@ -35,7 +36,6 @@ const SentenceByGroup = () => {
 
   const [isOpen, setIsOpen] = useState(false);
   const [showSelectGroupModal, setShowSelectGroupModal] = useState(false);
-  const [showConfirmModal, setShowConfirmModal] = useState(false);
 
   const [selectSentenceIds, setIsSelectSentenceIds] = useState<string[]>([]);
   const [selectSentence, setIsSelectSentence] = useState<SentenceDetailInfo[]>(
@@ -48,6 +48,7 @@ const SentenceByGroup = () => {
   const { groupData, isLoading } = useGroup();
 
   const [context, setContext] = useRecoilState(contextState);
+  const [showModal, setIsShowModal] = useRecoilState(modalState);
 
   if (isLoading) return;
 
@@ -59,7 +60,7 @@ const SentenceByGroup = () => {
       });
 
       if (response.status === 201) {
-        setShowConfirmModal((prev) => !prev);
+        setIsShowModal({ confirmModal: !showModal.confirmModal });
 
         removeSentenceMutate({
           groupId: groupData[0]._id,
@@ -84,7 +85,7 @@ const SentenceByGroup = () => {
   };
 
   const handleDeleteSentence = async () => {
-    setShowConfirmModal((prev) => !prev);
+    setIsShowModal({ confirmModal: !showModal.confirmModal });
 
     removeSentenceMutate({
       groupId: groupData[0]._id,
@@ -101,9 +102,8 @@ const SentenceByGroup = () => {
   return (
     <>
       <Seo title={`${groupData[0].name}`} />
-      {showConfirmModal && (
+      {showModal.confirmModal && (
         <ConfirmModal
-          setShowModal={setShowConfirmModal}
           handler={handleChangeGroup}
           deleteHandler={handleDeleteSentence}
           selectSentenceIds={selectSentenceIds}
@@ -122,7 +122,6 @@ const SentenceByGroup = () => {
         {showSelectGroupModal && (
           <SelectGroup
             setShowSelectGroupModal={setShowSelectGroupModal}
-            setShowConfirmModal={setShowConfirmModal}
             setIsSelectGroup={setIsSelectGroup}
           />
         )}
@@ -131,7 +130,6 @@ const SentenceByGroup = () => {
         {context && groupData[0].sentences ? (
           <SelectSentence
             groupInfo={groupData[0]}
-            setShowConfirmModal={setShowConfirmModal}
             setIsSelectSentenceIds={setIsSelectSentenceIds}
             setIsSelectSentence={setIsSelectSentence}
             setShowSelectGroupModal={setShowSelectGroupModal}

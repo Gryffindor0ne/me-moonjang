@@ -7,16 +7,12 @@ import { GroupInfo } from '@pages/[groupId]';
 
 const Group = ({
   group,
-
   setIsSelectGroupId,
   setIsOpen,
-  setShowConfirmModal,
 }: {
   group: GroupInfo;
-
   setIsSelectGroupId: Dispatch<SetStateAction<string>>;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
-  setShowConfirmModal: Dispatch<SetStateAction<boolean>>;
 }) => {
   const router = useRouter();
   const [isOpenGroupEdit, setIsOpenGroupEdit] = useState(false);
@@ -52,7 +48,6 @@ const Group = ({
             setIsSelectGroupId={setIsSelectGroupId}
             setIsOpenGroupEdit={setIsOpenGroupEdit}
             setIsOpen={setIsOpen}
-            setShowConfirmModal={setShowConfirmModal}
           />
         )}
       </div>

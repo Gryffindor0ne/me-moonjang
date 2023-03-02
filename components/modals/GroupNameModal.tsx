@@ -27,12 +27,10 @@ type GroupProps = {
 const GroupNameModal = ({
   selectGroupId,
   setIsOpen,
-
   setIsSelectGroupId,
 }: {
   selectGroupId?: string;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
-
   setIsSelectGroupId: Dispatch<SetStateAction<string>>;
 }) => {
   const { data: session } = useSession();
@@ -67,8 +65,8 @@ const GroupNameModal = ({
     const { name } = value;
 
     newGroupRegister({ name, email: user.email });
-
     setIsOpen((prev) => !prev);
+    setContext('');
   };
 
   return (

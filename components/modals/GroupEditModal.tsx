@@ -1,30 +1,30 @@
 import { useSession } from 'next-auth/react';
 import { Dispatch, SetStateAction } from 'react';
 import { HiOutlineRefresh, HiOutlineTrash, HiOutlineX } from 'react-icons/hi';
-import { useSetRecoilState } from 'recoil';
+import { useRecoilState, useSetRecoilState } from 'recoil';
 
 import { UserInfo } from '@pages/profile';
 import { useCustomToast } from '@components/hooks/useCustomToast';
 import { contextState } from '@recoil/atoms/common';
+import { modalState } from '@recoil/atoms/modals';
 
 const GroupEditModal = ({
   id,
   setIsOpen,
   setIsSelectGroupId,
   setIsOpenGroupEdit,
-  setShowConfirmModal,
 }: {
   id: string;
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   setIsSelectGroupId: Dispatch<SetStateAction<string>>;
   setIsOpenGroupEdit: Dispatch<SetStateAction<boolean>>;
-  setShowConfirmModal: Dispatch<SetStateAction<boolean>>;
 }) => {
   const { data: session } = useSession();
   const user = session?.user as UserInfo;
   const toast = useCustomToast();
 
   const setContext = useSetRecoilState(contextState);
+  const [showModal, setIsShowModal] = useRecoilState(modalState);
 
   const handleClickModal = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
@@ -46,7 +46,7 @@ const GroupEditModal = ({
     }
     if (purpose === 'deleteGroup') {
       setContext('deleteGroup');
-      setShowConfirmModal((prev) => !prev);
+      setIsShowModal({ confirmModal: !showModal.confirmModal });
     }
   };
 
