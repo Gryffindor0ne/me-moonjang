@@ -1,35 +1,46 @@
 import { useSession } from 'next-auth/react';
 import { Dispatch, SetStateAction } from 'react';
 import { HiOutlineRefresh, HiOutlineTrash, HiOutlineX } from 'react-icons/hi';
-import { useRecoilState, useSetRecoilState } from 'recoil';
+import { useSetRecoilState } from 'recoil';
 
 import { UserInfo } from '@pages/profile';
 import { useCustomToast } from '@components/hooks/useCustomToast';
 import { contextState } from '@recoil/atoms/common';
-import { modalState } from '@recoil/atoms/modals';
+import useModal from '@components/hooks/useModal';
+import { useRemoveGroup } from '@react-query/hooks/groups/useRemoveGroup';
+
+export type GroupEditModalProps = {
+  id: string;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
+  setIsSelectGroupId: Dispatch<SetStateAction<string>>;
+  setIsOpenGroupEdit: Dispatch<SetStateAction<boolean>>;
+};
 
 const GroupEditModal = ({
   id,
   setIsOpen,
   setIsSelectGroupId,
   setIsOpenGroupEdit,
-}: {
-  id: string;
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
-  setIsSelectGroupId: Dispatch<SetStateAction<string>>;
-  setIsOpenGroupEdit: Dispatch<SetStateAction<boolean>>;
-}) => {
+}: GroupEditModalProps) => {
   const { data: session } = useSession();
   const user = session?.user as UserInfo;
   const toast = useCustomToast();
+  const removeGroup = useRemoveGroup();
 
   const setContext = useSetRecoilState(contextState);
-  const [showModal, setIsShowModal] = useRecoilState(modalState);
+  const { showModal, hideModal } = useModal();
 
   const handleClickModal = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
     setIsOpenGroupEdit((prev) => !prev);
     setIsSelectGroupId(id);
+
+    const handleDeleteGroup = () => {
+      setContext('');
+      hideModal();
+      removeGroup({ id });
+      setIsSelectGroupId('');
+    };
 
     const purpose = (event.target as any).id;
 
@@ -46,7 +57,13 @@ const GroupEditModal = ({
     }
     if (purpose === 'deleteGroup') {
       setContext('deleteGroup');
-      setIsShowModal({ confirmModal: !showModal.confirmModal });
+      setIsOpen(false);
+      showModal({
+        modalType: 'ConfirmModal',
+        modalProps: {
+          handler: handleDeleteGroup,
+        },
+      });
     }
   };
 

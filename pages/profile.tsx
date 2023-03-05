@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { getSession, signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { GetServerSideProps } from 'next';
@@ -8,10 +7,11 @@ import { CiLogout } from 'react-icons/ci';
 import { useSetRecoilState } from 'recoil';
 
 import Seo from '@components/layout/Seo';
-import ConfirmModal from '@components/modals/ConfirmModal';
+
 import Layout from '@components/layout/Layout';
 import { useCustomToast } from '@components/hooks/useCustomToast';
 import { contextState } from '@recoil/atoms/common';
+import useModal from '@components/hooks/useModal';
 
 export type UserInfo = {
   id: string;
@@ -24,7 +24,7 @@ const ProfilePage = () => {
   const { data: session } = useSession();
   const user = session?.user as UserInfo;
   const router = useRouter();
-  const [showModal, setShowModal] = useState(false);
+  const { showModal } = useModal();
 
   const toast = useCustomToast();
 
@@ -37,23 +37,13 @@ const ProfilePage = () => {
       });
 
       if (res.status === 200) {
+        setContext('');
+
         signOut({ callbackUrl: `${process.env.NEXT_PUBLIC_URL}` });
       }
     } catch (error) {
       console.log(error);
     }
-  };
-
-  const handleClickBtn = (value: string) => {
-    if (value === 'deleteAccount' && user.email === 'guest@memoonjang.com') {
-      toast({
-        title: '게스트는 회원탈퇴 할 수 없습니다!',
-        status: 'warning',
-      });
-      return;
-    }
-    setContext(value);
-    setShowModal((prev) => !prev);
   };
 
   const handleDeleteAccount = async (): Promise<void> => {
@@ -67,6 +57,8 @@ const ProfilePage = () => {
         });
 
         if (deleteUserResponse.status === 200) {
+          setContext('');
+
           toast({
             title: '회원탈퇴가 완료되었습니다.',
             status: 'success',
@@ -82,16 +74,39 @@ const ProfilePage = () => {
     }
   };
 
+  const handleClickBtn = (value: string) => {
+    if (value === 'deleteAccount' && user.email === 'guest@memoonjang.com') {
+      toast({
+        title: '게스트는 회원탈퇴 할 수 없습니다!',
+        status: 'warning',
+      });
+      return;
+    }
+
+    setContext(value);
+
+    if (value === 'logout') {
+      showModal({
+        modalType: 'ConfirmModal',
+        modalProps: {
+          handler: handleLogout,
+        },
+      });
+    }
+    if (value === 'deleteAccout') {
+      showModal({
+        modalType: 'ConfirmModal',
+        modalProps: {
+          handler: handleDeleteAccount,
+        },
+      });
+    }
+  };
+
   return (
     <>
       <Seo title="회원정보" />
-      {showModal && (
-        <ConfirmModal
-          setShowModal={setShowModal}
-          deleteHandler={handleDeleteAccount}
-          handler={handleLogout}
-        />
-      )}
+
       <Layout>
         <section className="flex flex-col w-full gap-4 p-5 mx-auto">
           <div className="flex">

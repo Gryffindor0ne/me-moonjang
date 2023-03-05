@@ -1,18 +1,15 @@
 import { useState } from 'react';
 import { GetServerSideProps } from 'next';
 import { getSession } from 'next-auth/react';
-import { useRouter } from 'next/router';
-import axios from 'axios';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
 import { HiOutlineExclamationCircle } from 'react-icons/hi';
-import { useRecoilState } from 'recoil';
+import { useRecoilValue } from 'recoil';
 
 import { descendingSort } from '@utils/dayjs';
 import Sentence, { SentenceDetailInfo } from '@components/group/Sentence';
 import Seo from '@components/layout/Seo';
 import GroupNavbar from '@components/group/GroupNavbar';
 import SentenceEditModal from '@components/modals/SentenceEditModal';
-import ConfirmModal from '@components/modals/ConfirmModal';
 import SelectSentence from '@components/group/SelectSentence';
 import GroupHeader from '@components/group/GroupHeader';
 import SelectGroup from '@components/group/SelectGroup';
@@ -20,7 +17,6 @@ import { queryKeys } from '@react-query/constants';
 import { getGroupData, useGroup } from '@react-query/hooks/groups/useGroup';
 import { useRemoveSentence } from '@react-query/hooks/sentence/useRemoveSentence';
 import { contextState } from '@recoil/atoms/common';
-import { modalState } from '@recoil/atoms/modals';
 
 export type GroupInfo = {
   _id: string;
@@ -32,104 +28,53 @@ export type GroupInfo = {
 };
 
 const SentenceByGroup = () => {
-  const SERVER_ERROR = 'There was an error contacting the server.';
-
-  const [isOpen, setIsOpen] = useState(false);
+  const [showSentenceEditModal, setIsShowSentenceEditModal] = useState(false);
   const [showSelectGroupModal, setShowSelectGroupModal] = useState(false);
 
   const [selectSentenceIds, setIsSelectSentenceIds] = useState<string[]>([]);
   const [selectSentence, setIsSelectSentence] = useState<SentenceDetailInfo[]>(
     []
   );
-  const [selectGroup, setIsSelectGroup] = useState<GroupInfo | undefined>();
 
-  const router = useRouter();
-  const { removeSentenceMutate, setRemoveState } = useRemoveSentence();
+  const { setRemoveState } = useRemoveSentence();
   const { groupData, isLoading } = useGroup();
 
-  const [context, setContext] = useRecoilState(contextState);
-  const [showModal, setIsShowModal] = useRecoilState(modalState);
+  const context = useRecoilValue(contextState);
 
-  if (isLoading) return;
-
-  const handleChangeGroup = async (): Promise<void> => {
-    try {
-      const response = await axios.patch(`api/sentence/actions/change-group`, {
-        id: selectGroup?._id,
-        sentences: selectSentence,
-      });
-
-      if (response.status === 201) {
-        setIsShowModal({ confirmModal: !showModal.confirmModal });
-
-        removeSentenceMutate({
-          groupId: groupData[0]._id,
-          sentenceIds: selectSentenceIds,
-        });
-
-        setContext('');
-        setIsOpen(false);
-        setTimeout(() => {
-          router.push(`/${groupData[0]._id}`);
-        }, 100);
-      }
-    } catch (errorResponse) {
-      const message =
-        axios.isAxiosError(errorResponse) &&
-        errorResponse?.response?.data?.message
-          ? errorResponse?.response?.data?.message
-          : SERVER_ERROR;
-
-      console.error(message);
-    }
-  };
-
-  const handleDeleteSentence = async () => {
-    setIsShowModal({ confirmModal: !showModal.confirmModal });
-
-    removeSentenceMutate({
-      groupId: groupData[0]._id,
-      sentenceIds: selectSentenceIds,
-    });
-
-    setContext('');
-    setIsOpen(false);
-    setTimeout(() => {
-      router.push(`/${groupData[0]._id}`);
-    }, 100);
-  };
+  if (isLoading) return null;
 
   return (
     <>
       <Seo title={`${groupData[0].name}`} />
-      {showModal.confirmModal && (
-        <ConfirmModal
-          handler={handleChangeGroup}
-          deleteHandler={handleDeleteSentence}
-          selectSentenceIds={selectSentenceIds}
-          setIsSelectSentenceIds={setIsSelectSentenceIds}
-        />
-      )}
+
       <section className="flex flex-col w-full gap-3 p-4 pb-32 mx-auto">
-        <GroupNavbar name={groupData[0].name} setIsOpen={setIsOpen} />
-        {isOpen && (
+        <GroupNavbar
+          name={groupData[0].name}
+          setIsOpen={setIsShowSentenceEditModal}
+        />
+        {showSentenceEditModal && (
           <SentenceEditModal
-            setIsOpen={setIsOpen}
+            setIsOpen={setIsShowSentenceEditModal}
             setRemoveState={setRemoveState}
           />
         )}
 
         {showSelectGroupModal && (
           <SelectGroup
+            setIsOpen={setIsShowSentenceEditModal}
+            selectSentence={selectSentence}
+            selectSentenceIds={selectSentenceIds}
+            setIsSelectSentenceIds={setIsSelectSentenceIds}
             setShowSelectGroupModal={setShowSelectGroupModal}
-            setIsSelectGroup={setIsSelectGroup}
           />
         )}
         <GroupHeader groupData={groupData} />
 
         {context && groupData[0].sentences ? (
           <SelectSentence
+            setIsOpen={setIsShowSentenceEditModal}
             groupInfo={groupData[0]}
+            selectSentenceIds={selectSentenceIds}
             setIsSelectSentenceIds={setIsSelectSentenceIds}
             setIsSelectSentence={setIsSelectSentence}
             setShowSelectGroupModal={setShowSelectGroupModal}

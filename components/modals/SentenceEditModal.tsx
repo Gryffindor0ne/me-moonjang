@@ -6,13 +6,15 @@ import { useGroup } from '@react-query/hooks/groups/useGroup';
 import { useCustomToast } from '@components/hooks/useCustomToast';
 import { contextState } from '@recoil/atoms/common';
 
+export type SentenceEditModalProps = {
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
+  setRemoveState: Dispatch<SetStateAction<boolean>>;
+};
+
 const SentenceEditModal = ({
   setIsOpen,
   setRemoveState,
-}: {
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
-  setRemoveState: Dispatch<SetStateAction<boolean>>;
-}) => {
+}: SentenceEditModalProps) => {
   const toast = useCustomToast();
   const { groupData, isLoading } = useGroup();
 

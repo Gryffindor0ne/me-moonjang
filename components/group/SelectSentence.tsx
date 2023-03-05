@@ -2,6 +2,7 @@ import { Dispatch, SetStateAction } from 'react';
 import { useSession } from 'next-auth/react';
 import { Field, Form, Formik } from 'formik';
 import { useRecoilState } from 'recoil';
+import { useRouter } from 'next/router';
 
 import Sentence, { SentenceDetailInfo } from '@components/group/Sentence';
 import { UserInfo } from '@pages/profile';
@@ -9,19 +10,25 @@ import { GroupInfo } from '@pages/[groupId]';
 import { descendingSort } from '@utils/dayjs';
 import { useCustomToast } from '@components/hooks/useCustomToast';
 import { contextState } from '@recoil/atoms/common';
-import { modalState } from '@recoil/atoms/modals';
+import useModal from '@components/hooks/useModal';
+import { useRemoveSentence } from '@react-query/hooks/sentence/useRemoveSentence';
+import { useGroup } from '@react-query/hooks/groups/useGroup';
 
 type SelectSentenceInfo = {
   sentenceIds: string[];
 };
 
 const SelectSentence = ({
+  setIsOpen,
   groupInfo,
+  selectSentenceIds,
   setIsSelectSentence,
   setIsSelectSentenceIds,
   setShowSelectGroupModal,
 }: {
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
   groupInfo: GroupInfo;
+  selectSentenceIds: string[];
   setIsSelectSentenceIds: Dispatch<SetStateAction<string[]>>;
   setIsSelectSentence: Dispatch<SetStateAction<SentenceDetailInfo[]>>;
   setShowSelectGroupModal: Dispatch<SetStateAction<boolean>>;
@@ -31,12 +38,15 @@ const SelectSentence = ({
   const handleCancel = () => {
     setContext('');
   };
+  const router = useRouter();
   const toast = useCustomToast();
+  const { removeSentenceMutate } = useRemoveSentence();
+  const { groupData, isLoading } = useGroup();
 
   const [context, setContext] = useRecoilState(contextState);
-  const [showModal, setIsShowModal] = useRecoilState(modalState);
+  const { showModal, hideModal } = useModal();
 
-  console.log(context, showModal);
+  if (isLoading) return null;
 
   const onSubmit = (value: SelectSentenceInfo) => {
     const { sentenceIds } = value;
@@ -48,6 +58,21 @@ const SelectSentence = ({
       });
       return;
     }
+
+    const handleDeleteSentence = async () => {
+      hideModal();
+
+      removeSentenceMutate({
+        groupId: groupData[0]._id,
+        sentenceIds,
+      });
+
+      setContext('');
+      setIsOpen(false);
+      setTimeout(() => {
+        router.push(`/${groupData[0]._id}`);
+      }, 100);
+    };
 
     const selectSentences: SentenceDetailInfo[] = descendingSort(
       groupInfo.sentences
@@ -69,8 +94,16 @@ const SelectSentence = ({
       setShowSelectGroupModal((prev) => !prev);
       setIsSelectSentence(selectSentences);
     }
-    if (context === 'deleteSentence')
-      setIsShowModal({ confirmModal: !showModal.confirmModal });
+    if (context === 'deleteSentence') {
+      showModal({
+        modalType: 'ConfirmModal',
+        modalProps: {
+          handler: handleDeleteSentence,
+          selectSentenceIds,
+          setIsSelectSentenceIds,
+        },
+      });
+    }
   };
 
   return (
