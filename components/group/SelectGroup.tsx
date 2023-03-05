@@ -1,33 +1,101 @@
 import { Dispatch, SetStateAction } from 'react';
 import { Field, Form, Formik } from 'formik';
 import { HiOutlineX } from 'react-icons/hi';
-import { useRecoilState } from 'recoil';
+import axios from 'axios';
+import { useSetRecoilState } from 'recoil';
+import { useRouter } from 'next/router';
 
-import { GroupInfo } from '@pages/[groupId]';
+import useModal from '@components/hooks/useModal';
+import { SentenceDetailInfo } from '@components/group/Sentence';
+import { useRemoveSentence } from '@react-query/hooks/sentence/useRemoveSentence';
+import { useGroup } from '@react-query/hooks/groups/useGroup';
 import { useGroups } from '@react-query/hooks/groups/useGroups';
-import { modalState } from '@recoil/atoms/modals';
+import { contextState } from '@recoil/atoms/common';
 
 type Group = {
   groupName: string;
 };
 
+export type GroupInfo = {
+  _id: string;
+  name: string;
+  email: string;
+  createdAt: number;
+  updatedAt: number;
+  sentences: SentenceDetailInfo[];
+};
+
 const SelectGroup = ({
-  setIsSelectGroup,
+  setIsOpen,
+  selectSentence,
+  selectSentenceIds,
+  setIsSelectSentenceIds,
   setShowSelectGroupModal,
 }: {
-  setIsSelectGroup: Dispatch<SetStateAction<GroupInfo | undefined>>;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
+  selectSentence: SentenceDetailInfo[];
+  selectSentenceIds: string[];
+  setIsSelectSentenceIds: Dispatch<SetStateAction<string[]>>;
   setShowSelectGroupModal: Dispatch<SetStateAction<boolean>>;
 }) => {
+  const router = useRouter();
+  const { showModal, hideModal } = useModal();
   const { groups } = useGroups();
-  const [showModal, setIsShowModal] = useRecoilState(modalState);
+  const { removeSentenceMutate } = useRemoveSentence();
+  const { groupData, isLoading } = useGroup();
+
+  const setContext = useSetRecoilState(contextState);
+
+  if (isLoading) return null;
 
   const onSubmit = async (values: Group) => {
     const { groupName } = values;
-
-    setIsShowModal({ confirmModal: !showModal.confirmModal });
-
-    setIsSelectGroup(groups.filter((group) => group.name === groupName)[0]);
+    const groupId = groups.filter((group) => group.name === groupName)[0]._id;
     setShowSelectGroupModal((prev) => !prev);
+
+    const handleChangeGroup = async (): Promise<void> => {
+      try {
+        const response = await axios.patch(
+          `api/sentence/actions/change-group`,
+          {
+            id: groupId,
+            sentences: selectSentence,
+          }
+        );
+
+        if (response.status === 201) {
+          hideModal();
+
+          removeSentenceMutate({
+            groupId: groupData[0]._id,
+            sentenceIds: selectSentenceIds,
+          });
+
+          setContext('');
+          setIsOpen(false);
+          setTimeout(() => {
+            router.push(`/${groupData[0]._id}`);
+          }, 100);
+        }
+      } catch (errorResponse) {
+        const message =
+          axios.isAxiosError(errorResponse) &&
+          errorResponse?.response?.data?.message
+            ? errorResponse?.response?.data?.message
+            : 'There was an error contacting the server.';
+
+        console.error(message);
+      }
+    };
+
+    showModal({
+      modalType: 'ConfirmModal',
+      modalProps: {
+        handler: handleChangeGroup,
+        selectSentenceIds,
+        setIsSelectSentenceIds,
+      },
+    });
   };
 
   return (

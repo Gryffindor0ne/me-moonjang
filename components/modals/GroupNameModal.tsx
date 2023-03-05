@@ -24,15 +24,17 @@ type GroupProps = {
   name: string;
 };
 
+export type GroupNameModalProps = {
+  selectGroupId?: string;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
+  setIsSelectGroupId: Dispatch<SetStateAction<string>>;
+};
+
 const GroupNameModal = ({
   selectGroupId,
   setIsOpen,
   setIsSelectGroupId,
-}: {
-  selectGroupId?: string;
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
-  setIsSelectGroupId: Dispatch<SetStateAction<string>>;
-}) => {
+}: GroupNameModalProps) => {
   const { data: session } = useSession();
   const user = session?.user as UserInfo;
 

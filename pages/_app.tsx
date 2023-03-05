@@ -11,6 +11,7 @@ import '../styles/globals.css';
 import { theme } from 'theme';
 import Loading from '@components/layout/Loading';
 import { queryClient } from '@react-query/queryClient';
+import GlobalModal from '@components/modals/GlobalModal';
 
 const { ToastContainer } = createStandaloneToast();
 
@@ -22,6 +23,7 @@ function MyApp({ Component, pageProps: { session, ...pageProps } }: AppProps) {
           <QueryClientProvider client={queryClient}>
             <Hydrate state={pageProps.dehydratedState}>
               <Component {...pageProps} />
+              <GlobalModal />
               <Loading />
               <ToastContainer />
             </Hydrate>

@@ -5,39 +5,41 @@ import React, {
   useRef,
   useState,
 } from 'react';
-import { useRecoilState, useRecoilValue } from 'recoil';
+import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { Dialog, Transition } from '@headlessui/react';
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 
 import { selectContext } from '@recoil/selectors/common';
-import { modalState } from '@recoil/atoms/modals';
+import useModal from '@components/hooks/useModal';
+import { contextState } from '@recoil/atoms/common';
+
+export type ConfirmModalProps = {
+  handler: () => void;
+  selectSentenceIds?: string[];
+  setIsSelectSentenceIds?: Dispatch<SetStateAction<string[] | []>>;
+};
 
 const ConfirmModal = ({
   handler,
-  deleteHandler,
   selectSentenceIds,
   setIsSelectSentenceIds,
-}: {
-  handler?: () => void;
-  deleteHandler: () => void;
-  selectSentenceIds?: string[];
-  setIsSelectSentenceIds?: Dispatch<SetStateAction<string[] | []>>;
-}) => {
+}: ConfirmModalProps) => {
   const [open, setOpen] = useState(true);
 
   const cancelButtonRef = useRef(null);
 
+  const setContext = useSetRecoilState(contextState);
   const currentContext = useRecoilValue(selectContext);
-  const [showModal, setIsShowModal] = useRecoilState(modalState);
+
+  const { hideModal } = useModal();
 
   const handleCancel = () => {
     setOpen((prev) => !prev);
-    setIsShowModal({ confirmModal: !showModal.confirmModal });
+    setContext('');
+
+    hideModal();
     if (selectSentenceIds) setIsSelectSentenceIds!([]);
   };
-
-  const currentHandler =
-    currentContext?.handler === 'handler' ? handler : deleteHandler;
 
   return (
     <Transition.Root show={open} as={Fragment}>
@@ -98,7 +100,7 @@ const ConfirmModal = ({
                   <button
                     type="button"
                     className="inline-flex justify-center w-full px-4 py-2 text-base font-medium text-white bg-orange-400 border border-transparent rounded-md shadow-sm hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 focus:ring-offset-1 sm:ml-3 sm:w-auto sm:text-sm"
-                    onClick={currentHandler}
+                    onClick={handler}
                   >
                     {currentContext?.title}
                   </button>

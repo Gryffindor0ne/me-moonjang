@@ -22,38 +22,32 @@ export const contextSet = atom({
       purpose: 'logout',
       title: '로그아웃',
       description: '로그아웃하시겠습니까?',
-      handler: 'handler',
     },
     {
       purpose: 'deleteAccount',
       title: '회원탈퇴',
       description: '정말 회원을 탈퇴하겠습니까? 모든 데이터가 삭제됩니다.',
-      handler: 'deleteHandler',
     },
     {
       purpose: 'deleteSentence',
       title: '문장삭제',
       description: '선택한 문장을 삭제하시겠습니까?',
-      handler: 'deleteHandler',
     },
     {
       purpose: 'changeGroup',
       title: '문장집 변경',
       description: '선택한 문장의 문장집을 변경하시겠습니까?',
-      handler: 'handler',
     },
     {
       purpose: 'updateGroup',
       title: '문장집 수정',
       description: '선택한 문장집의 이름을 변경하시겠습니까?',
-      handler: 'handler',
     },
     {
       purpose: 'deleteGroup',
       title: '문장집 삭제',
       description:
         '선택한 문장집을 삭제하시겠습니까? 문장집 내 모든 문장이 삭제됩니다.',
-      handler: 'deleteHandler',
     },
   ],
 });
