@@ -7,15 +7,15 @@ import {
 import { useSetRecoilState } from 'recoil';
 
 import GroupsNavbar from '@components/groups/components/GroupsNavbar';
-import GroupNameModal from '@components/modals/GroupNameModal';
 import { UserInfo } from '@pages/profile';
 import Group from '@components/groups/components/Group';
 import { useGroups } from '@react-query/hooks/groups/useGroups';
 import { contextState } from '@recoil/atoms/common';
+import useModal from '@components/hooks/useModal';
 
 const GroupBoard = () => {
-  const [isOpen, setIsOpen] = useState(false);
   const [selectGroupId, setIsSelectGroupId] = useState('');
+  const { showModal } = useModal();
 
   const { data: session } = useSession();
   const user = session?.user as UserInfo;
@@ -25,8 +25,15 @@ const GroupBoard = () => {
   const setContext = useSetRecoilState(contextState);
 
   const createNewGroup = () => {
-    setIsOpen((prev) => !prev);
     setContext('createGroup');
+
+    showModal({
+      modalType: 'GroupNameModal',
+      modalProps: {
+        selectGroupId,
+        setIsSelectGroupId,
+      },
+    });
   };
 
   return (
@@ -44,20 +51,13 @@ const GroupBoard = () => {
           <HiOutlineCollection />
         </div>
       </div>
-      {isOpen && (
-        <GroupNameModal
-          setIsOpen={setIsOpen}
-          selectGroupId={selectGroupId}
-          setIsSelectGroupId={setIsSelectGroupId}
-        />
-      )}
+
       {groups?.length !== 0 ? (
         groups?.map((group, idx) => {
           return (
             <Group
               key={idx}
               group={group}
-              setIsOpen={setIsOpen}
               setIsSelectGroupId={setIsSelectGroupId}
             />
           );

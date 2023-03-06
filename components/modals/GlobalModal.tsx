@@ -5,6 +5,7 @@ import ConfirmModal from '@components/modals/ConfirmModal';
 import GroupEditModal from '@components/modals/GroupEditModal';
 import GroupNameModal from '@components/modals/GroupNameModal';
 import SentenceEditModal from '@components/modals/SentenceEditModal';
+import GroupSelectModal from '@components/modals/GroupSelectModal';
 import { modalState } from '@recoil/atoms/modals';
 
 export const MODAL_TYPES = {
@@ -12,6 +13,7 @@ export const MODAL_TYPES = {
   GroupEditModal: 'GroupEditModal',
   GroupNameModal: 'GroupNameModal',
   SentenceEditModal: 'SentenceEditModal',
+  GroupSelectModal: 'GroupSelectModal',
 } as const;
 
 const MODAL_COMPONENTS: any = {
@@ -19,6 +21,7 @@ const MODAL_COMPONENTS: any = {
   [MODAL_TYPES.GroupEditModal]: GroupEditModal,
   [MODAL_TYPES.GroupNameModal]: GroupNameModal,
   [MODAL_TYPES.SentenceEditModal]: SentenceEditModal,
+  [MODAL_TYPES.GroupSelectModal]: GroupSelectModal,
 };
 
 const GlobalModal = () => {

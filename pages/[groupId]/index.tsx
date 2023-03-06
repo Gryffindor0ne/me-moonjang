@@ -12,7 +12,7 @@ import GroupNavbar from '@components/group/GroupNavbar';
 import SentenceEditModal from '@components/modals/SentenceEditModal';
 import SelectSentence from '@components/group/SelectSentence';
 import GroupHeader from '@components/group/GroupHeader';
-import SelectGroup from '@components/group/SelectGroup';
+import GroupSelectModal from '@components/modals/GroupSelectModal';
 import { queryKeys } from '@react-query/constants';
 import { getGroupData, useGroup } from '@react-query/hooks/groups/useGroup';
 import { useRemoveSentence } from '@react-query/hooks/sentence/useRemoveSentence';
@@ -60,7 +60,7 @@ const SentenceByGroup = () => {
         )}
 
         {showSelectGroupModal && (
-          <SelectGroup
+          <GroupSelectModal
             setIsOpen={setIsShowSentenceEditModal}
             selectSentence={selectSentence}
             selectSentenceIds={selectSentenceIds}

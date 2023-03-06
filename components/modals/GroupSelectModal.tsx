@@ -25,19 +25,21 @@ export type GroupInfo = {
   sentences: SentenceDetailInfo[];
 };
 
-const SelectGroup = ({
-  setIsOpen,
-  selectSentence,
-  selectSentenceIds,
-  setIsSelectSentenceIds,
-  setShowSelectGroupModal,
-}: {
+export type GroupSelectModalProps = {
   setIsOpen: Dispatch<SetStateAction<boolean>>;
   selectSentence: SentenceDetailInfo[];
   selectSentenceIds: string[];
   setIsSelectSentenceIds: Dispatch<SetStateAction<string[]>>;
   setShowSelectGroupModal: Dispatch<SetStateAction<boolean>>;
-}) => {
+};
+
+const GroupSelectModal = ({
+  setIsOpen,
+  selectSentence,
+  selectSentenceIds,
+  setIsSelectSentenceIds,
+  setShowSelectGroupModal,
+}: GroupSelectModalProps) => {
   const router = useRouter();
   const { showModal, hideModal } = useModal();
   const { groups } = useGroups();
@@ -164,4 +166,4 @@ const SelectGroup = ({
   );
 };
 
-export default SelectGroup;
+export default GroupSelectModal;
