@@ -8,31 +8,29 @@ import { useCustomToast } from '@components/hooks/useCustomToast';
 import { contextState } from '@recoil/atoms/common';
 import useModal from '@components/hooks/useModal';
 import { useRemoveGroup } from '@react-query/hooks/groups/useRemoveGroup';
+import { useGroups } from '@react-query/hooks/groups/useGroups';
 
 export type GroupEditModalProps = {
   id: string;
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
   setIsSelectGroupId: Dispatch<SetStateAction<string>>;
-  setIsOpenGroupEdit: Dispatch<SetStateAction<boolean>>;
 };
 
-const GroupEditModal = ({
-  id,
-  setIsOpen,
-  setIsSelectGroupId,
-  setIsOpenGroupEdit,
-}: GroupEditModalProps) => {
+const GroupEditModal = ({ id, setIsSelectGroupId }: GroupEditModalProps) => {
   const { data: session } = useSession();
   const user = session?.user as UserInfo;
   const toast = useCustomToast();
-  const removeGroup = useRemoveGroup();
 
   const setContext = useSetRecoilState(contextState);
   const { showModal, hideModal } = useModal();
 
+  const removeGroup = useRemoveGroup();
+  const { groups, isLoading } = useGroups();
+  if (isLoading) return null;
+
   const handleClickModal = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
-    setIsOpenGroupEdit((prev) => !prev);
+    hideModal();
+
     setIsSelectGroupId(id);
 
     const handleDeleteGroup = () => {
@@ -53,11 +51,19 @@ const GroupEditModal = ({
     }
     if (purpose === 'updateGroup') {
       setContext('updateGroup');
-      setIsOpen((prev) => !prev);
+
+      showModal({
+        modalType: 'GroupNameModal',
+        modalProps: {
+          selectGroupId: id,
+          setIsSelectGroupId,
+        },
+      });
     }
     if (purpose === 'deleteGroup') {
       setContext('deleteGroup');
-      setIsOpen(false);
+
+      hideModal();
       showModal({
         modalType: 'ConfirmModal',
         modalProps: {
@@ -66,23 +72,24 @@ const GroupEditModal = ({
       });
     }
   };
+  const currentGroupName = groups?.filter((group) => group._id === id)[0].name;
 
   return (
     <>
-      <div className="absolute z-50 flex justify-end w-full max-w-xs p-2 overflow-x-hidden overflow-y-auto outline-none md:max-w-md focus:outline-none">
-        <div className="relative max-w-xs p-1 bg-white rounded-md md:p-0 md:w-1/4 ">
+      <div className="fixed inset-0 z-50 flex items-center justify-center w-full p-2 overflow-x-hidden overflow-y-auto outline-none xs:max-w-lg focus:outline-none">
+        <div className="relative max-w-xs p-1 bg-white rounded-md md:p-2">
           <button
-            onClick={() => setIsOpenGroupEdit((prev) => !prev)}
+            onClick={() => hideModal()}
             type="button"
             className="absolute inline-flex items-center p-2 ml-auto text-base text-gray-400 bg-transparent rounded-lg md:p-1 top-2 right-2 hover:bg-gray-200 hover:text-gray-900"
           >
             <HiOutlineX />
           </button>
-          <ul className="flex flex-col py-1">
-            <li className="px-5">
+          <ul className="flex flex-col w-full py-2">
+            <li className="px-8">
               <div className="flex flex-row items-center h-8">
-                <div className="text-xs font-light tracking-wide text-gray-500">
-                  Menu
+                <div className="inline-flex pr-12 text-sm font-medium tracking-wide text-gray-500">
+                  {`${currentGroupName} 문장집`}
                 </div>
               </div>
             </li>
@@ -131,7 +138,7 @@ const GroupEditModal = ({
       </div>
 
       <div
-        onClick={() => setIsOpenGroupEdit((prev) => !prev)}
+        onClick={() => hideModal()}
         className="fixed inset-0 z-40 bg-gray-900 opacity-30"
       ></div>
     </>

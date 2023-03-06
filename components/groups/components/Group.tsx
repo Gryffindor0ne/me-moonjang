@@ -1,21 +1,20 @@
 import { useRouter } from 'next/router';
-import React, { Dispatch, SetStateAction, useState } from 'react';
+import React, { Dispatch, SetStateAction } from 'react';
 import { HiOutlineDotsHorizontal } from 'react-icons/hi';
 
-import GroupEditModal from '@components/modals/GroupEditModal';
 import { GroupInfo } from '@pages/[groupId]';
+import useModal from '@components/hooks/useModal';
 
 const Group = ({
   group,
   setIsSelectGroupId,
-  setIsOpen,
 }: {
   group: GroupInfo;
   setIsSelectGroupId: Dispatch<SetStateAction<string>>;
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
 }) => {
   const router = useRouter();
-  const [isOpenGroupEdit, setIsOpenGroupEdit] = useState(false);
+
+  const { showModal } = useModal();
 
   const handleClickGroupName = (event: React.MouseEvent<HTMLElement>) => {
     router.push(`/${(event.target as any).id}`);
@@ -23,7 +22,14 @@ const Group = ({
 
   const handleModalForGroupEdit = (event: React.MouseEvent<HTMLElement>) => {
     event.stopPropagation();
-    setIsOpenGroupEdit((prev) => !prev);
+
+    showModal({
+      modalType: 'GroupEditModal',
+      modalProps: {
+        id: group._id,
+        setIsSelectGroupId,
+      },
+    });
   };
   return (
     <>
@@ -34,22 +40,13 @@ const Group = ({
       >
         {group.name}
 
-        {!isOpenGroupEdit ? (
-          <span
-            id={group.name}
-            onClick={handleModalForGroupEdit}
-            className="z-0 flex items-center justify-center pr-2 text-xl cursor-pointer"
-          >
-            <HiOutlineDotsHorizontal />
-          </span>
-        ) : (
-          <GroupEditModal
-            id={group._id}
-            setIsSelectGroupId={setIsSelectGroupId}
-            setIsOpenGroupEdit={setIsOpenGroupEdit}
-            setIsOpen={setIsOpen}
-          />
-        )}
+        <span
+          id={group.name}
+          onClick={handleModalForGroupEdit}
+          className="z-0 flex items-center justify-center pr-2 text-xl cursor-pointer"
+        >
+          <HiOutlineDotsHorizontal />
+        </span>
       </div>
     </>
   );

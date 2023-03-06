@@ -5,6 +5,7 @@ import { ConfirmModalProps } from '@components/modals/ConfirmModal';
 import { GroupEditModalProps } from '@components/modals/GroupEditModal';
 import { GroupNameModalProps } from '@components/modals/GroupNameModal';
 import { SentenceEditModalProps } from '@components/modals/SentenceEditModal';
+import { GroupSelectModalProps } from '@components/modals/GroupSelectModal';
 
 export interface ConfirmModalType {
   modalType: typeof MODAL_TYPES.ConfirmModal;
@@ -23,11 +24,17 @@ export interface SentenceEditModalType {
   modalProps: SentenceEditModalProps;
 }
 
+export interface GroupSelectModalType {
+  modalType: typeof MODAL_TYPES.GroupSelectModal;
+  modalProps: GroupSelectModalProps;
+}
+
 export type ModalType =
   | ConfirmModalType
   | GroupEditModalType
   | GroupNameModalType
-  | SentenceEditModalType;
+  | SentenceEditModalType
+  | GroupSelectModalType;
 
 export const modalState = atom<ModalType | null>({
   key: 'modalState',

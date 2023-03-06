@@ -11,6 +11,7 @@ import { useChangeGroupName } from '@react-query/hooks/groups/useChangeGroupName
 import { useNewGroup } from '@react-query/hooks/groups/useNewGroup';
 import { contextState } from '@recoil/atoms/common';
 import { selectContext } from '@recoil/selectors/common';
+import useModal from '@components/hooks/useModal';
 
 export const userSchema = yup.object().shape({
   name: yup
@@ -25,14 +26,12 @@ type GroupProps = {
 };
 
 export type GroupNameModalProps = {
-  selectGroupId?: string;
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
+  selectGroupId: string;
   setIsSelectGroupId: Dispatch<SetStateAction<string>>;
 };
 
 const GroupNameModal = ({
   selectGroupId,
-  setIsOpen,
   setIsSelectGroupId,
 }: GroupNameModalProps) => {
   const { data: session } = useSession();
@@ -40,15 +39,16 @@ const GroupNameModal = ({
 
   const changeName = useChangeGroupName();
   const newGroupRegister = useNewGroup();
-  const { groups, isLoading } = useGroups();
 
   const [context, setContext] = useRecoilState(contextState);
   const currentContext = useRecoilValue(selectContext);
+  const { groups, isLoading } = useGroups();
+  const { hideModal } = useModal();
 
   if (isLoading) return null;
 
   const handleCloseModal = () => {
-    setIsOpen(false);
+    hideModal();
     setContext('');
     setIsSelectGroupId('');
   };
@@ -58,7 +58,7 @@ const GroupNameModal = ({
 
     changeName({ name, groupId: selectGroupId });
 
-    setIsOpen((prev) => !prev);
+    hideModal();
     setContext('');
     setIsSelectGroupId('');
   };
@@ -67,13 +67,14 @@ const GroupNameModal = ({
     const { name } = value;
 
     newGroupRegister({ name, email: user.email });
-    setIsOpen((prev) => !prev);
+    hideModal();
+
     setContext('');
   };
 
   return (
     <>
-      <div className="fixed z-50 flex items-center justify-center w-full max-w-md pr-6 outline-none md:h-[50vh] md:p-0 md:ml-6 focus:outline-none">
+      <div className="fixed inset-0 z-50 flex items-center justify-center w-full outline-none md:p-0 focus:outline-none">
         <div className="relative w-full h-auto max-w-sm p-10 md:p-2">
           <div className="relative bg-white rounded-lg shadow">
             <button
