@@ -76,7 +76,7 @@ const GroupEditModal = ({ id, setIsSelectGroupId }: GroupEditModalProps) => {
 
   return (
     <>
-      <div className="fixed inset-0 z-50 flex items-center justify-center w-full p-2 overflow-x-hidden overflow-y-auto outline-none xs:max-w-lg focus:outline-none">
+      <div className="fixed z-50 flex items-center justify-center w-full max-w-lg p-2 overflow-x-hidden overflow-y-auto outline-none top-1/3 focus:outline-none">
         <div className="relative max-w-xs p-1 bg-white rounded-md md:p-2">
           <button
             onClick={() => hideModal()}

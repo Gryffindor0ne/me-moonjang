@@ -74,7 +74,7 @@ const GroupNameModal = ({
 
   return (
     <>
-      <div className="fixed inset-0 z-50 flex items-center justify-center w-full outline-none md:p-0 focus:outline-none">
+      <div className="fixed z-50 flex items-center justify-center w-full max-w-lg outline-none top-1/3 md:p-0 focus:outline-none">
         <div className="relative w-full h-auto max-w-sm p-10 md:p-2">
           <div className="relative bg-white rounded-lg shadow">
             <button

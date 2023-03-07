@@ -1,25 +1,32 @@
 import { useRouter } from 'next/router';
 import { MdOutlineArrowBackIos } from 'react-icons/md';
 import { HiOutlineDotsHorizontal } from 'react-icons/hi';
-import { Dispatch, SetStateAction } from 'react';
+import { useSetRecoilState } from 'recoil';
 
-const GroupNavbar = ({
-  name,
-  setIsOpen,
-}: {
-  name: string;
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
-}) => {
+import useModal from '@components/hooks/useModal';
+import { contextState } from '@recoil/atoms/common';
+
+const GroupNavbar = ({ name }: { name: string }) => {
   const router = useRouter();
+  const { showModal } = useModal();
+  const setContext = useSetRecoilState(contextState);
+
+  const handleCancel = () => {
+    router.push('/');
+    setContext('');
+  };
 
   const handleModalForEdit = () => {
-    setIsOpen(true);
+    showModal({
+      modalType: 'SentenceEditModal',
+      modalProps: {},
+    });
   };
 
   return (
     <div className="flex">
       <span
-        onClick={() => router.push('/')}
+        onClick={handleCancel}
         className="flex items-center justify-center pl-4 text-2xl cursor-pointer"
       >
         <MdOutlineArrowBackIos />

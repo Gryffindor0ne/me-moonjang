@@ -24,7 +24,7 @@ const ProfilePage = () => {
   const { data: session } = useSession();
   const user = session?.user as UserInfo;
   const router = useRouter();
-  const { showModal } = useModal();
+  const { showModal, hideModal } = useModal();
 
   const toast = useCustomToast();
 
@@ -37,8 +37,8 @@ const ProfilePage = () => {
       });
 
       if (res.status === 200) {
+        hideModal();
         setContext('');
-
         signOut({ callbackUrl: `${process.env.NEXT_PUBLIC_URL}` });
       }
     } catch (error) {
@@ -57,6 +57,7 @@ const ProfilePage = () => {
         });
 
         if (deleteUserResponse.status === 200) {
+          hideModal();
           setContext('');
 
           toast({
@@ -93,7 +94,8 @@ const ProfilePage = () => {
         },
       });
     }
-    if (value === 'deleteAccout') {
+
+    if (value === 'deleteAccount') {
       showModal({
         modalType: 'ConfirmModal',
         modalProps: {

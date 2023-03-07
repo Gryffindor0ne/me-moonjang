@@ -1,4 +1,3 @@
-import { Dispatch, SetStateAction } from 'react';
 import { Field, Form, Formik } from 'formik';
 import { HiOutlineX } from 'react-icons/hi';
 import axios from 'axios';
@@ -26,34 +25,28 @@ export type GroupInfo = {
 };
 
 export type GroupSelectModalProps = {
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
   selectSentence: SentenceDetailInfo[];
   selectSentenceIds: string[];
-  setIsSelectSentenceIds: Dispatch<SetStateAction<string[]>>;
-  setShowSelectGroupModal: Dispatch<SetStateAction<boolean>>;
 };
 
 const GroupSelectModal = ({
-  setIsOpen,
   selectSentence,
   selectSentenceIds,
-  setIsSelectSentenceIds,
-  setShowSelectGroupModal,
 }: GroupSelectModalProps) => {
   const router = useRouter();
   const { showModal, hideModal } = useModal();
-  const { groups } = useGroups();
-  const { removeSentenceMutate } = useRemoveSentence();
-  const { groupData, isLoading } = useGroup();
+  const { groups, isLoading } = useGroups();
 
   const setContext = useSetRecoilState(contextState);
+  const removeSentenceMutate = useRemoveSentence();
+  const { groupData } = useGroup();
 
   if (isLoading) return null;
 
   const onSubmit = async (values: Group) => {
     const { groupName } = values;
     const groupId = groups.filter((group) => group.name === groupName)[0]._id;
-    setShowSelectGroupModal((prev) => !prev);
+    hideModal();
 
     const handleChangeGroup = async (): Promise<void> => {
       try {
@@ -74,7 +67,6 @@ const GroupSelectModal = ({
           });
 
           setContext('');
-          setIsOpen(false);
           setTimeout(() => {
             router.push(`/${groupData[0]._id}`);
           }, 100);
@@ -94,18 +86,16 @@ const GroupSelectModal = ({
       modalType: 'ConfirmModal',
       modalProps: {
         handler: handleChangeGroup,
-        selectSentenceIds,
-        setIsSelectSentenceIds,
       },
     });
   };
 
   return (
     <>
-      <div className="fixed z-50 flex items-center justify-center w-full max-w-md pl-8 mt-10 overflow-x-hidden overflow-y-auto outline-none focus:outline-none">
+      <div className="fixed z-50 flex items-center justify-center w-full max-w-lg overflow-x-hidden overflow-y-auto outline-none top-1/3 focus:outline-none">
         <div className="relative w-3/4 max-w-xs p-4 bg-white rounded-md md:p-2 md:w-full">
           <button
-            onClick={() => setShowSelectGroupModal((prev) => !prev)}
+            onClick={() => hideModal()}
             type="button"
             className="absolute top-2 right-2 text-gray-400 bg-transparent
            hover:bg-gray-200 hover:text-gray-900 rounded-lg text-lg p-2.5 ml-auto 
@@ -159,7 +149,7 @@ const GroupSelectModal = ({
       </div>
 
       <div
-        onClick={() => setShowSelectGroupModal((prev) => !prev)}
+        onClick={() => hideModal()}
         className="fixed inset-0 bg-gray-900 z-100 opacity-30"
       ></div>
     </>
