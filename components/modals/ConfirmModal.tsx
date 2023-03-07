@@ -1,10 +1,4 @@
-import React, {
-  Dispatch,
-  Fragment,
-  SetStateAction,
-  useRef,
-  useState,
-} from 'react';
+import React, { Fragment, useRef, useState } from 'react';
 import { useRecoilValue, useSetRecoilState } from 'recoil';
 import { Dialog, Transition } from '@headlessui/react';
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
@@ -15,15 +9,9 @@ import { contextState } from '@recoil/atoms/common';
 
 export type ConfirmModalProps = {
   handler: () => void;
-  selectSentenceIds?: string[];
-  setIsSelectSentenceIds?: Dispatch<SetStateAction<string[] | []>>;
 };
 
-const ConfirmModal = ({
-  handler,
-  selectSentenceIds,
-  setIsSelectSentenceIds,
-}: ConfirmModalProps) => {
+const ConfirmModal = ({ handler }: ConfirmModalProps) => {
   const [open, setOpen] = useState(true);
 
   const cancelButtonRef = useRef(null);
@@ -38,7 +26,6 @@ const ConfirmModal = ({
     setContext('');
 
     hideModal();
-    if (selectSentenceIds) setIsSelectSentenceIds!([]);
   };
 
   return (

@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { GetServerSideProps } from 'next';
 import { getSession } from 'next-auth/react';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
@@ -9,13 +8,10 @@ import { descendingSort } from '@utils/dayjs';
 import Sentence, { SentenceDetailInfo } from '@components/group/Sentence';
 import Seo from '@components/layout/Seo';
 import GroupNavbar from '@components/group/GroupNavbar';
-import SentenceEditModal from '@components/modals/SentenceEditModal';
 import SelectSentence from '@components/group/SelectSentence';
 import GroupHeader from '@components/group/GroupHeader';
-import GroupSelectModal from '@components/modals/GroupSelectModal';
 import { queryKeys } from '@react-query/constants';
 import { getGroupData, useGroup } from '@react-query/hooks/groups/useGroup';
-import { useRemoveSentence } from '@react-query/hooks/sentence/useRemoveSentence';
 import { contextState } from '@recoil/atoms/common';
 
 export type GroupInfo = {
@@ -28,15 +24,6 @@ export type GroupInfo = {
 };
 
 const SentenceByGroup = () => {
-  const [showSentenceEditModal, setIsShowSentenceEditModal] = useState(false);
-  const [showSelectGroupModal, setShowSelectGroupModal] = useState(false);
-
-  const [selectSentenceIds, setIsSelectSentenceIds] = useState<string[]>([]);
-  const [selectSentence, setIsSelectSentence] = useState<SentenceDetailInfo[]>(
-    []
-  );
-
-  const { setRemoveState } = useRemoveSentence();
   const { groupData, isLoading } = useGroup();
 
   const context = useRecoilValue(contextState);
@@ -48,37 +35,12 @@ const SentenceByGroup = () => {
       <Seo title={`${groupData[0].name}`} />
 
       <section className="flex flex-col w-full gap-3 p-4 pb-32 mx-auto">
-        <GroupNavbar
-          name={groupData[0].name}
-          setIsOpen={setIsShowSentenceEditModal}
-        />
-        {showSentenceEditModal && (
-          <SentenceEditModal
-            setIsOpen={setIsShowSentenceEditModal}
-            setRemoveState={setRemoveState}
-          />
-        )}
+        <GroupNavbar name={groupData[0].name} />
 
-        {showSelectGroupModal && (
-          <GroupSelectModal
-            setIsOpen={setIsShowSentenceEditModal}
-            selectSentence={selectSentence}
-            selectSentenceIds={selectSentenceIds}
-            setIsSelectSentenceIds={setIsSelectSentenceIds}
-            setShowSelectGroupModal={setShowSelectGroupModal}
-          />
-        )}
         <GroupHeader groupData={groupData} />
 
         {context && groupData[0].sentences ? (
-          <SelectSentence
-            setIsOpen={setIsShowSentenceEditModal}
-            groupInfo={groupData[0]}
-            selectSentenceIds={selectSentenceIds}
-            setIsSelectSentenceIds={setIsSelectSentenceIds}
-            setIsSelectSentence={setIsSelectSentence}
-            setShowSelectGroupModal={setShowSelectGroupModal}
-          />
+          <SelectSentence groupInfo={groupData[0]} />
         ) : groupData[0].sentences && groupData[0].sentences.length !== 0 ? (
           descendingSort(groupData[0].sentences).map((sentenceInfo, idx) => (
             <Sentence key={idx} data={sentenceInfo} groupInfo={groupData[0]} />

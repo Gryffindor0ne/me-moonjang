@@ -1,4 +1,3 @@
-import { Dispatch, SetStateAction } from 'react';
 import { useSession } from 'next-auth/react';
 import { Field, Form, Formik } from 'formik';
 import { useRecoilState } from 'recoil';
@@ -18,21 +17,11 @@ type SelectSentenceInfo = {
   sentenceIds: string[];
 };
 
-const SelectSentence = ({
-  setIsOpen,
-  groupInfo,
-  selectSentenceIds,
-  setIsSelectSentence,
-  setIsSelectSentenceIds,
-  setShowSelectGroupModal,
-}: {
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
+type SelectSentenceProps = {
   groupInfo: GroupInfo;
-  selectSentenceIds: string[];
-  setIsSelectSentenceIds: Dispatch<SetStateAction<string[]>>;
-  setIsSelectSentence: Dispatch<SetStateAction<SentenceDetailInfo[]>>;
-  setShowSelectGroupModal: Dispatch<SetStateAction<boolean>>;
-}) => {
+};
+
+const SelectSentence = ({ groupInfo }: SelectSentenceProps) => {
   const { data: session } = useSession();
   const user = session?.user as UserInfo;
   const handleCancel = () => {
@@ -40,7 +29,7 @@ const SelectSentence = ({
   };
   const router = useRouter();
   const toast = useCustomToast();
-  const { removeSentenceMutate } = useRemoveSentence();
+  const removeSentenceMutate = useRemoveSentence();
   const { groupData, isLoading } = useGroup();
 
   const [context, setContext] = useRecoilState(contextState);
@@ -68,7 +57,6 @@ const SelectSentence = ({
       });
 
       setContext('');
-      setIsOpen(false);
       setTimeout(() => {
         router.push(`/${groupData[0]._id}`);
       }, 100);
@@ -80,8 +68,6 @@ const SelectSentence = ({
       sentenceIds.includes(sentence.id)
     );
 
-    setIsSelectSentenceIds(sentenceIds);
-
     if (context === 'deleteSentence' && user.email === 'guest@memoonjang.com') {
       toast({
         title: '게스트는 삭제권한이 없습니다!',
@@ -91,16 +77,19 @@ const SelectSentence = ({
     }
 
     if (context === 'changeGroup') {
-      setShowSelectGroupModal((prev) => !prev);
-      setIsSelectSentence(selectSentences);
+      showModal({
+        modalType: 'GroupSelectModal',
+        modalProps: {
+          selectSentence: selectSentences,
+          selectSentenceIds: sentenceIds,
+        },
+      });
     }
     if (context === 'deleteSentence') {
       showModal({
         modalType: 'ConfirmModal',
         modalProps: {
           handler: handleDeleteSentence,
-          selectSentenceIds,
-          setIsSelectSentenceIds,
         },
       });
     }

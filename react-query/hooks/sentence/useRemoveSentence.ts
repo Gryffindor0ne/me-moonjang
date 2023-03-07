@@ -1,23 +1,18 @@
-import { Dispatch, SetStateAction, useState } from 'react';
 import {
   UseMutateFunction,
   useMutation,
   useQueryClient,
 } from '@tanstack/react-query';
 import axios from 'axios';
+import { useRecoilState } from 'recoil';
 
 import { queryKeys } from '@react-query/constants';
 import { useCustomToast } from '@components/hooks/useCustomToast';
+import { contextState } from '@recoil/atoms/common';
 
 type Ids = {
   groupId: string;
   sentenceIds: string[];
-};
-
-type UseRemoveSentence = {
-  removeSentenceMutate: UseMutateFunction<void, unknown, Ids, unknown>;
-  removeState: boolean;
-  setRemoveState: Dispatch<SetStateAction<boolean>>;
 };
 
 const removeSentence = async (ids: Ids) => {
@@ -29,26 +24,29 @@ const removeSentence = async (ids: Ids) => {
   });
 };
 
-export const useRemoveSentence = (): UseRemoveSentence => {
+export const useRemoveSentence = (): UseMutateFunction<
+  void,
+  unknown,
+  Ids,
+  unknown
+> => {
   const queryClient = useQueryClient();
   const toast = useCustomToast();
 
-  const [removeState, setRemoveState] = useState(true);
+  const context = useRecoilState(contextState)[0];
 
-  const { mutate: removeSentenceMutate } = useMutation(
-    (ids: Ids) => removeSentence(ids),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([queryKeys.groupDetailData]);
-        toast({
-          title: removeState
-            ? '선택한 문장이 삭제되었습니다.'
-            : '선택한 문장이 변경되었습니다.',
+  const { mutate } = useMutation((ids: Ids) => removeSentence(ids), {
+    onSuccess: () => {
+      queryClient.invalidateQueries([queryKeys.groupDetailData]);
+      toast({
+        title:
+          context === 'changeGroup'
+            ? '선택한 문장이 변경되었습니다.'
+            : '선택한 문장이 삭제되었습니다.',
 
-          status: 'success',
-        });
-      },
-    }
-  );
-  return { removeSentenceMutate, removeState, setRemoveState };
+        status: 'success',
+      });
+    },
+  });
+  return mutate;
 };
