@@ -11,7 +11,7 @@ import { useChangeGroupName } from '@react-query/hooks/groups/useChangeGroupName
 import { useNewGroup } from '@react-query/hooks/groups/useNewGroup';
 import { contextState } from '@recoil/atoms/common';
 import { selectContext } from '@recoil/selectors/common';
-import useModal from '@components/hooks/useModal';
+import useModal from '@hooks/useModal';
 
 export const userSchema = yup.object().shape({
   name: yup

@@ -9,7 +9,7 @@ import { GoEyeClosed, GoEye } from 'react-icons/go';
 
 import styles from '@styles/Form.module.css';
 import Seo from '@components/layout/Seo';
-import { useCustomToast } from '@components/hooks/useCustomToast';
+import { useCustomToast } from '@hooks/useCustomToast';
 
 export type AuthType = 'memoonjang';
 

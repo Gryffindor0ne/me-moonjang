@@ -4,9 +4,9 @@ import { HiOutlineRefresh, HiOutlineTrash, HiOutlineX } from 'react-icons/hi';
 import { useSetRecoilState } from 'recoil';
 
 import { UserInfo } from '@pages/profile';
-import { useCustomToast } from '@components/hooks/useCustomToast';
+import { useCustomToast } from '@hooks/useCustomToast';
 import { contextState } from '@recoil/atoms/common';
-import useModal from '@components/hooks/useModal';
+import useModal from '@hooks/useModal';
 import { useRemoveGroup } from '@react-query/hooks/groups/useRemoveGroup';
 import { useGroups } from '@react-query/hooks/groups/useGroups';
 

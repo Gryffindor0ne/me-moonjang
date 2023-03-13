@@ -21,10 +21,9 @@ const Sentence = () => {
   const router = useRouter();
 
   const { sentenceData, isLoading } = useSentence();
-
   if (isLoading) return;
 
-  const sentenceDetail: SentenceDetailInfo = sentenceData[0].sentences[0];
+  const sentenceDetail: SentenceDetailInfo = sentenceData.sentences[0];
 
   const handleSentence = () => {
     setOpen((prev) => !prev);
@@ -32,7 +31,7 @@ const Sentence = () => {
 
   return (
     <>
-      <Seo title={`${sentenceData[0].name}-상세`} />
+      <Seo title={`${sentenceData.name}-상세`} />
       <section className="flex flex-col w-full p-5 mx-auto">
         <div className="flex pr-8">
           <span
@@ -42,7 +41,7 @@ const Sentence = () => {
             <MdOutlineArrowBackIos />
           </span>
           <h1 className="flex py-2 mx-auto my-8 text-xl font-bold text-gray-800 md:2xl">
-            {sentenceData[0].name}
+            {sentenceData.name}
           </h1>
         </div>
         <div
@@ -51,7 +50,7 @@ const Sentence = () => {
         >
           <LearningState
             data={sentenceDetail}
-            groupInfo={sentenceData[0]}
+            groupInfo={sentenceData}
             sentenceDetail={true}
           />
           <div className="flex p-2 text-2xl font-bold font-Lora md:text-3xl">
@@ -92,6 +91,7 @@ const Sentence = () => {
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const { groupId, id } = context.query;
+
   const session = await getSession(context);
 
   const queryClient = new QueryClient();

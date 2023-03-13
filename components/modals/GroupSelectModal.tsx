@@ -4,7 +4,7 @@ import axios from 'axios';
 import { useSetRecoilState } from 'recoil';
 import { useRouter } from 'next/router';
 
-import useModal from '@components/hooks/useModal';
+import useModal from '@hooks/useModal';
 import { SentenceDetailInfo } from '@components/group/Sentence';
 import { useRemoveSentence } from '@react-query/hooks/sentence/useRemoveSentence';
 import { useGroup } from '@react-query/hooks/groups/useGroup';

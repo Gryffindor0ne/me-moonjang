@@ -9,9 +9,9 @@ import { useSetRecoilState } from 'recoil';
 import Seo from '@components/layout/Seo';
 
 import Layout from '@components/layout/Layout';
-import { useCustomToast } from '@components/hooks/useCustomToast';
+import { useCustomToast } from '@hooks/useCustomToast';
 import { contextState } from '@recoil/atoms/common';
-import useModal from '@components/hooks/useModal';
+import useModal from '@hooks/useModal';
 
 export type UserInfo = {
   id: string;

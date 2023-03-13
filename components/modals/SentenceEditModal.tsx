@@ -2,9 +2,9 @@ import { HiOutlineRefresh, HiOutlineTrash, HiOutlineX } from 'react-icons/hi';
 import { useSetRecoilState } from 'recoil';
 
 import { useGroup } from '@react-query/hooks/groups/useGroup';
-import { useCustomToast } from '@components/hooks/useCustomToast';
+import { useCustomToast } from '@hooks/useCustomToast';
 import { contextState } from '@recoil/atoms/common';
-import useModal from '@components/hooks/useModal';
+import useModal from '@hooks/useModal';
 
 export type SentenceEditModalProps = {};
 

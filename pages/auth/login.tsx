@@ -12,7 +12,7 @@ import { AiOutlineGoogle } from 'react-icons/ai';
 import styles from '@styles/Form.module.css';
 import Seo from '@components/layout/Seo';
 import LoginIndicator from '@components/layout/LoginIndicator';
-import { useCustomToast } from '@components/hooks/useCustomToast';
+import { useCustomToast } from '@hooks/useCustomToast';
 
 const loginSchema = yup.object().shape({
   email: yup

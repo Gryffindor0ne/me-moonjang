@@ -7,9 +7,9 @@ import Sentence, { SentenceDetailInfo } from '@components/group/Sentence';
 import { UserInfo } from '@pages/profile';
 import { GroupInfo } from '@pages/[groupId]';
 import { descendingSort } from '@utils/dayjs';
-import { useCustomToast } from '@components/hooks/useCustomToast';
+import { useCustomToast } from '@hooks/useCustomToast';
 import { contextState } from '@recoil/atoms/common';
-import useModal from '@components/hooks/useModal';
+import useModal from '@hooks/useModal';
 import { useRemoveSentence } from '@react-query/hooks/sentence/useRemoveSentence';
 import { useGroup } from '@react-query/hooks/groups/useGroup';
 
