@@ -24,9 +24,7 @@ const Sentence = ({
   const router = useRouter();
 
   const handleClickGroupName = (event: React.MouseEvent<HTMLElement>) => {
-    router.push(
-      `/sentences/${(event.target as any).id}?groupId=${groupInfo._id}`
-    );
+    router.push(`/${groupInfo._id}/${(event.target as any).id}`);
   };
 
   return (

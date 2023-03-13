@@ -3,7 +3,7 @@ import React, { Dispatch, SetStateAction } from 'react';
 import { HiOutlineDotsHorizontal } from 'react-icons/hi';
 
 import { GroupInfo } from '@pages/[groupId]';
-import useModal from '@components/hooks/useModal';
+import useModal from '@hooks/useModal';
 
 const Group = ({
   group,

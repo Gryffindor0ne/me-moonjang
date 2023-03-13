@@ -3,7 +3,7 @@ import { MdOutlineArrowBackIos } from 'react-icons/md';
 import { HiOutlineDotsHorizontal } from 'react-icons/hi';
 import { useSetRecoilState } from 'recoil';
 
-import useModal from '@components/hooks/useModal';
+import useModal from '@hooks/useModal';
 import { contextState } from '@recoil/atoms/common';
 
 const GroupNavbar = ({ name }: { name: string }) => {

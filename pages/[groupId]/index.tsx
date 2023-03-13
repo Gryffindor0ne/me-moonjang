@@ -61,7 +61,7 @@ const SentenceByGroup = () => {
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const groupId = context.params?.groupId;
+  const { groupId } = context.query;
   const session = await getSession(context);
 
   const queryClient = new QueryClient();

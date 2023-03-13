@@ -6,7 +6,7 @@ import {
 import axios from 'axios';
 
 import { queryKeys } from '@react-query/constants';
-import { useCustomToast } from '@components/hooks/useCustomToast';
+import { useCustomToast } from '@hooks/useCustomToast';
 
 type LearningStateData = {
   groupId: string;

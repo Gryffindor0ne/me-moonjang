@@ -4,7 +4,7 @@ import { Dialog, Transition } from '@headlessui/react';
 import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 
 import { selectContext } from '@recoil/selectors/common';
-import useModal from '@components/hooks/useModal';
+import useModal from '@hooks/useModal';
 import { contextState } from '@recoil/atoms/common';
 
 export type ConfirmModalProps = {

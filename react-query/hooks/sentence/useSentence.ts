@@ -16,6 +16,7 @@ export const getSentenceData = async (
 
 export const useSentence = () => {
   const router = useRouter();
+
   const { groupId, id } = router.query;
 
   const { data: sentenceData, isLoading } = useQuery(

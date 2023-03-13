@@ -31,7 +31,7 @@ const sentenceHandler = async (req: NextApiRequest, res: NextApiResponse) => {
           )
           .toArray();
 
-        return res.status(201).json(data);
+        return res.status(201).json(data[0]);
       } catch (error) {
         console.log(error);
       } finally {

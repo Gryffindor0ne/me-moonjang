@@ -11,7 +11,7 @@ import { UserInfo } from '@pages/profile';
 import Group from '@components/groups/components/Group';
 import { useGroups } from '@react-query/hooks/groups/useGroups';
 import { contextState } from '@recoil/atoms/common';
-import useModal from '@components/hooks/useModal';
+import useModal from '@hooks/useModal';
 
 const GroupBoard = () => {
   const [selectGroupId, setIsSelectGroupId] = useState('');
