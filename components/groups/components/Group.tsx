@@ -36,7 +36,7 @@ const Group = ({
       <div
         id={group._id}
         onClick={handleClickGroupName}
-        className="z-0 flex justify-between p-4 mx-2 my-4 text-teal-100 rounded-md cursor-pointer md:text-lg md:p-5 bg-gradient-to-r from-teal-500 via-teal-400 to-teal-200 text-md text-bold"
+        className="z-0 flex justify-between w-full max-w-2xl p-4 m-2 text-teal-100 rounded-md cursor-pointer md:text-lg md:p-5 bg-gradient-to-r from-teal-500 via-teal-400 to-teal-200 text-md text-bold"
       >
         {group.name}
 

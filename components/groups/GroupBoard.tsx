@@ -40,7 +40,7 @@ const GroupBoard = () => {
     <>
       <GroupsNavbar />
 
-      <div className="flex items-center justify-between w-full p-2">
+      <div className="flex items-center justify-between w-full max-w-2xl p-2">
         <div className="flex justify-start p-2 my-2 text-base font-bold text-gray-700 md:text-lg md:p-4">
           {`${user?.username.toUpperCase()}'s memoonjang`}
         </div>
@@ -63,7 +63,7 @@ const GroupBoard = () => {
           );
         })
       ) : (
-        <div className="flex flex-col items-center justify-center p-2 mt-10 text-xl text-center">
+        <div className="flex flex-col items-center justify-center max-w-2xl p-2 mt-10 text-xl text-center">
           <div className="p-2 text-3xl text-center text-teal-500 md:text-4xl">
             <HiOutlineExclamationCircle />
           </div>

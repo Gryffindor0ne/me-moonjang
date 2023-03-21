@@ -87,7 +87,7 @@ const Register: NextPage = () => {
   return (
     <>
       <Seo title="회원가입" />
-      <section className="flex flex-col w-full gap-2 p-10 mx-auto">
+      <section className="flex flex-col w-full max-w-xl gap-2 p-10 mx-auto">
         <h1 className="flex py-2 mx-auto my-4 text-2xl font-bold text-gray-800 md:my-10 md:text-3xl">
           회원가입
         </h1>
