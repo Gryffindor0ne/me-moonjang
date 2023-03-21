@@ -11,7 +11,7 @@ const QuizPage = () => {
     <>
       <Seo title="퀴즈" />
       <Layout>
-        <section className="flex flex-col w-full gap-5 p-5 mx-auto">
+        <section className="flex flex-col w-full max-w-2xl gap-5 p-5 mx-auto">
           <div className="flex">
             <span
               onClick={() => router.back()}

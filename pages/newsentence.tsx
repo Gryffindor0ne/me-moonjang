@@ -62,7 +62,7 @@ const SentenceInputPage = () => {
     <>
       <Seo title="문장등록" />
       <Layout>
-        <section className="flex flex-col w-full p-5 mx-auto">
+        <section className="flex flex-col w-full max-w-2xl p-5 mx-auto">
           <div className="flex">
             <span
               onClick={() => router.back()}

@@ -93,7 +93,7 @@ const AuthPage: NextPage = () => {
       {loading ? (
         <LoginIndicator />
       ) : (
-        <section className="flex flex-col w-full gap-2 p-10 mx-auto md:gap-12">
+        <section className="flex flex-col max-w-xl gap-2 p-10 mx-auto md:gap-12">
           <h1 className="flex py-2 mx-auto my-4 text-2xl font-bold text-gray-800 md:my-10 md:text-3xl">
             Me Moonjang
           </h1>

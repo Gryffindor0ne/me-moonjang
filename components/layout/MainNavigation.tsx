@@ -7,7 +7,7 @@ const MainNavigation = () => {
 
   return (
     <div>
-      <section className="max-w-[520px] mx-auto fixed inset-x-0 bottom-0 z-10 bg-white shadow">
+      <section className="fixed inset-x-0 bottom-0 z-10 max-w-2xl mx-auto bg-white shadow">
         <div id="tabs" className="flex pt-1 border-t-2 justify-evenly">
           <Link
             href="/"

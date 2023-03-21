@@ -39,7 +39,7 @@ const SentenceEditModal = () => {
 
   return (
     <>
-      <div className="fixed z-50 flex items-center justify-center w-full max-w-lg ml-12 overflow-x-hidden overflow-y-auto outline-none top-16 sm:ml-20 focus:outline-none">
+      <div className="fixed z-50 flex items-center justify-center w-full ml-12 outline-none top-16 sm:ml-20 focus:outline-none">
         <div className="relative w-2/3 max-w-xs p-2 bg-white rounded-md md:p-0 md:w-full">
           <button
             onClick={() => hideModal()}

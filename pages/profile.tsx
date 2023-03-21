@@ -110,7 +110,7 @@ const ProfilePage = () => {
       <Seo title="회원정보" />
 
       <Layout>
-        <section className="flex flex-col w-full gap-4 p-5 mx-auto">
+        <section className="flex flex-col w-full max-w-2xl gap-4 p-5 mx-auto">
           <div className="flex">
             <span
               onClick={() => router.back()}

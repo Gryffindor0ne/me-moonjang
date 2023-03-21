@@ -34,7 +34,7 @@ const SentenceByGroup = () => {
     <>
       <Seo title={`${groupData[0].name}`} />
 
-      <section className="flex flex-col w-full gap-3 p-4 pb-32 mx-auto">
+      <section className="flex flex-col w-full max-w-2xl gap-3 p-4 pb-32 mx-auto">
         <GroupNavbar name={groupData[0].name} />
 
         <GroupHeader groupData={groupData} />
@@ -46,7 +46,7 @@ const SentenceByGroup = () => {
             <Sentence key={idx} data={sentenceInfo} groupInfo={groupData[0]} />
           ))
         ) : (
-          <div className="flex flex-col items-center justify-center p-2 mt-10 text-xl text-center">
+          <div className="flex flex-col items-center justify-center w-full max-w-2xl p-2 mt-10 text-xl text-center">
             <div className="p-2 text-3xl text-center text-teal-500 md:text-4xl">
               <HiOutlineExclamationCircle />
             </div>

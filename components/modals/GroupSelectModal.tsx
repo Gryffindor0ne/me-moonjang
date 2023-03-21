@@ -92,7 +92,7 @@ const GroupSelectModal = ({
 
   return (
     <>
-      <div className="fixed z-50 flex items-center justify-center w-full max-w-lg overflow-x-hidden overflow-y-auto outline-none top-1/3 focus:outline-none">
+      <div className="fixed z-50 flex items-center justify-center w-full overflow-x-hidden overflow-y-auto outline-none top-1/3 focus:outline-none">
         <div className="relative w-3/4 max-w-xs p-4 bg-white rounded-md md:p-2 md:w-full">
           <button
             onClick={() => hideModal()}
