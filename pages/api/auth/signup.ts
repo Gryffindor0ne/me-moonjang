@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { hashPassword } from '@lib/auth';
-import dbConnect from '@lib/db';
+import { dbConnect } from '@lib/db';
 
 const createUser = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== 'POST') {

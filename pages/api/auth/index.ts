@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { JsonWebTokenError, JwtPayload } from 'jsonwebtoken';
 
-import dbConnect from '@lib/db';
+import { dbConnect } from '@lib/db';
 import { generateAccessToken, verifyToken } from '@lib/jwt';
 
 const refreshAccessToken = async (

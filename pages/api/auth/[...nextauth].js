@@ -4,7 +4,7 @@ import GoogleProvider from 'next-auth/providers/google';
 import KakaoProvider from 'next-auth/providers/kakao';
 import axios from 'axios';
 
-import dbConnect from '@lib/db';
+import { dbConnect } from '@lib/db';
 
 import { generateAccessToken, verifyToken } from '@lib/jwt';
 
