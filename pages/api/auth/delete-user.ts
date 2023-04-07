@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import dbConnect from '@lib/db';
+import { dbConnect } from '@lib/db';
 
 const deleteUser = async (req: NextApiRequest, res: NextApiResponse) => {
   const { email } = req.body;

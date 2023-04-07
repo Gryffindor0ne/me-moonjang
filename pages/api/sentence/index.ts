@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { ObjectId } from 'mongodb';
 
-import dbConnect from '@lib/db';
+import { dbConnect } from '@lib/db';
 
 const sentenceHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req;

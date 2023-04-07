@@ -1,25 +1,29 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { ObjectId } from 'mongodb';
 
-import dbConnect from '@lib/db';
+import { dbConnect, getAllDocuments, updateDocument } from '@lib/db';
 
 const changeGroupName = async (req: NextApiRequest, res: NextApiResponse) => {
   const { name, groupId } = req.body;
   const client = await dbConnect();
 
   try {
-    const db = client.db();
-    const groupsCollection = db.collection('groups');
+    const documents = await getAllDocuments(
+      client,
+      'groups',
+      { _id: 1 },
+      { name }
+    );
 
-    const checkExistingGroup = await groupsCollection.find({ name }).toArray();
-
-    if (checkExistingGroup.length !== 0) {
+    if (documents.length !== 0) {
       res.status(422).json({ message: '동일한 문장집이 존재합니다.' });
       client.close();
       return;
     }
 
-    await groupsCollection.updateOne(
+    await updateDocument(
+      client,
+      'groups',
       {
         _id: new ObjectId(`${groupId}`),
       },

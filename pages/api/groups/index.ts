@@ -1,7 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { ObjectId } from 'mongodb';
 
-import dbConnect from '@lib/db';
+import {
+  dbConnect,
+  insertDocument,
+  getAllDocuments,
+  deleteDocument,
+} from '@lib/db';
 
 const groupHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req;
@@ -12,13 +17,14 @@ const groupHandler = async (req: NextApiRequest, res: NextApiResponse) => {
       const { user } = req.query;
 
       try {
-        const db = client.db();
-        const groupsCollection = db.collection('groups');
-        let data = await groupsCollection
-          .find({ name: { $exists: 1 }, email: user })
-          .toArray();
+        const documents = await getAllDocuments(
+          client,
+          'groups',
+          { _id: 1 },
+          { name: { $exists: 1 }, email: user }
+        );
 
-        return res.status(201).json(data);
+        return res.status(201).json(documents);
       } catch (error) {
         console.log(error);
       } finally {
@@ -30,22 +36,23 @@ const groupHandler = async (req: NextApiRequest, res: NextApiResponse) => {
       const { name, email } = req.body;
 
       try {
-        const db = client.db();
-        const groupsCollection = db.collection('groups');
-        const checkExistingGroup = await groupsCollection
-          .find({
+        const documents = await getAllDocuments(
+          client,
+          'groups',
+          { _id: 1 },
+          {
             name,
             email,
-          })
-          .toArray();
+          }
+        );
 
-        if (checkExistingGroup.length !== 0) {
+        if (documents.length !== 0) {
           res.status(422).json({ message: '동일한 문장집이 존재합니다.' });
           client.close();
           return;
         }
 
-        await groupsCollection.insertOne({
+        await insertDocument(client, 'groups', {
           email,
           name,
           createdAt: Date.now(),
@@ -64,10 +71,7 @@ const groupHandler = async (req: NextApiRequest, res: NextApiResponse) => {
       const { id } = req.body;
 
       try {
-        const db = client.db();
-        const groupsCollection = db.collection('groups');
-
-        await groupsCollection.deleteOne({
+        await deleteDocument(client, 'groups', {
           _id: new ObjectId(`${id}`),
         });
 
