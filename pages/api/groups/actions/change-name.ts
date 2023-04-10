@@ -32,7 +32,8 @@ const changeGroupName = async (req: NextApiRequest, res: NextApiResponse) => {
           name,
           updatedAt: Date.now(),
         },
-      }
+      },
+      {}
     );
 
     res.status(201).json({ message: 'Group updated' });

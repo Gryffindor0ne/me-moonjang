@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { ObjectId } from 'mongodb';
 
-import { dbConnect } from '@lib/db';
+import { dbConnect, updateBulkDocument } from '@lib/db';
 import { SentenceDetailInfo } from '@components/group/Sentence';
 
 const changeSentenceGroup = async (
@@ -12,8 +12,6 @@ const changeSentenceGroup = async (
   const client = await dbConnect();
 
   try {
-    const db = client.db();
-    const groupsCollection = db.collection('groups');
     const bulkOps = sentences.map((sentence: SentenceDetailInfo) => {
       return {
         updateOne: {
@@ -39,7 +37,7 @@ const changeSentenceGroup = async (
       };
     });
 
-    await groupsCollection.bulkWrite(bulkOps);
+    await updateBulkDocument(client, 'groups', bulkOps);
 
     res.status(201).json({ message: 'Sentence was moved' });
   } catch (error) {

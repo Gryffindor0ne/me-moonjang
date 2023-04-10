@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { dbConnect } from '@lib/db';
+import { dbConnect, getDocument, updateDocument } from '@lib/db';
 import { verifyPassword } from '@lib/auth';
 import { generateAccessToken, generateRefreshToken } from '@lib/jwt';
 
@@ -9,11 +9,8 @@ const login = async (req: NextApiRequest, res: NextApiResponse) => {
 
   try {
     const client = await dbConnect();
-    const db = client.db();
-    const usersCollection = db.collection('users');
-    const user = await usersCollection.findOne({
-      email,
-    });
+
+    const user = await getDocument(client, 'users', { email });
 
     if (!user) {
       client.close();
@@ -45,12 +42,11 @@ const login = async (req: NextApiRequest, res: NextApiResponse) => {
       email: user.email,
     });
 
-    const tokensCollection = db.collection('tokens');
     const updateDoc = {
       $set: { email: user.email, token: refreshToken },
     };
 
-    await tokensCollection.updateOne({ userId }, updateDoc, {
+    await updateDocument(client, 'tokens', { userId }, updateDoc, {
       upsert: true,
     });
 

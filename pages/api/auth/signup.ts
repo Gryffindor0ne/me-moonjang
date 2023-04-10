@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { hashPassword } from '@lib/auth';
-import { dbConnect } from '@lib/db';
+import { dbConnect, getDocument, insertDocument } from '@lib/db';
 
 const createUser = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method !== 'POST') {
@@ -10,11 +10,10 @@ const createUser = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const { email, password, username, authType } = req.body;
   const client = await dbConnect();
-  const db = client.db();
-  const userCollection = db.collection('users');
-  const checkExistingUser = await userCollection.findOne({ email: email });
 
-  if (checkExistingUser) {
+  const result = await getDocument(client, 'users', { email });
+
+  if (result) {
     res.status(422).json({ message: 'User already exists' });
     client.close();
     return;
@@ -22,7 +21,7 @@ const createUser = async (req: NextApiRequest, res: NextApiResponse) => {
 
   const hashedPassword = await hashPassword(password);
 
-  await userCollection.insertOne({
+  await insertDocument(client, 'users', {
     email,
     password: hashedPassword,
     username,
