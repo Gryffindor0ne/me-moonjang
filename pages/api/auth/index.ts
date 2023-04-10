@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { JsonWebTokenError, JwtPayload } from 'jsonwebtoken';
 
-import { dbConnect } from '@lib/db';
+import { dbConnect, getDocument } from '@lib/db';
 import { generateAccessToken, verifyToken } from '@lib/jwt';
 
 const refreshAccessToken = async (
@@ -15,10 +15,8 @@ const refreshAccessToken = async (
   const { user } = req.body;
 
   const client = await dbConnect();
-  const db = client.db();
-  const tokensCollection = db.collection('tokens');
 
-  const refreshToken = await tokensCollection.findOne({
+  const refreshToken = await getDocument(client, 'tokens', {
     userId: user.id,
   });
 

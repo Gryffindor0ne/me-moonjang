@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
-import { dbConnect } from '@lib/db';
+import { dbConnect, deleteDocument } from '@lib/db';
 
 const deleteRefreshToken = async (
   req: NextApiRequest,
@@ -10,11 +10,8 @@ const deleteRefreshToken = async (
 
   try {
     const client = await dbConnect();
-    const db = client.db();
-    const tokensCollection = db.collection('tokens');
-    await tokensCollection.deleteOne({
-      userId: id,
-    });
+
+    await deleteDocument(client, 'tokens', { userId: id });
 
     res.status(200).json({ message: 'Token deleted' });
     client.close();

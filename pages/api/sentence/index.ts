@@ -1,7 +1,12 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { ObjectId } from 'mongodb';
 
-import { dbConnect } from '@lib/db';
+import {
+  dbConnect,
+  getAllDocuments,
+  updateBulkDocument,
+  updateDocument,
+} from '@lib/db';
 
 const sentenceHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   const { method } = req;
@@ -12,26 +17,19 @@ const sentenceHandler = async (req: NextApiRequest, res: NextApiResponse) => {
       const { group, sentenceId } = req.query;
 
       try {
-        const db = client.db();
-        const groupsCollection = db.collection('groups');
-        const data = await groupsCollection
-          .find(
-            { _id: new ObjectId(`${group}`) },
-            {
-              projection: {
-                email: 1,
-                name: 1,
-                createdAt: 1,
-                updatedAt: 1,
-                sentences: {
-                  $elemMatch: { id: new ObjectId(`${sentenceId}`) },
-                },
-              },
-            }
-          )
-          .toArray();
+        const document = await getAllDocuments(
+          client,
+          'groups',
+          { _id: 1 },
+          {
+            _id: new ObjectId(`${group}`),
+            sentences: {
+              $elemMatch: { id: new ObjectId(`${sentenceId}`) },
+            },
+          }
+        );
 
-        return res.status(201).json(data[0]);
+        return res.status(201).json(document[0]);
       } catch (error) {
         console.log(error);
       } finally {
@@ -43,39 +41,45 @@ const sentenceHandler = async (req: NextApiRequest, res: NextApiResponse) => {
       const { id, sentence, interpretation, explanation } = req.body;
 
       try {
-        const db = client.db();
-        const groupsCollection = db.collection('groups');
-        const checkSentence = await groupsCollection
-          .find({
+        const document = await getAllDocuments(
+          client,
+          'groups',
+          { _id: 1 },
+          {
             _id: new ObjectId(`${id}`),
             sentences: { $elemMatch: { sentence: sentence } },
-          })
-          .toArray();
+          }
+        );
 
-        if (checkSentence.length !== 0) {
+        if (document.length !== 0) {
           res.status(422).json({ message: '동일한 문장이 존재합니다.' });
           client.close();
           return;
         }
 
-        await groupsCollection.updateOne(
+        const updateDoc = {
+          $push: {
+            sentences: {
+              id: new ObjectId(),
+              sentence,
+              interpretation,
+              explanation,
+              learningState: false,
+              createdAt: Date.now(),
+              updatedAt: Date.now(),
+            },
+          },
+          $set: { updatedAt: Date.now() },
+        };
+
+        await updateDocument(
+          client,
+          'groups',
           {
             _id: new ObjectId(`${id}`),
           },
-          {
-            $push: {
-              sentences: {
-                id: new ObjectId(),
-                sentence,
-                interpretation,
-                explanation,
-                learningState: false,
-                createdAt: Date.now(),
-                updatedAt: Date.now(),
-              },
-            },
-            $set: { updatedAt: Date.now() },
-          }
+          updateDoc,
+          {}
         );
 
         res.status(201).json({ message: 'Sentence created' });
@@ -91,8 +95,6 @@ const sentenceHandler = async (req: NextApiRequest, res: NextApiResponse) => {
       const ids = sentenceIds.map((id: string) => new ObjectId(id));
 
       try {
-        const db = client.db();
-        const groupsCollection = db.collection('groups');
         const bulkOps = ids.map((id: any) => {
           return {
             updateOne: {
@@ -112,7 +114,7 @@ const sentenceHandler = async (req: NextApiRequest, res: NextApiResponse) => {
           };
         });
 
-        await groupsCollection.bulkWrite(bulkOps);
+        await updateBulkDocument(client, 'groups', bulkOps);
 
         res.status(201).json({ message: 'Sentence deleted' });
       } catch (error) {

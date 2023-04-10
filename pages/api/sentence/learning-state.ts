@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { ObjectId } from 'mongodb';
 
-import { dbConnect } from '@lib/db';
+import { dbConnect, updateDocument } from '@lib/db';
 
 const changeSentenceLearningState = async (
   req: NextApiRequest,
@@ -11,25 +11,28 @@ const changeSentenceLearningState = async (
 
   const client = await dbConnect();
 
-  try {
-    const db = client.db();
-    const groupsCollection = db.collection('groups');
+  const updateDoc = {
+    $set: { 'sentences.$[sentences].learningState': learningState },
+  };
 
-    await groupsCollection.updateOne(
+  const updateOps = {
+    arrayFilters: [
+      {
+        'sentences.id': new ObjectId(`${sentenceId}`),
+      },
+    ],
+  };
+
+  try {
+    await updateDocument(
+      client,
+      'groups',
       {
         _id: new ObjectId(`${id}`),
         sentences: { $elemMatch: { id: new ObjectId(`${sentenceId}`) } },
       },
-      {
-        $set: { 'sentences.$[sentences].learningState': learningState },
-      },
-      {
-        arrayFilters: [
-          {
-            'sentences.id': new ObjectId(`${sentenceId}`),
-          },
-        ],
-      }
+      updateDoc,
+      updateOps
     );
 
     res.status(201).json({ message: 'Sentence learning state is updated' });
