@@ -33,15 +33,14 @@ export const getDocument = async (
 export const getAllDocuments = async (
   client: mongoDB.MongoClient,
   collection: string,
-  sort: mongoDB.Sort,
-  filter: mongoDB.Filter<mongoDB.Document>
+  filter: mongoDB.Filter<mongoDB.Document>,
+  findOptions?: mongoDB.FindOptions
 ) => {
   const db = client.db();
 
   const documents = await db
     .collection(collection)
-    .find(filter)
-    .sort(sort)
+    .find(filter, findOptions)
     .toArray();
 
   return documents;

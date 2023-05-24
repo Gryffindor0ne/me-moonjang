@@ -8,12 +8,7 @@ const changeGroupName = async (req: NextApiRequest, res: NextApiResponse) => {
   const client = await dbConnect();
 
   try {
-    const documents = await getAllDocuments(
-      client,
-      'groups',
-      { _id: 1 },
-      { name }
-    );
+    const documents = await getAllDocuments(client, 'groups', { name });
 
     if (documents.length !== 0) {
       res.status(422).json({ message: '동일한 문장집이 존재합니다.' });

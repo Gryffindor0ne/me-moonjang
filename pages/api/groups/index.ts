@@ -17,12 +17,10 @@ const groupHandler = async (req: NextApiRequest, res: NextApiResponse) => {
       const { user } = req.query;
 
       try {
-        const documents = await getAllDocuments(
-          client,
-          'groups',
-          { _id: 1 },
-          { name: { $exists: 1 }, email: user }
-        );
+        const documents = await getAllDocuments(client, 'groups', {
+          name: { $exists: 1 },
+          email: user,
+        });
 
         return res.status(201).json(documents);
       } catch (error) {
@@ -36,19 +34,13 @@ const groupHandler = async (req: NextApiRequest, res: NextApiResponse) => {
       const { name, email } = req.body;
 
       try {
-        const documents = await getAllDocuments(
-          client,
-          'groups',
-          { _id: 1 },
-          {
-            name,
-            email,
-          }
-        );
+        const documents = await getAllDocuments(client, 'groups', {
+          name,
+          email,
+        });
 
         if (documents.length !== 0) {
           res.status(422).json({ message: '동일한 문장집이 존재합니다.' });
-          client.close();
           return;
         }
 
