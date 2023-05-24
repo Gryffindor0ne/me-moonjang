@@ -8,12 +8,9 @@ const getGroupData = async (req: NextApiRequest, res: NextApiResponse) => {
   const client = await dbConnect();
 
   try {
-    const documents = await getAllDocuments(
-      client,
-      'groups',
-      { _id: 1 },
-      { _id: new ObjectId(`${id}`) }
-    );
+    const documents = await getAllDocuments(client, 'groups', {
+      _id: new ObjectId(`${id}`),
+    });
 
     return res.status(201).json(documents);
   } catch (error) {

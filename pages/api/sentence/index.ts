@@ -20,11 +20,14 @@ const sentenceHandler = async (req: NextApiRequest, res: NextApiResponse) => {
         const document = await getAllDocuments(
           client,
           'groups',
-          { _id: 1 },
           {
             _id: new ObjectId(`${group}`),
-            sentences: {
-              $elemMatch: { id: new ObjectId(`${sentenceId}`) },
+          },
+          {
+            projection: {
+              sentences: {
+                $elemMatch: { id: new ObjectId(`${sentenceId}`) },
+              },
             },
           }
         );
@@ -41,15 +44,10 @@ const sentenceHandler = async (req: NextApiRequest, res: NextApiResponse) => {
       const { id, sentence, interpretation, explanation } = req.body;
 
       try {
-        const document = await getAllDocuments(
-          client,
-          'groups',
-          { _id: 1 },
-          {
-            _id: new ObjectId(`${id}`),
-            sentences: { $elemMatch: { sentence: sentence } },
-          }
-        );
+        const document = await getAllDocuments(client, 'groups', {
+          _id: new ObjectId(`${id}`),
+          sentences: { $elemMatch: { sentence: sentence } },
+        });
 
         if (document.length !== 0) {
           res.status(422).json({ message: '동일한 문장이 존재합니다.' });
