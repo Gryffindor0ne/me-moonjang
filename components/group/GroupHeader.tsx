@@ -3,7 +3,7 @@ import { HiOutlinePlus } from 'react-icons/hi';
 
 import { GroupInfo } from '@pages/[groupId]';
 
-const GroupHeader = ({ groupData }: { groupData: GroupInfo[] }) => {
+const GroupHeader = ({ groupData }: { groupData: GroupInfo }) => {
   const router = useRouter();
   const { groupId } = router.query;
 
@@ -14,8 +14,8 @@ const GroupHeader = ({ groupData }: { groupData: GroupInfo[] }) => {
     <>
       <div className="flex justify-between">
         <div className="p-3 text-lg font-bold text-teal-500">
-          {groupData[0].sentences
-            ? `총 ${groupData[0].sentences.length} 문장`
+          {groupData.sentences
+            ? `총 ${groupData.sentences.length} 문장`
             : `총 0 문장`}
         </div>
         <span

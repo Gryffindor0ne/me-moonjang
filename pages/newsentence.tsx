@@ -8,7 +8,7 @@ import Layout from '@components/layout/Layout';
 import Seo from '@components/layout/Seo';
 import styles from '@styles/Form.module.css';
 import { GroupInfo } from '@pages/[groupId]';
-import { useGroups } from '@react-query/hooks/groups/useGroups';
+import { useGroupNames } from '@react-query/hooks/group/useGroupNames';
 import { useNewSentence } from '@react-query/hooks/sentence/useNewSentence';
 
 export type SentenceInfo = {
@@ -35,7 +35,7 @@ const SentenceInputPage = () => {
   const router = useRouter();
   const { groupId } = router.query;
 
-  const { groups } = useGroups();
+  const { groups } = useGroupNames();
   const newSentence = useNewSentence();
 
   const groupNames = groups.map((group) => group.name);

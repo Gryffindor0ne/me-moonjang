@@ -39,7 +39,7 @@ export const useChangeGroupName = (): UseMutateFunction<
           status: 'success',
         });
 
-        queryClient.invalidateQueries([queryKeys.groupsData]);
+        queryClient.invalidateQueries([queryKeys.groupNames]);
       },
     }
   );

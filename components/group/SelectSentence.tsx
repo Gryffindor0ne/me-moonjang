@@ -5,32 +5,30 @@ import { useRouter } from 'next/router';
 
 import Sentence, { SentenceDetailInfo } from '@components/group/Sentence';
 import { UserInfo } from '@pages/profile';
-import { GroupInfo } from '@pages/[groupId]';
 import { descendingSort } from '@utils/dayjs';
 import { useCustomToast } from '@hooks/useCustomToast';
 import { contextState } from '@recoil/atoms/common';
 import useModal from '@hooks/useModal';
 import { useRemoveSentence } from '@react-query/hooks/sentence/useRemoveSentence';
-import { useGroup } from '@react-query/hooks/groups/useGroup';
+
+import { useSentence } from '@react-query/hooks/sentence/useSentence';
 
 type SelectSentenceInfo = {
   sentenceIds: string[];
 };
 
-type SelectSentenceProps = {
-  groupInfo: GroupInfo;
-};
-
-const SelectSentence = ({ groupInfo }: SelectSentenceProps) => {
+const SelectSentence = () => {
   const { data: session } = useSession();
   const user = session?.user as UserInfo;
   const handleCancel = () => {
     setContext('');
   };
-  const router = useRouter();
   const toast = useCustomToast();
   const removeSentenceMutate = useRemoveSentence();
-  const { groupData, isLoading } = useGroup();
+
+  const router = useRouter();
+
+  const { groupData, isLoading } = useSentence();
 
   const [context, setContext] = useRecoilState(contextState);
   const { showModal, hideModal } = useModal();
@@ -52,18 +50,18 @@ const SelectSentence = ({ groupInfo }: SelectSentenceProps) => {
       hideModal();
 
       removeSentenceMutate({
-        groupId: groupData[0]._id,
+        groupId: groupData._id,
         sentenceIds,
       });
 
       setContext('');
       setTimeout(() => {
-        router.push(`/${groupData[0]._id}`);
+        router.push(`/${groupData._id}`);
       }, 100);
     };
 
     const selectSentences: SentenceDetailInfo[] = descendingSort(
-      groupInfo.sentences
+      groupData.sentences
     ).filter((sentence: SentenceDetailInfo) =>
       sentenceIds.includes(sentence.id)
     );
@@ -105,7 +103,7 @@ const SelectSentence = ({ groupInfo }: SelectSentenceProps) => {
       >
         {(props) => (
           <Form className="flex flex-col gap-4" onSubmit={props.handleSubmit}>
-            {descendingSort(groupInfo.sentences).map((sentence) => {
+            {descendingSort(groupData.sentences).map((sentence) => {
               return (
                 <label key={sentence.id} className="inline-flex items-center">
                   <Field
@@ -114,7 +112,7 @@ const SelectSentence = ({ groupInfo }: SelectSentenceProps) => {
                     type="checkbox"
                     value={sentence.id}
                   />
-                  <Sentence data={sentence} groupInfo={groupInfo} />
+                  <Sentence data={sentence} />
                 </label>
               );
             })}

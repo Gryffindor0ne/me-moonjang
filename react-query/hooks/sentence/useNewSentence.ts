@@ -37,7 +37,7 @@ export const useNewSentence = (): UseMutateFunction<
     (newSentence: NewSentence) => createNewSentence(newSentence),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries([queryKeys.groupsData]);
+        queryClient.invalidateQueries([queryKeys.groupData]);
         toast({
           title: '새 문장이 생성되었습니다.',
           status: 'success',

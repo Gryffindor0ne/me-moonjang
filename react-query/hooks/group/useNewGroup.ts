@@ -8,32 +8,33 @@ import axios from 'axios';
 import { queryKeys } from '@react-query/constants';
 import { useCustomToast } from '@hooks/useCustomToast';
 
-type TargetId = {
-  id: string;
+type NewGroup = {
+  name: string;
+  email: string;
 };
-
-const removeGroup = async (targetId: TargetId) => {
-  await axios.delete(`/api/groups`, {
-    data: { id: targetId.id },
+const createNewGroup = async (newGroup: NewGroup) => {
+  await axios.post(`api/groups`, {
+    name: newGroup.name,
+    email: newGroup.email,
   });
 };
 
-export const useRemoveGroup = (): UseMutateFunction<
+export const useNewGroup = (): UseMutateFunction<
   void,
   unknown,
-  TargetId,
+  NewGroup,
   unknown
 > => {
   const queryClient = useQueryClient();
   const toast = useCustomToast();
 
   const { mutate } = useMutation(
-    (targetId: TargetId) => removeGroup(targetId),
+    (newGroup: NewGroup) => createNewGroup(newGroup),
     {
       onSuccess: () => {
-        queryClient.invalidateQueries([queryKeys.groupsData]);
+        queryClient.invalidateQueries([queryKeys.groupNames]);
         toast({
-          title: '문장집을 삭제하였습니다.',
+          title: '새 문장집이 생성되었습니다.',
           status: 'success',
         });
       },

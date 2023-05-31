@@ -13,36 +13,36 @@ const sentenceHandler = async (req: NextApiRequest, res: NextApiResponse) => {
   const client = await dbConnect();
 
   switch (method) {
-    case 'GET':
-      const { group, sentenceId } = req.query;
+    // case 'GET':
+    //   const { group, sentenceId } = req.query;
 
-      try {
-        const document = await getAllDocuments(
-          client,
-          'groups',
-          {
-            _id: new ObjectId(`${group}`),
-          },
-          {
-            projection: {
-              email: 1,
-              name: 1,
-              createdAt: 1,
-              updatedAt: 1,
-              sentences: {
-                $elemMatch: { id: new ObjectId(`${sentenceId}`) },
-              },
-            },
-          }
-        );
+    //   try {
+    //     const document = await getAllDocuments(
+    //       client,
+    //       'groups',
+    //       {
+    //         _id: new ObjectId(`${group}`),
+    //       },
+    //       {
+    //         projection: {
+    //           email: 1,
+    //           name: 1,
+    //           createdAt: 1,
+    //           updatedAt: 1,
+    //           sentences: {
+    //             $elemMatch: { id: new ObjectId(`${sentenceId}`) },
+    //           },
+    //         },
+    //       }
+    //     );
 
-        return res.status(201).json(document[0]);
-      } catch (error) {
-        console.log(error);
-      } finally {
-        client.close();
-      }
-      break;
+    //     return res.status(201).json(document[0]);
+    //   } catch (error) {
+    //     console.log(error);
+    //   } finally {
+    //     client.close();
+    //   }
+    //   break;
 
     case 'POST':
       const { id, sentence, interpretation, explanation } = req.body;

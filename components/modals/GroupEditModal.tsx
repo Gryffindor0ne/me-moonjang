@@ -7,8 +7,8 @@ import { UserInfo } from '@pages/profile';
 import { useCustomToast } from '@hooks/useCustomToast';
 import { contextState } from '@recoil/atoms/common';
 import useModal from '@hooks/useModal';
-import { useRemoveGroup } from '@react-query/hooks/groups/useRemoveGroup';
-import { useGroups } from '@react-query/hooks/groups/useGroups';
+import { useRemoveGroup } from '@react-query/hooks/group/useRemoveGroup';
+import { useGroupNames } from '@react-query/hooks/group/useGroupNames';
 
 export type GroupEditModalProps = {
   id: string;
@@ -24,7 +24,7 @@ const GroupEditModal = ({ id, setIsSelectGroupId }: GroupEditModalProps) => {
   const { showModal, hideModal } = useModal();
 
   const removeGroup = useRemoveGroup();
-  const { groups, isLoading } = useGroups();
+  const { groups, isLoading } = useGroupNames();
   if (isLoading) return null;
 
   const handleClickModal = (event: React.MouseEvent<HTMLElement>) => {

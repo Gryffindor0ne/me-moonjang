@@ -4,20 +4,14 @@ import { MdOutlineFaceRetouchingNatural } from 'react-icons/md';
 
 import { SentenceDetailInfo } from '@components/group/Sentence';
 import useSentenceState from '@react-query/hooks/sentence/useSentenceState';
-import { GroupInfo } from '@pages/[groupId]';
+import { useSentence } from '@react-query/hooks/sentence/useSentence';
 
-const LearningState = ({
-  data,
-  groupInfo,
-  sentenceDetail,
-}: {
-  data: SentenceDetailInfo;
-  groupInfo: GroupInfo;
-  sentenceDetail: boolean;
-}) => {
+const LearningState = ({ data }: { data: SentenceDetailInfo }) => {
   const [learningComplete, setLearingComplete] = useState(
     !data.learningState ?? false
   );
+
+  const { groupData } = useSentence();
 
   const learningStateMutate = useSentenceState();
 
@@ -26,10 +20,9 @@ const LearningState = ({
     setLearingComplete((prev) => !prev);
 
     learningStateMutate({
-      groupId: groupInfo._id,
+      groupId: groupData._id,
       sentenceId: data.id,
       learningComplete,
-      sentenceDetail,
     });
   };
 

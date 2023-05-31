@@ -1,5 +1,4 @@
 export const queryKeys = {
-  groupsData: 'groupsData',
-  groupDetailData: 'groupDetailData',
-  sentenceDetail: 'sentenceDetail',
+  groupData: 'groupData',
+  groupNames: 'groupNames',
 };

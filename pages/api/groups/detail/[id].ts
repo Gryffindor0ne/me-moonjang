@@ -1,14 +1,14 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { ObjectId } from 'mongodb';
 
-import { dbConnect, getAllDocuments } from '@lib/db';
+import { dbConnect, getDocument } from '@lib/db';
 
 const getGroupData = async (req: NextApiRequest, res: NextApiResponse) => {
   const { id } = req.query;
   const client = await dbConnect();
 
   try {
-    const documents = await getAllDocuments(client, 'groups', {
+    const documents = await getDocument(client, 'groups', {
       _id: new ObjectId(`${id}`),
     });
 
