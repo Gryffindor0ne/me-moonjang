@@ -10,8 +10,8 @@ import Seo from '@components/layout/Seo';
 import GroupNavbar from '@components/group/GroupNavbar';
 import SelectSentence from '@components/group/SelectSentence';
 import GroupHeader from '@components/group/GroupHeader';
-import { queryKeys } from '@react-query/constants';
-import { getGroupData, useGroup } from '@react-query/hooks/groups/useGroup';
+// import { queryKeys } from '@react-query/constants';
+import { useSentence } from '@react-query/hooks/sentence/useSentence';
 import { contextState } from '@recoil/atoms/common';
 
 export type GroupInfo = {
@@ -24,7 +24,7 @@ export type GroupInfo = {
 };
 
 const SentenceByGroup = () => {
-  const { groupData, isLoading } = useGroup();
+  const { groupData, isLoading } = useSentence();
 
   const context = useRecoilValue(contextState);
 
@@ -32,18 +32,18 @@ const SentenceByGroup = () => {
 
   return (
     <>
-      <Seo title={`${groupData[0].name}`} />
+      <Seo title={`${groupData.name}`} />
 
       <section className="flex flex-col w-full max-w-2xl gap-3 p-4 pb-32 mx-auto">
-        <GroupNavbar name={groupData[0].name} />
+        <GroupNavbar name={groupData.name} />
 
         <GroupHeader groupData={groupData} />
 
-        {context && groupData[0].sentences ? (
-          <SelectSentence groupInfo={groupData[0]} />
-        ) : groupData[0].sentences && groupData[0].sentences.length !== 0 ? (
-          descendingSort(groupData[0].sentences).map((sentenceInfo, idx) => (
-            <Sentence key={idx} data={sentenceInfo} groupInfo={groupData[0]} />
+        {context && groupData.sentences ? (
+          <SelectSentence />
+        ) : groupData.sentences && groupData.sentences.length !== 0 ? (
+          descendingSort(groupData.sentences).map((sentenceInfo, idx) => (
+            <Sentence key={idx} data={sentenceInfo} />
           ))
         ) : (
           <div className="flex flex-col items-center justify-center w-full max-w-2xl p-2 mt-10 text-xl text-center">
@@ -61,15 +61,15 @@ const SentenceByGroup = () => {
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { groupId } = context.query;
+  // const { groupId } = context.query;
   const session = await getSession(context);
 
   const queryClient = new QueryClient();
 
-  await queryClient.prefetchQuery({
-    queryKey: [queryKeys.groupDetailData],
-    queryFn: () => getGroupData(groupId as string),
-  });
+  // await queryClient.prefetchQuery({
+  //   queryKey: [queryKeys.groupDetailData],
+  //   queryFn: () => getGroupData(groupId as string),
+  // });
 
   return {
     props: {

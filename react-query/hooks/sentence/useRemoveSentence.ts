@@ -37,7 +37,7 @@ export const useRemoveSentence = (): UseMutateFunction<
 
   const { mutate } = useMutation((ids: Ids) => removeSentence(ids), {
     onSuccess: () => {
-      queryClient.invalidateQueries([queryKeys.groupDetailData]);
+      queryClient.invalidateQueries([queryKeys.groupData]);
       toast({
         title:
           context === 'changeGroup'

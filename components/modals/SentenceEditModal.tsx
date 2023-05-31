@@ -1,7 +1,7 @@
 import { HiOutlineRefresh, HiOutlineTrash, HiOutlineX } from 'react-icons/hi';
 import { useSetRecoilState } from 'recoil';
 
-import { useGroup } from '@react-query/hooks/groups/useGroup';
+import { useSentence } from '@react-query/hooks/sentence/useSentence';
 import { useCustomToast } from '@hooks/useCustomToast';
 import { contextState } from '@recoil/atoms/common';
 import useModal from '@hooks/useModal';
@@ -11,8 +11,7 @@ export type SentenceEditModalProps = {};
 const SentenceEditModal = () => {
   const toast = useCustomToast();
   const { hideModal } = useModal();
-  const { groupData, isLoading } = useGroup();
-
+  const { groupData, isLoading } = useSentence();
   const setContext = useSetRecoilState(contextState);
 
   if (isLoading) return null;
@@ -20,7 +19,7 @@ const SentenceEditModal = () => {
   const handleClickModal = (event: React.MouseEvent<HTMLElement>) => {
     hideModal();
 
-    if (!groupData[0].sentences || groupData[0].sentences.length === 0) {
+    if (!groupData.sentences || groupData.sentences.length === 0) {
       toast({
         title: '문장이 존재하지 않습니다.',
         status: 'warning',

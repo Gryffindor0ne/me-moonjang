@@ -1,14 +1,12 @@
-import { useQuery, useQueryClient } from '@tanstack/react-query';
+import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
 import { useSession } from 'next-auth/react';
-import { useEffect } from 'react';
 
 import { UserInfo } from '@pages/profile';
 import { GroupInfo } from '@pages/[groupId]';
 import { queryKeys } from '@react-query/constants';
-import { getGroupData } from '@react-query/hooks/groups/useGroup';
 
-export const getGroupsData = async (
+export const getGroupNames = async (
   user: UserInfo
 ): Promise<GroupInfo[] | undefined> => {
   const { data } = await axios.get(
@@ -23,27 +21,16 @@ export const getGroupsData = async (
   return data;
 };
 
-export const useGroups = () => {
+export const useGroupNames = () => {
   const { data: session } = useSession();
   const user = session?.user as UserInfo;
-  const queryClient = useQueryClient();
 
   const fallback: GroupInfo[] = [];
 
   const { data: groups = fallback, isLoading } = useQuery(
-    [queryKeys.groupsData, user],
-    () => getGroupsData(user)
+    [queryKeys.groupNames, user],
+    () => getGroupNames(user)
   );
-
-  useEffect(() => {
-    if (groups) {
-      groups.forEach((group) => {
-        queryClient.prefetchQuery([queryKeys.groupDetailData, group._id], () =>
-          getGroupData(group._id)
-        );
-      });
-    }
-  }, [queryClient, groups]);
 
   return { groups, isLoading };
 };

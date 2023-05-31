@@ -9,21 +9,21 @@ import { HiOutlineBell } from 'react-icons/hi';
 import Seo from '@components/layout/Seo';
 import LearningState from '@components/common/LearningState';
 import { SentenceDetailInfo } from '@components/group/Sentence';
-import { queryKeys } from '@react-query/constants';
-import {
-  getSentenceData,
-  useSentence,
-} from '@react-query/hooks/sentence/useSentence';
+import { useSentence } from '@react-query/hooks/sentence/useSentence';
 
 const Sentence = () => {
   const [open, setOpen] = useState(true);
 
   const router = useRouter();
+  const { id } = router.query;
 
-  const { sentenceData, isLoading } = useSentence();
+  const { groupData, isLoading } = useSentence();
+
   if (isLoading) return;
 
-  const sentenceDetail: SentenceDetailInfo = sentenceData.sentences[0];
+  const sentenceData = groupData.sentences.find(
+    (sentence: SentenceDetailInfo) => sentence.id === id
+  );
 
   const handleSentence = () => {
     setOpen((prev) => !prev);
@@ -31,7 +31,7 @@ const Sentence = () => {
 
   return (
     <>
-      <Seo title={`${sentenceData.name}-상세`} />
+      <Seo title={`${groupData.name}-상세`} />
       <section className="flex flex-col w-full max-w-2xl p-5 mx-auto">
         <div className="flex pr-8">
           <span
@@ -41,34 +41,30 @@ const Sentence = () => {
             <MdOutlineArrowBackIos />
           </span>
           <h1 className="flex py-2 mx-auto my-8 text-xl font-bold text-gray-800 md:2xl">
-            {sentenceData.name}
+            {groupData.name}
           </h1>
         </div>
         <div
           onClick={handleSentence}
           className="flex flex-col w-full h-full gap-2 px-4 py-8 text-gray-700 border border-gray-300 rounded-md cursor-pointer resize-none hover:ring-2 hover:ring-teal-500 hover:ring-offset-1 hover:outline-none"
         >
-          <LearningState
-            data={sentenceDetail}
-            groupInfo={sentenceData}
-            sentenceDetail={true}
-          />
+          <LearningState data={sentenceData} />
           <div className="flex p-2 text-2xl font-bold font-Lora md:text-3xl">
-            {sentenceDetail.sentence}
+            {sentenceData.sentence}
           </div>
           {open && (
             <div className="flex flex-col w-full p-2 mt-5">
               <div className="mb-10 text-base text-gray-400 font-Gowun md:text-xl">
-                {sentenceDetail.interpretation}
+                {sentenceData.interpretation}
               </div>
-              {sentenceDetail.explanation && (
+              {sentenceData.explanation && (
                 <div>
                   <div className="p-2 mt-2 text-2xl text-teal-400">
                     <HiOutlineBell />
                   </div>
 
                   <div className="flex w-full mt-2 text-xs leading-relaxed text-gray-600 md:text-base">
-                    {sentenceDetail.explanation}
+                    {sentenceData.explanation}
                   </div>
                 </div>
               )}
@@ -90,16 +86,9 @@ const Sentence = () => {
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const { groupId, id } = context.query;
-
   const session = await getSession(context);
 
   const queryClient = new QueryClient();
-
-  await queryClient.prefetchQuery({
-    queryKey: [queryKeys.sentenceDetail, groupId, id],
-    queryFn: () => getSentenceData(groupId, id),
-  });
 
   return {
     props: {

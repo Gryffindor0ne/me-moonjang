@@ -12,7 +12,6 @@ type LearningStateData = {
   groupId: string;
   sentenceId: string;
   learningComplete: boolean;
-  sentenceDetail: boolean;
 };
 
 const changeLearningState = async (learningStateData: LearningStateData) => {
@@ -50,11 +49,7 @@ const useSentenceState = (): UseMutateFunction<
           });
         }
 
-        queryClient.invalidateQueries([
-          variables.sentenceDetail
-            ? queryKeys.sentenceDetail
-            : queryKeys.groupDetailData,
-        ]);
+        queryClient.invalidateQueries([queryKeys.groupData]);
       },
     }
   );

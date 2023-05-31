@@ -6,9 +6,9 @@ import { HiOutlineX } from 'react-icons/hi';
 import { useRecoilState, useRecoilValue } from 'recoil';
 
 import { UserInfo } from '@pages/profile';
-import { useGroups } from '@react-query/hooks/groups/useGroups';
-import { useChangeGroupName } from '@react-query/hooks/groups/useChangeGroupName';
-import { useNewGroup } from '@react-query/hooks/groups/useNewGroup';
+import { useGroupNames } from '@react-query/hooks/group/useGroupNames';
+import { useChangeGroupName } from '@react-query/hooks/group/useChangeGroupName';
+import { useNewGroup } from '@react-query/hooks/group/useNewGroup';
 import { contextState } from '@recoil/atoms/common';
 import { selectContext } from '@recoil/selectors/common';
 import useModal from '@hooks/useModal';
@@ -42,7 +42,7 @@ const GroupNameModal = ({
 
   const [context, setContext] = useRecoilState(contextState);
   const currentContext = useRecoilValue(selectContext);
-  const { groups, isLoading } = useGroups();
+  const { groups, isLoading } = useGroupNames();
   const { hideModal } = useModal();
 
   if (isLoading) return null;

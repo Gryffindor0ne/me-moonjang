@@ -17,10 +17,19 @@ const groupHandler = async (req: NextApiRequest, res: NextApiResponse) => {
       const { user } = req.query;
 
       try {
-        const documents = await getAllDocuments(client, 'groups', {
-          name: { $exists: 1 },
-          email: user,
-        });
+        const documents = await getAllDocuments(
+          client,
+          'groups',
+          {
+            name: { $exists: 1 },
+            email: user,
+          },
+          {
+            projection: {
+              name: 1,
+            },
+          }
+        );
 
         return res.status(201).json(documents);
       } catch (error) {

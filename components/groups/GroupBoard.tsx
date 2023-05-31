@@ -9,7 +9,7 @@ import { useSetRecoilState } from 'recoil';
 import GroupsNavbar from '@components/groups/components/GroupsNavbar';
 import { UserInfo } from '@pages/profile';
 import Group from '@components/groups/components/Group';
-import { useGroups } from '@react-query/hooks/groups/useGroups';
+import { useGroupNames } from '@react-query/hooks/group/useGroupNames';
 import { contextState } from '@recoil/atoms/common';
 import useModal from '@hooks/useModal';
 
@@ -20,7 +20,7 @@ const GroupBoard = () => {
   const { data: session } = useSession();
   const user = session?.user as UserInfo;
 
-  const { groups } = useGroups();
+  const { groups } = useGroupNames();
 
   const setContext = useSetRecoilState(contextState);
 

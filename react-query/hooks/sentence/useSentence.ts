@@ -4,12 +4,9 @@ import { useRouter } from 'next/router';
 
 import { queryKeys } from '@react-query/constants';
 
-export const getSentenceData = async (
-  groupId: string | string[] | undefined,
-  id: string | string[] | undefined
-) => {
+export const getGroupData = async (groupId: string | undefined) => {
   const { data } = await axios.get(
-    `${process.env.NEXT_PUBLIC_URL}/api/sentence/?group=${groupId}&sentenceId=${id}`
+    `${process.env.NEXT_PUBLIC_URL}/api/groups/detail/${groupId}`
   );
   return data;
 };
@@ -17,12 +14,12 @@ export const getSentenceData = async (
 export const useSentence = () => {
   const router = useRouter();
 
-  const { groupId, id } = router.query;
+  const { groupId } = router.query;
 
-  const { data: sentenceData, isLoading } = useQuery(
-    [queryKeys.sentenceDetail, groupId, id],
-    () => getSentenceData(groupId, id)
+  const { data: groupData, isLoading } = useQuery(
+    [queryKeys.groupData, groupId],
+    () => getGroupData(groupId as string)
   );
 
-  return { sentenceData, isLoading };
+  return { groupData, isLoading };
 };

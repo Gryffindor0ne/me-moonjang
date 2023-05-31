@@ -7,7 +7,10 @@ import Seo from '@components/layout/Seo';
 import { UserInfo } from '@pages/profile';
 import { queryKeys } from '@react-query/constants';
 import Splash from '@components/layout/Splash';
-import { getGroupsData, useGroups } from '@react-query/hooks/groups/useGroups';
+import {
+  getGroupNames,
+  useGroupNames,
+} from '@react-query/hooks/group/useGroupNames';
 import Main from '@components/layout/Main';
 
 const Home = () => {
@@ -20,7 +23,7 @@ const Home = () => {
     });
   }, []);
 
-  const { isLoading } = useGroups();
+  const { isLoading } = useGroupNames();
 
   if (isLoading) return;
 
@@ -40,8 +43,8 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
   const queryClient = new QueryClient();
 
   await queryClient.prefetchQuery({
-    queryKey: [queryKeys.groupsData],
-    queryFn: () => getGroupsData(user),
+    queryKey: [queryKeys.groupNames],
+    queryFn: () => getGroupNames(user),
   });
 
   return {

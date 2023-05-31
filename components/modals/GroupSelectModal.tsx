@@ -7,8 +7,8 @@ import { useRouter } from 'next/router';
 import useModal from '@hooks/useModal';
 import { SentenceDetailInfo } from '@components/group/Sentence';
 import { useRemoveSentence } from '@react-query/hooks/sentence/useRemoveSentence';
-import { useGroup } from '@react-query/hooks/groups/useGroup';
-import { useGroups } from '@react-query/hooks/groups/useGroups';
+import { useSentence } from '@react-query/hooks/sentence/useSentence';
+import { useGroupNames } from '@react-query/hooks/group/useGroupNames';
 import { contextState } from '@recoil/atoms/common';
 
 type Group = {
@@ -35,17 +35,18 @@ const GroupSelectModal = ({
 }: GroupSelectModalProps) => {
   const router = useRouter();
   const { showModal, hideModal } = useModal();
-  const { groups, isLoading } = useGroups();
+  const { groups, isLoading } = useGroupNames();
+  const { groupData } = useSentence();
 
   const setContext = useSetRecoilState(contextState);
   const removeSentenceMutate = useRemoveSentence();
-  const { groupData } = useGroup();
 
   if (isLoading) return null;
 
   const onSubmit = async (values: Group) => {
     const { groupName } = values;
     const groupId = groups.filter((group) => group.name === groupName)[0]._id;
+
     hideModal();
 
     const handleChangeGroup = async (): Promise<void> => {
@@ -62,13 +63,13 @@ const GroupSelectModal = ({
           hideModal();
 
           removeSentenceMutate({
-            groupId: groupData[0]._id,
+            groupId: groupData._id,
             sentenceIds: selectSentenceIds,
           });
 
           setContext('');
           setTimeout(() => {
-            router.push(`/${groupData[0]._id}`);
+            router.push(`/${groupData._id}`);
           }, 100);
         }
       } catch (errorResponse) {
