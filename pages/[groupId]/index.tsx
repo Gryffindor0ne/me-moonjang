@@ -10,7 +10,6 @@ import Seo from '@components/layout/Seo';
 import GroupNavbar from '@components/group/GroupNavbar';
 import SelectSentence from '@components/group/SelectSentence';
 import GroupHeader from '@components/group/GroupHeader';
-// import { queryKeys } from '@react-query/constants';
 import { useSentence } from '@react-query/hooks/sentence/useSentence';
 import { contextState } from '@recoil/atoms/common';
 
@@ -61,15 +60,9 @@ const SentenceByGroup = () => {
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  // const { groupId } = context.query;
   const session = await getSession(context);
 
   const queryClient = new QueryClient();
-
-  // await queryClient.prefetchQuery({
-  //   queryKey: [queryKeys.groupDetailData],
-  //   queryFn: () => getGroupData(groupId as string),
-  // });
 
   return {
     props: {
