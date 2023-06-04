@@ -40,9 +40,14 @@ const GroupBoard = () => {
     <>
       <GroupsNavbar />
 
-      <div className="flex items-center justify-between w-full max-w-2xl p-2">
-        <div className="flex justify-start p-2 my-2 text-base font-bold text-gray-700 md:text-lg md:p-4">
-          {`${user?.username.toUpperCase()}'s memoonjang`}
+      <div className="flex items-center justify-between w-full max-w-xl p-2 my-3">
+        <div className="flex flex-col">
+          <div className="flex justify-start text-lg font-bold text-gray-600 md:text-2xl">
+            {`${user?.username.toUpperCase()}'s `}
+          </div>
+          <div className="flex items-center justify-start text-base font-bold text-gray-600 md:text-xl">
+            memoonjang
+          </div>
         </div>
         <div
           onClick={createNewGroup}
@@ -64,10 +69,10 @@ const GroupBoard = () => {
         })
       ) : (
         <div className="flex flex-col items-center justify-center max-w-2xl p-2 mt-10 text-xl text-center">
-          <div className="p-2 text-3xl text-center text-teal-500 md:text-4xl">
+          <div className="p-2 mb-5 text-3xl text-center text-teal-500 md:text-4xl">
             <HiOutlineExclamationCircle />
           </div>
-          <div className="flex p-2 mx-auto text-base font-bold text-teal-500 md:text-xl">
+          <div className="flex p-2 mx-auto text-xl font-bold text-teal-500 md:text-2xl">
             생성된 문장집이 없습니다.
           </div>
         </div>

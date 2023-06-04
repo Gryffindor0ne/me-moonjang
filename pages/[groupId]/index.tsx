@@ -10,7 +10,6 @@ import Seo from '@components/layout/Seo';
 import GroupNavbar from '@components/group/GroupNavbar';
 import SelectSentence from '@components/group/SelectSentence';
 import GroupHeader from '@components/group/GroupHeader';
-// import { queryKeys } from '@react-query/constants';
 import { useSentence } from '@react-query/hooks/sentence/useSentence';
 import { contextState } from '@recoil/atoms/common';
 
@@ -34,7 +33,7 @@ const SentenceByGroup = () => {
     <>
       <Seo title={`${groupData.name}`} />
 
-      <section className="flex flex-col w-full max-w-2xl gap-3 p-4 pb-32 mx-auto">
+      <section className="flex flex-col w-full max-w-2xl gap-3 px-8 pb-32 mx-auto">
         <GroupNavbar name={groupData.name} />
 
         <GroupHeader groupData={groupData} />
@@ -47,10 +46,10 @@ const SentenceByGroup = () => {
           ))
         ) : (
           <div className="flex flex-col items-center justify-center w-full max-w-2xl p-2 mt-10 text-xl text-center">
-            <div className="p-2 text-3xl text-center text-teal-500 md:text-4xl">
+            <div className="p-2 mb-5 text-3xl text-center text-teal-500 md:text-4xl">
               <HiOutlineExclamationCircle />
             </div>
-            <div className="flex p-2 mx-auto text-base font-bold text-teal-500 md:text-xl">
+            <div className="flex p-2 mx-auto text-xl font-bold text-teal-500 md:text-2xl">
               등록된 문장이 없습니다.
             </div>
           </div>
@@ -61,15 +60,9 @@ const SentenceByGroup = () => {
 };
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  // const { groupId } = context.query;
   const session = await getSession(context);
 
   const queryClient = new QueryClient();
-
-  // await queryClient.prefetchQuery({
-  //   queryKey: [queryKeys.groupDetailData],
-  //   queryFn: () => getGroupData(groupId as string),
-  // });
 
   return {
     props: {

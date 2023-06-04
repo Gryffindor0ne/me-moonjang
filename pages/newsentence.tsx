@@ -62,7 +62,7 @@ const SentenceInputPage = () => {
     <>
       <Seo title="문장등록" />
       <Layout>
-        <section className="flex flex-col w-full max-w-2xl p-5 mx-auto">
+        <section className="flex flex-col w-full max-w-xl gap-5 mx-auto md:p-5">
           <div className="flex">
             <span
               onClick={() => router.back()}
@@ -94,7 +94,7 @@ const SentenceInputPage = () => {
             >
               {(props) => (
                 <Form
-                  className="flex flex-col gap-2"
+                  className="flex flex-col gap-1"
                   onSubmit={props.handleSubmit}
                 >
                   {!groupId && (
@@ -180,10 +180,10 @@ const SentenceInputPage = () => {
             </Formik>
           ) : (
             <div className="flex flex-col items-center justify-center p-2 mt-10 text-xl text-center">
-              <div className="p-2 text-3xl text-center text-teal-500 md:text-4xl">
+              <div className="p-2 mb-5 text-3xl text-center text-teal-500 md:text-4xl">
                 <HiOutlineExclamationCircle />
               </div>
-              <div className="flex p-2 mx-auto text-base font-bold text-teal-500 md:text-xl">
+              <div className="flex p-2 mx-auto text-xl font-bold text-teal-500 md:text-2xl">
                 생성된 문장집이 없습니다.
               </div>
             </div>

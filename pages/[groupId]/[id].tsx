@@ -32,7 +32,7 @@ const Sentence = () => {
   return (
     <>
       <Seo title={`${groupData.name}-상세`} />
-      <section className="flex flex-col w-full max-w-2xl p-5 mx-auto">
+      <section className="flex flex-col w-full max-w-2xl px-8 mx-auto">
         <div className="flex pr-8">
           <span
             onClick={() => router.back()}

@@ -37,7 +37,7 @@ const Sentence = ({ data }: { data: SentenceDetailInfo }) => {
 
         <LearningState data={data} />
       </div>
-      <div id={data.id} className="font-bold text-md md:text-xl">
+      <div id={data.id} className="text-base font-bold md:text-xl">
         {data.sentence}
       </div>
       <div id={data.id} className="mt-5 text-xs md:text-base">

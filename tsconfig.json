@@ -26,6 +26,12 @@
       "@recoil/*": ["recoil/*"]
     }
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "lib/db.ts"],
+  "include": [
+    "next-env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    "lib/db.ts",
+    "utils/scoreAnimation.js"
+  ],
   "exclude": ["node_modules"]
 }
