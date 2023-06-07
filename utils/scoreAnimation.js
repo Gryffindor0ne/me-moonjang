@@ -1,4 +1,4 @@
-const speed = 4;
+const speed = 2;
 
 export function incEltNbr(id) {
   const elt = document.getElementById(id);
