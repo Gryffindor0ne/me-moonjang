@@ -1,6 +1,15 @@
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { CiUser, CiPen, CiLollipop, CiGrid41 } from 'react-icons/ci';
+import {
+  IoIceCreamOutline,
+  IoLibraryOutline,
+  IoPersonOutline,
+  IoLibrary,
+  IoIceCream,
+  IoPerson,
+  IoPencil,
+  IoPencilOutline,
+} from 'react-icons/io5';
 
 const MainNavigation = () => {
   const router = useRouter();
@@ -11,7 +20,7 @@ const MainNavigation = () => {
         <div id="tabs" className="flex pt-1 border-t-2 justify-evenly">
           <Link
             href="/"
-            className="px-2 py-2 mx-2 text-2xl font-bold text-center text-gray-800"
+            className="px-2 py-2 mx-2 text-2xl font-bold text-center"
           >
             <div
               className={`${
@@ -20,14 +29,19 @@ const MainNavigation = () => {
                   : 'text-gray-800 flex flex-col items-center'
               }`}
             >
-              <CiGrid41 />
+              {router.pathname === '/' || router.pathname === '/#' ? (
+                <IoLibrary />
+              ) : (
+                <IoLibraryOutline />
+              )}
+
               <span className="block mt-1 text-xs tab">문장집</span>
             </div>
           </Link>
 
           <Link
             href="newsentence"
-            className="px-4 py-2 mx-2 text-2xl font-bold text-center text-gray-800"
+            className="px-4 py-2 mx-2 text-2xl font-bold text-center"
           >
             <div
               className={`${
@@ -36,14 +50,19 @@ const MainNavigation = () => {
                   : 'text-gray-800 flex flex-col items-center'
               }`}
             >
-              <CiPen />
+              {router.pathname === '/newsentence' ? (
+                <IoPencil />
+              ) : (
+                <IoPencilOutline />
+              )}
+
               <span className="block mt-1 text-xs tab">문장</span>
             </div>
           </Link>
 
           <Link
             href="quiz"
-            className="px-4 py-2 mx-2 text-2xl font-bold text-center text-gray-800"
+            className="px-4 py-2 mx-2 text-2xl font-bold text-center"
           >
             <div
               className={`${
@@ -52,14 +71,19 @@ const MainNavigation = () => {
                   : 'text-gray-800 flex flex-col items-center'
               }`}
             >
-              <CiLollipop />
+              {router.pathname === '/quiz' ? (
+                <IoIceCream />
+              ) : (
+                <IoIceCreamOutline />
+              )}
+
               <span className="block mt-1 text-xs tab">퀴즈</span>
             </div>
           </Link>
 
           <Link
             href="profile"
-            className="px-2 py-2 mx-2 text-2xl font-bold text-center text-gray-800"
+            className="p-2 mx-2 text-2xl font-bold text-center"
           >
             <div
               className={`${
@@ -68,7 +92,12 @@ const MainNavigation = () => {
                   : 'text-gray-800 flex flex-col items-center'
               }`}
             >
-              <CiUser />
+              {router.pathname === '/profile' ? (
+                <IoPerson />
+              ) : (
+                <IoPersonOutline />
+              )}
+
               <span className="block mt-1 text-xs tab">내 정보</span>
             </div>
           </Link>

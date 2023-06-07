@@ -1,9 +1,6 @@
 import React, { useState } from 'react';
 import { useSession } from 'next-auth/react';
-import {
-  HiOutlineCollection,
-  HiOutlineExclamationCircle,
-} from 'react-icons/hi';
+import { HiOutlineExclamationCircle, HiPlus } from 'react-icons/hi';
 import { useSetRecoilState } from 'recoil';
 
 import GroupsNavbar from '@components/groups/components/GroupsNavbar';
@@ -53,7 +50,7 @@ const GroupBoard = () => {
           onClick={createNewGroup}
           className="p-2 text-3xl text-center text-teal-400 cursor-pointer md:text-4xl md:p-4"
         >
-          <HiOutlineCollection />
+          <HiPlus />
         </div>
       </div>
 
