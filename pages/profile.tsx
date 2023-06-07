@@ -123,23 +123,23 @@ const ProfilePage = () => {
             </h1>
           </div>
           <div className="flex items-center justify-between px-5 py-3 font-mono border-b border-gray-100 md:text-lg">
-            <div className="text-sm text-gray-600 md:text-lg">로그인방식</div>
-            <div className="text-xs md:text-lg">
+            <div className="text-base text-gray-600 md:text-lg">로그인방식</div>
+            <div className="text-base md:text-lg">
               {user.authType.toUpperCase()}
             </div>
           </div>
 
           <div className="flex items-center justify-between px-5 py-3 font-mono border-b border-gray-100 md:text-lg">
-            <div className="text-sm text-gray-600 md:text-lg">이름</div>
-            <div className="text-xs md:text-lg">{user.username}</div>
+            <div className="text-base text-gray-600 md:text-lg">이름</div>
+            <div className="text-base md:text-lg">{user.username}</div>
           </div>
           <div className="flex items-center justify-between px-5 py-3 font-mono border-b border-gray-100 md:text-lg">
-            <div className="text-sm text-gray-600 md:text-lg">이메일</div>
-            <div className="text-xs md:text-lg">{user.email}</div>
+            <div className="text-base text-gray-600 md:text-lg">이메일</div>
+            <div className="text-sm md:text-lg">{user.email}</div>
           </div>
 
           <div className="flex items-center justify-between px-5 py-3 border-b border-gray-100 md:text-lg">
-            <div className="text-sm text-gray-600 md:text-lg">로그아웃</div>
+            <div className="text-base text-gray-600 md:text-lg">로그아웃</div>
             <div
               onClick={() => handleClickBtn('logout')}
               className="px-4 py-2 text-lg text-orange-500 rounded-sm cursor-pointer sm:text-2xl"
@@ -151,7 +151,7 @@ const ProfilePage = () => {
           <div className="px-5 py-3 border-b border-gray-100 md:text-lg">
             <div
               onClick={() => handleClickBtn('deleteAccount')}
-              className="mt-20 text-sm text-gray-600 cursor-pointer md:text-lg"
+              className="mt-20 text-base text-gray-600 cursor-pointer md:text-lg"
             >
               회원탈퇴
             </div>

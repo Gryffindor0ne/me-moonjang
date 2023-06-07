@@ -18,7 +18,7 @@ const QuizPage = () => {
     <>
       <Seo title="퀴즈" />
       <Layout>
-        <section className="flex flex-col w-full max-w-2xl gap-5 mx-auto md:p-5">
+        <section className="flex flex-col w-full max-w-2xl gap-3 mx-auto md:gap-5 md:p-5">
           <div className="flex">
             <span
               onClick={() => router.back()}
@@ -37,7 +37,7 @@ const QuizPage = () => {
             </div>
           ) : null}
 
-          <div className="flex flex-wrap justify-center text-xl text-center md:mt-10">
+          <div className="flex flex-wrap justify-center mt-3 text-xl text-center md:mt-10">
             {groups?.length !== 0 ? (
               groups?.map((group, idx) => {
                 return <GroupBox key={idx} groupName={group} />;
