@@ -11,12 +11,14 @@ import { useCustomToast } from '@hooks/useCustomToast';
 type NewGroupName = {
   name: string;
   groupId: string | undefined;
+  email: string;
 };
 
 const setGroupName = async (newGroupNameData: NewGroupName) => {
-  await axios.patch(`api/groups/actions/change-name`, {
+  await axios.patch(`/api/groups/actions/change-name`, {
     name: newGroupNameData.name,
     groupId: newGroupNameData.groupId,
+    email: newGroupNameData.email,
   });
 };
 

@@ -56,7 +56,7 @@ const GroupNameModal = ({
   const changeGroupName = (value: GroupProps) => {
     const { name } = value;
 
-    changeName({ name, groupId: selectGroupId });
+    changeName({ name, groupId: selectGroupId, email: user.email });
 
     hideModal();
     setContext('');
