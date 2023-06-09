@@ -3,10 +3,10 @@ import {
   useMutation,
   useQueryClient,
 } from '@tanstack/react-query';
-import axios from 'axios';
 
 import { queryKeys } from '@react-query/constants';
 import { useCustomToast } from '@hooks/useCustomToast';
+import { axiosInstance } from '@lib/axiosInstance';
 
 type LearningStateData = {
   groupId: string;
@@ -15,7 +15,7 @@ type LearningStateData = {
 };
 
 const changeLearningState = async (learningStateData: LearningStateData) => {
-  await axios.post(`/api/sentence/learning-state`, {
+  await axiosInstance.post(`/api/sentence/learning-state`, {
     id: learningStateData.groupId,
     sentenceId: learningStateData.sentenceId,
     learningState: learningStateData.learningComplete,

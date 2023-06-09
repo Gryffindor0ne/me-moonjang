@@ -4,16 +4,7 @@ import { writtenDate } from '@utils/dayjs';
 import LearningState from '@components/common/LearningState';
 
 import { useSentence } from '@react-query/hooks/sentence/useSentence';
-
-export type SentenceDetailInfo = {
-  id: string;
-  sentence: string;
-  interpretation: string;
-  explanation: string;
-  createdAt: number;
-  updatedAt: number;
-  learningState?: boolean;
-};
+import { SentenceDetailInfo } from '@shared/types';
 
 const Sentence = ({ data }: { data: SentenceDetailInfo }) => {
   const router = useRouter();

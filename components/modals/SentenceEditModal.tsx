@@ -6,8 +6,6 @@ import { useCustomToast } from '@hooks/useCustomToast';
 import { contextState } from '@recoil/atoms/common';
 import useModal from '@hooks/useModal';
 
-export type SentenceEditModalProps = {};
-
 const SentenceEditModal = () => {
   const toast = useCustomToast();
   const { hideModal } = useModal();

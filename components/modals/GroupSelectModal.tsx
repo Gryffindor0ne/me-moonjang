@@ -5,28 +5,15 @@ import { useSetRecoilState } from 'recoil';
 import { useRouter } from 'next/router';
 
 import useModal from '@hooks/useModal';
-import { SentenceDetailInfo } from '@components/group/Sentence';
 import { useRemoveSentence } from '@react-query/hooks/sentence/useRemoveSentence';
 import { useSentence } from '@react-query/hooks/sentence/useSentence';
 import { useGroupNames } from '@react-query/hooks/group/useGroupNames';
 import { contextState } from '@recoil/atoms/common';
+import { axiosInstance } from '@lib/axiosInstance';
+import { GroupSelectModalProps } from '@shared/types';
 
 type Group = {
   groupName: string;
-};
-
-export type GroupInfo = {
-  _id: string;
-  name: string;
-  email: string;
-  createdAt: number;
-  updatedAt: number;
-  sentences: SentenceDetailInfo[];
-};
-
-export type GroupSelectModalProps = {
-  selectSentence: SentenceDetailInfo[];
-  selectSentenceIds: string[];
 };
 
 const GroupSelectModal = ({
@@ -51,8 +38,8 @@ const GroupSelectModal = ({
 
     const handleChangeGroup = async (): Promise<void> => {
       try {
-        const response = await axios.patch(
-          `api/sentence/actions/change-group`,
+        const response = await axiosInstance.patch(
+          `/api/sentence/actions/change-group`,
           {
             id: groupId,
             sentences: selectSentence,

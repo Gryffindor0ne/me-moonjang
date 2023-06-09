@@ -2,8 +2,8 @@ import { useRouter } from 'next/router';
 import React, { Dispatch, SetStateAction } from 'react';
 import { HiOutlineDotsHorizontal } from 'react-icons/hi';
 
-import { GroupInfo } from '@pages/[groupId]';
 import useModal from '@hooks/useModal';
+import { GroupInfo } from '@shared/types';
 
 const Group = ({
   group,

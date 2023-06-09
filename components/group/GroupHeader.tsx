@@ -1,7 +1,7 @@
 import { useRouter } from 'next/router';
 import { HiOutlinePlus } from 'react-icons/hi';
 
-import { GroupInfo } from '@pages/[groupId]';
+import { GroupInfo } from '@shared/types';
 
 const GroupHeader = ({ groupData }: { groupData: GroupInfo }) => {
   const router = useRouter();

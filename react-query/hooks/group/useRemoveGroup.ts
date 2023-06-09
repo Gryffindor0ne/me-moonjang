@@ -3,17 +3,17 @@ import {
   useMutation,
   useQueryClient,
 } from '@tanstack/react-query';
-import axios from 'axios';
 
 import { queryKeys } from '@react-query/constants';
 import { useCustomToast } from '@hooks/useCustomToast';
+import { axiosInstance } from '@lib/axiosInstance';
 
 type TargetId = {
   id: string;
 };
 
 const removeGroup = async (targetId: TargetId) => {
-  await axios.delete(`/api/groups`, {
+  await axiosInstance.delete(`/api/groups`, {
     data: { id: targetId.id },
   });
 };

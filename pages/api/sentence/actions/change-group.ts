@@ -2,7 +2,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import { ObjectId } from 'mongodb';
 
 import { dbConnect, updateBulkDocument } from '@lib/db';
-import { SentenceDetailInfo } from '@components/group/Sentence';
+import { SentenceDetailInfo } from '@shared/types';
 
 const changeSentenceGroup = async (
   req: NextApiRequest,

@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 
-import { SentenceDetailInfo } from '@components/group/Sentence';
+import { SentenceDetailInfo } from '@shared/types';
 
 export const descendingSort = (sentences: SentenceDetailInfo[]) => {
   return sentences.sort((a, b) => b.createdAt - a.createdAt);

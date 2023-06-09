@@ -6,10 +6,7 @@ import { ExclamationTriangleIcon } from '@heroicons/react/24/outline';
 import { selectContext } from '@recoil/selectors/common';
 import useModal from '@hooks/useModal';
 import { contextState } from '@recoil/atoms/common';
-
-export type ConfirmModalProps = {
-  handler: () => void;
-};
+import { ConfirmModalProps } from '@shared/types';
 
 const ConfirmModal = ({ handler }: ConfirmModalProps) => {
   const [open, setOpen] = useState(true);

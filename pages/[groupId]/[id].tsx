@@ -8,8 +8,8 @@ import { HiOutlineBell } from 'react-icons/hi';
 
 import Seo from '@components/layout/Seo';
 import LearningState from '@components/common/LearningState';
-import { SentenceDetailInfo } from '@components/group/Sentence';
 import { useSentence } from '@react-query/hooks/sentence/useSentence';
+import { SentenceDetailInfo } from '@shared/types';
 
 const Sentence = () => {
   const [open, setOpen] = useState(true);

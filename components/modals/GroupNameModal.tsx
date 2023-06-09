@@ -1,17 +1,16 @@
-import React, { Dispatch, SetStateAction } from 'react';
 import { useSession } from 'next-auth/react';
 import { ErrorMessage, Field, Form, Formik } from 'formik';
 import * as yup from 'yup';
 import { HiOutlineX } from 'react-icons/hi';
 import { useRecoilState, useRecoilValue } from 'recoil';
 
-import { UserInfo } from '@pages/profile';
 import { useGroupNames } from '@react-query/hooks/group/useGroupNames';
 import { useChangeGroupName } from '@react-query/hooks/group/useChangeGroupName';
 import { useNewGroup } from '@react-query/hooks/group/useNewGroup';
 import { contextState } from '@recoil/atoms/common';
 import { selectContext } from '@recoil/selectors/common';
 import useModal from '@hooks/useModal';
+import { GroupNameModalProps, UserInfo } from '@shared/types';
 
 export const userSchema = yup.object().shape({
   name: yup
@@ -23,11 +22,6 @@ export const userSchema = yup.object().shape({
 
 type GroupProps = {
   name: string;
-};
-
-export type GroupNameModalProps = {
-  selectGroupId: string;
-  setIsSelectGroupId: Dispatch<SetStateAction<string>>;
 };
 
 const GroupNameModal = ({

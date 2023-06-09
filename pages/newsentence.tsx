@@ -7,16 +7,9 @@ import { HiOutlineExclamationCircle } from 'react-icons/hi';
 import Layout from '@components/layout/Layout';
 import Seo from '@components/layout/Seo';
 import styles from '@styles/Form.module.css';
-import { GroupInfo } from '@pages/[groupId]';
 import { useGroupNames } from '@react-query/hooks/group/useGroupNames';
 import { useNewSentence } from '@react-query/hooks/sentence/useNewSentence';
-
-export type SentenceInfo = {
-  groupName: string;
-  sentence: string;
-  interpretation: string;
-  explanation: string;
-};
+import { GroupInfo, SentenceInfo } from '@shared/types';
 
 export const sentenceSchema = yup.object().shape({
   sentence: yup

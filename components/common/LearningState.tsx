@@ -2,9 +2,9 @@ import { useState } from 'react';
 
 import { MdOutlineFaceRetouchingNatural } from 'react-icons/md';
 
-import { SentenceDetailInfo } from '@components/group/Sentence';
 import useSentenceState from '@react-query/hooks/sentence/useSentenceState';
 import { useSentence } from '@react-query/hooks/sentence/useSentence';
+import { SentenceDetailInfo } from '@shared/types';
 
 const LearningState = ({ data }: { data: SentenceDetailInfo }) => {
   const [learningComplete, setLearingComplete] = useState(

@@ -1,7 +1,6 @@
 import { getSession, signOut, useSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { GetServerSideProps } from 'next';
-import axios from 'axios';
 import { MdOutlineArrowBackIos } from 'react-icons/md';
 import { CiLogout } from 'react-icons/ci';
 import { useSetRecoilState } from 'recoil';
@@ -12,13 +11,9 @@ import Layout from '@components/layout/Layout';
 import { useCustomToast } from '@hooks/useCustomToast';
 import { contextState } from '@recoil/atoms/common';
 import useModal from '@hooks/useModal';
-
-export type UserInfo = {
-  id: string;
-  email: string;
-  username: string;
-  authType: string;
-};
+import { axiosInstance } from '@lib/axiosInstance';
+import { baseUrl } from '@lib/axiosInstance/constants';
+import { UserInfo } from '@shared/types';
 
 const ProfilePage = () => {
   const { data: session } = useSession();
@@ -32,14 +27,14 @@ const ProfilePage = () => {
 
   const handleLogout = async (): Promise<void> => {
     try {
-      const res = await axios.post(`api/auth/logout`, {
+      const res = await axiosInstance.post(`/api/auth/logout`, {
         id: user.id,
       });
 
       if (res.status === 200) {
         hideModal();
         setContext('');
-        signOut({ callbackUrl: `${process.env.NEXT_PUBLIC_URL}` });
+        signOut({ callbackUrl: `${baseUrl}` });
       }
     } catch (error) {
       console.log(error);
@@ -48,13 +43,16 @@ const ProfilePage = () => {
 
   const handleDeleteAccount = async (): Promise<void> => {
     try {
-      const logoutResponse = await axios.post(`api/auth/logout`, {
+      const logoutResponse = await axiosInstance.post(`/api/auth/logout`, {
         id: user.id,
       });
       if (logoutResponse.status === 200) {
-        const deleteUserResponse = await axios.post(`api/auth/delete-user`, {
-          email: user.email,
-        });
+        const deleteUserResponse = await axiosInstance.post(
+          `/api/auth/delete-user`,
+          {
+            email: user.email,
+          }
+        );
 
         if (deleteUserResponse.status === 200) {
           hideModal();
@@ -64,10 +62,7 @@ const ProfilePage = () => {
             title: '회원탈퇴가 완료되었습니다.',
             status: 'success',
           });
-          setTimeout(
-            () => signOut({ callbackUrl: `${process.env.NEXT_PUBLIC_URL}` }),
-            2000
-          );
+          setTimeout(() => signOut({ callbackUrl: `${baseUrl}` }), 2000);
         }
       }
     } catch (error) {

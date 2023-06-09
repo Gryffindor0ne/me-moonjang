@@ -3,12 +3,12 @@ import {
   useMutation,
   useQueryClient,
 } from '@tanstack/react-query';
-import axios from 'axios';
 import { useRecoilState } from 'recoil';
 
 import { queryKeys } from '@react-query/constants';
 import { useCustomToast } from '@hooks/useCustomToast';
 import { contextState } from '@recoil/atoms/common';
+import { axiosInstance } from '@lib/axiosInstance';
 
 type Ids = {
   groupId: string;
@@ -16,7 +16,7 @@ type Ids = {
 };
 
 const removeSentence = async (ids: Ids) => {
-  await axios.delete(`/api/sentence`, {
+  await axiosInstance.delete(`/api/sentence`, {
     data: {
       groupId: ids.groupId,
       sentenceIds: ids.sentenceIds,

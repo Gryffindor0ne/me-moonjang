@@ -3,17 +3,17 @@ import {
   useMutation,
   useQueryClient,
 } from '@tanstack/react-query';
-import axios from 'axios';
 
 import { queryKeys } from '@react-query/constants';
 import { useCustomToast } from '@hooks/useCustomToast';
+import { axiosInstance } from '@lib/axiosInstance';
 
 type NewGroup = {
   name: string;
   email: string;
 };
 const createNewGroup = async (newGroup: NewGroup) => {
-  await axios.post(`api/groups`, {
+  await axiosInstance.post(`/api/groups`, {
     name: newGroup.name,
     email: newGroup.email,
   });
