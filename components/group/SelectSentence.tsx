@@ -3,8 +3,7 @@ import { Field, Form, Formik } from 'formik';
 import { useRecoilState } from 'recoil';
 import { useRouter } from 'next/router';
 
-import Sentence, { SentenceDetailInfo } from '@components/group/Sentence';
-import { UserInfo } from '@pages/profile';
+import Sentence from '@components/group/Sentence';
 import { descendingSort } from '@utils/dayjs';
 import { useCustomToast } from '@hooks/useCustomToast';
 import { contextState } from '@recoil/atoms/common';
@@ -12,6 +11,7 @@ import useModal from '@hooks/useModal';
 import { useRemoveSentence } from '@react-query/hooks/sentence/useRemoveSentence';
 
 import { useSentence } from '@react-query/hooks/sentence/useSentence';
+import { SentenceDetailInfo, UserInfo } from '@shared/types';
 
 type SelectSentenceInfo = {
   sentenceIds: string[];

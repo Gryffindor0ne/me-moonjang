@@ -3,10 +3,10 @@ import {
   useMutation,
   useQueryClient,
 } from '@tanstack/react-query';
-import axios from 'axios';
 
 import { queryKeys } from '@react-query/constants';
 import { useCustomToast } from '@hooks/useCustomToast';
+import { axiosInstance } from '@lib/axiosInstance';
 
 type NewGroupName = {
   name: string;
@@ -15,7 +15,7 @@ type NewGroupName = {
 };
 
 const setGroupName = async (newGroupNameData: NewGroupName) => {
-  await axios.patch(`/api/groups/actions/change-name`, {
+  await axiosInstance.patch(`/api/groups/actions/change-name`, {
     name: newGroupNameData.name,
     groupId: newGroupNameData.groupId,
     email: newGroupNameData.email,

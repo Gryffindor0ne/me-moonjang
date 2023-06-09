@@ -1,19 +1,13 @@
 import { useSession } from 'next-auth/react';
-import { Dispatch, SetStateAction } from 'react';
 import { HiOutlineRefresh, HiOutlineTrash, HiOutlineX } from 'react-icons/hi';
 import { useSetRecoilState } from 'recoil';
 
-import { UserInfo } from '@pages/profile';
 import { useCustomToast } from '@hooks/useCustomToast';
 import { contextState } from '@recoil/atoms/common';
 import useModal from '@hooks/useModal';
 import { useRemoveGroup } from '@react-query/hooks/group/useRemoveGroup';
 import { useGroupNames } from '@react-query/hooks/group/useGroupNames';
-
-export type GroupEditModalProps = {
-  id: string;
-  setIsSelectGroupId: Dispatch<SetStateAction<string>>;
-};
+import { GroupEditModalProps, UserInfo } from '@shared/types';
 
 const GroupEditModal = ({ id, setIsSelectGroupId }: GroupEditModalProps) => {
   const { data: session } = useSession();

@@ -3,10 +3,10 @@ import {
   useMutation,
   useQueryClient,
 } from '@tanstack/react-query';
-import axios from 'axios';
 
 import { queryKeys } from '@react-query/constants';
 import { useCustomToast } from '@hooks/useCustomToast';
+import { axiosInstance } from '@lib/axiosInstance';
 
 type NewSentence = {
   id: string;
@@ -16,7 +16,7 @@ type NewSentence = {
 };
 
 const createNewSentence = async (newSentence: NewSentence) => {
-  await axios.post(`api/sentence`, {
+  await axiosInstance.post(`/api/sentence`, {
     id: newSentence.id,
     sentence: newSentence.sentence,
     interpretation: newSentence.interpretation,

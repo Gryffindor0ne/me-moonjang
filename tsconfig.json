@@ -23,7 +23,8 @@
       "@utils/*": ["utils/*"],
       "@hooks/*": ["hooks/*"],
       "@react-query/*": ["react-query/*"],
-      "@recoil/*": ["recoil/*"]
+      "@recoil/*": ["recoil/*"],
+      "@shared/*": ["shared/*"]
     }
   },
   "include": [

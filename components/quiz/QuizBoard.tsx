@@ -1,12 +1,12 @@
 import { useState } from 'react';
 
-import { SentenceDetailInfo } from '@components/group/Sentence';
 import Seo from '@components/layout/Seo';
 import makeRandomOrder from '@utils/makeRandomOrder';
 import QuizBox from '@components/quiz/QuizBox';
 import QuizResult from '@components/quiz/QuizResult';
+import { SentenceDetailInfo } from '@shared/types';
 
-export type QuizProps = {
+type QuizProps = {
   sentences: SentenceDetailInfo[];
   groupName: string;
 };

@@ -10,10 +10,11 @@ import { GoEyeClosed, GoEye } from 'react-icons/go';
 import styles from '@styles/Form.module.css';
 import Seo from '@components/layout/Seo';
 import { useCustomToast } from '@hooks/useCustomToast';
+import { axiosInstance } from '@lib/axiosInstance';
 
-export type AuthType = 'memoonjang';
+type AuthType = 'memoonjang';
 
-export type UserInputInfo = {
+type UserInputInfo = {
   email: string;
   password: string;
   confirmPassword: string;
@@ -54,7 +55,7 @@ const Register: NextPage = () => {
     const { email, password, username, authType } = values;
 
     try {
-      const res = await axios.post('/api/auth/signup', {
+      const res = await axiosInstance.post('/api/auth/signup', {
         email,
         password,
         username,

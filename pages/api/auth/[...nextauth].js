@@ -2,15 +2,15 @@ import NextAuth from 'next-auth/next';
 import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google';
 import KakaoProvider from 'next-auth/providers/kakao';
-import axios from 'axios';
 
 import { dbConnect } from '@lib/db';
 
 import { generateAccessToken, verifyToken } from '@lib/jwt';
+import { axiosInstance } from '@lib/axiosInstance';
 
 const refreshAccessToken = async (token) => {
   try {
-    const response = await axios.post(`${process.env.NEXTAUTH_URL}/api/auth`, {
+    const response = await axiosInstance.post(`/api/auth`, {
       user: token.user,
     });
 
@@ -51,13 +51,10 @@ export default NextAuth({
       authorize: async (credentials) => {
         try {
           const { email, password } = credentials;
-          const user = await axios.post(
-            `${process.env.NEXTAUTH_URL}/api/auth/login`,
-            {
-              email,
-              password,
-            }
-          );
+          const user = await axiosInstance.post(`/api/auth/login`, {
+            email,
+            password,
+          });
 
           if (user.status === 200) {
             return user.data;
@@ -81,25 +78,22 @@ export default NextAuth({
       }
       if (account.provider === 'kakao') {
         try {
-          await axios.post(`${process.env.NEXTAUTH_URL}/api/auth/login`, {
+          await axiosInstance.post(`/api/auth/login`, {
             email: user.email,
           });
 
           return true;
         } catch (error) {
           if (error.response?.status === 404) {
-            const result = await axios.post(
-              `${process.env.NEXTAUTH_URL}/api/auth/signup`,
-              {
-                email: user.email,
-                username: user.name,
-                password: user.id,
-                authType: 'kakao',
-              }
-            );
+            const result = await axiosInstance.post(`/api/auth/signup`, {
+              email: user.email,
+              username: user.name,
+              password: user.id,
+              authType: 'kakao',
+            });
 
             if (result.status == 201) {
-              await axios.post(`${process.env.NEXTAUTH_URL}/api/auth/login`, {
+              await axiosInstance.post(`/api/auth/login`, {
                 email: user.email,
               });
             }
@@ -112,24 +106,21 @@ export default NextAuth({
       }
       if (account.provider === 'google') {
         try {
-          await axios.post(`${process.env.NEXTAUTH_URL}/api/auth/login`, {
+          await axiosInstance.post(`/api/auth/login`, {
             email: user.email,
           });
           return true;
         } catch (error) {
           if (error.response?.status === 404) {
-            const result = await axios.post(
-              `${process.env.NEXTAUTH_URL}/api/auth/signup`,
-              {
-                email: user.email,
-                username: user.name,
-                password: user.id,
-                authType: 'google',
-              }
-            );
+            const result = await axiosInstance.post(`/api/auth/signup`, {
+              email: user.email,
+              username: user.name,
+              password: user.id,
+              authType: 'google',
+            });
 
             if (result.status == 201) {
-              await axios.post(`${process.env.NEXTAUTH_URL}/api/auth/login`, {
+              await axiosInstance.post(`/api/auth/login`, {
                 email: user.email,
               });
             }

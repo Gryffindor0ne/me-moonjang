@@ -5,22 +5,13 @@ import { HiOutlineExclamationCircle } from 'react-icons/hi';
 import { useRecoilValue } from 'recoil';
 
 import { descendingSort } from '@utils/dayjs';
-import Sentence, { SentenceDetailInfo } from '@components/group/Sentence';
+import Sentence from '@components/group/Sentence';
 import Seo from '@components/layout/Seo';
 import GroupNavbar from '@components/group/GroupNavbar';
 import SelectSentence from '@components/group/SelectSentence';
 import GroupHeader from '@components/group/GroupHeader';
 import { useSentence } from '@react-query/hooks/sentence/useSentence';
 import { contextState } from '@recoil/atoms/common';
-
-export type GroupInfo = {
-  _id: string;
-  name: string;
-  email: string;
-  createdAt: number;
-  updatedAt: number;
-  sentences: SentenceDetailInfo[];
-};
 
 const SentenceByGroup = () => {
   const { groupData, isLoading } = useSentence();

@@ -1,8 +1,8 @@
 import { MdOutlineClose, MdOutlineFiberManualRecord } from 'react-icons/md';
 
-import { SentenceDetailInfo } from '@components/group/Sentence';
+import { SentenceDetailInfo } from '@shared/types';
 
-export type QuizProps = {
+type QuizProps = {
   quiz: SentenceDetailInfo[];
   handleChoice: (num: number) => void;
   len: number;

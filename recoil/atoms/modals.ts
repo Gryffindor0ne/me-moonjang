@@ -1,11 +1,13 @@
 import { atom } from 'recoil';
 
 import { MODAL_TYPES } from '@components/modals/GlobalModal';
-import { ConfirmModalProps } from '@components/modals/ConfirmModal';
-import { GroupEditModalProps } from '@components/modals/GroupEditModal';
-import { GroupNameModalProps } from '@components/modals/GroupNameModal';
-import { SentenceEditModalProps } from '@components/modals/SentenceEditModal';
-import { GroupSelectModalProps } from '@components/modals/GroupSelectModal';
+import {
+  ConfirmModalProps,
+  GroupEditModalProps,
+  GroupNameModalProps,
+  GroupSelectModalProps,
+  SentenceEditModalProps,
+} from '@shared/types';
 
 export interface ConfirmModalType {
   modalType: typeof MODAL_TYPES.ConfirmModal;

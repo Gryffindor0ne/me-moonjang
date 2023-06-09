@@ -13,6 +13,7 @@ import styles from '@styles/Form.module.css';
 import Seo from '@components/layout/Seo';
 import LoginIndicator from '@components/layout/LoginIndicator';
 import { useCustomToast } from '@hooks/useCustomToast';
+import { baseUrl } from '@lib/axiosInstance/constants';
 
 const loginSchema = yup.object().shape({
   email: yup
@@ -62,14 +63,14 @@ const AuthPage: NextPage = () => {
   const handleKakaoLogin = async () => {
     setIsLoading((prev) => !prev);
     await signIn('kakao', {
-      callbackUrl: `${process.env.NEXT_PUBLIC_URL}`,
+      callbackUrl: `${baseUrl}`,
     });
   };
 
   const handleGoogleLogin = async () => {
     setIsLoading((prev) => !prev);
     await signIn('google', {
-      callbackUrl: `${process.env.NEXT_PUBLIC_URL}`,
+      callbackUrl: `${baseUrl}`,
     });
   };
 

@@ -4,7 +4,6 @@ import { getSession, useSession } from 'next-auth/react';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
 
 import Seo from '@components/layout/Seo';
-import { UserInfo } from '@pages/profile';
 import { queryKeys } from '@react-query/constants';
 import Splash from '@components/layout/Splash';
 import {
@@ -12,6 +11,7 @@ import {
   useGroupNames,
 } from '@react-query/hooks/group/useGroupNames';
 import Main from '@components/layout/Main';
+import { UserInfo } from '@shared/types';
 
 const Home = () => {
   const { data: session } = useSession();

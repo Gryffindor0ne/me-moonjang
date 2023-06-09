@@ -33,7 +33,12 @@ const QuizByGroup = () => {
           </h1>
         </div>
 
-        {!sentences ? (
+        {/* 
+        한번도 문장을 생성하지 않았다면 undefined 
+        한번이라도 생성하였다가 문장을 모두 삭제했다면 []
+        */}
+
+        {!sentences || sentences.length === 0 ? (
           <div className="flex flex-col items-center justify-center max-w-2xl p-2 mt-10 text-xl text-center">
             <div className="p-2 mb-5 text-3xl text-center text-teal-500 md:text-4xl">
               <HiOutlineExclamationCircle />

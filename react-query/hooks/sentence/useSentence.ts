@@ -1,13 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
 import { useRouter } from 'next/router';
 
 import { queryKeys } from '@react-query/constants';
+import { axiosInstance } from '@lib/axiosInstance';
 
 export const getGroupData = async (groupId: string | undefined) => {
-  const { data } = await axios.get(
-    `${process.env.NEXT_PUBLIC_URL}/api/groups/detail/${groupId}`
-  );
+  const { data } = await axiosInstance.get(`/api/groups/detail/${groupId}`);
   return data;
 };
 

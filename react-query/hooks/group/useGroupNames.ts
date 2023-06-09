@@ -1,22 +1,18 @@
 import { useQuery } from '@tanstack/react-query';
-import axios from 'axios';
 import { useSession } from 'next-auth/react';
 
-import { UserInfo } from '@pages/profile';
-import { GroupInfo } from '@pages/[groupId]';
 import { queryKeys } from '@react-query/constants';
+import { axiosInstance } from '@lib/axiosInstance';
+import { GroupInfo, UserInfo } from '@shared/types';
 
 export const getGroupNames = async (
   user: UserInfo
 ): Promise<GroupInfo[] | undefined> => {
-  const { data } = await axios.get(
-    `${process.env.NEXT_PUBLIC_URL}/api/groups`,
-    {
-      params: {
-        user: user?.email,
-      },
-    }
-  );
+  const { data } = await axiosInstance.get(`/api/groups`, {
+    params: {
+      user: user?.email,
+    },
+  });
 
   return data;
 };

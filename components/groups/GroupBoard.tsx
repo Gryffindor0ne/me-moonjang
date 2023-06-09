@@ -4,11 +4,11 @@ import { HiOutlineExclamationCircle, HiPlus } from 'react-icons/hi';
 import { useSetRecoilState } from 'recoil';
 
 import GroupsNavbar from '@components/groups/components/GroupsNavbar';
-import { UserInfo } from '@pages/profile';
 import Group from '@components/groups/components/Group';
 import { useGroupNames } from '@react-query/hooks/group/useGroupNames';
 import { contextState } from '@recoil/atoms/common';
 import useModal from '@hooks/useModal';
+import { UserInfo } from '@shared/types';
 
 const GroupBoard = () => {
   const [selectGroupId, setIsSelectGroupId] = useState('');
