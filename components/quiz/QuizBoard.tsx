@@ -43,7 +43,7 @@ const QuizBoard = ({ sentences, groupName }: QuizProps) => {
 
   return (
     <>
-      <Seo title={`QUIZ - ${groupName}`} />
+      <Seo title={`퀴즈-${groupName}`} />
       <section className="flex flex-col w-full max-w-2xl gap-5 mx-auto md:mt-10">
         {userAnswer.length !== sentences.length ? (
           <QuizBox
