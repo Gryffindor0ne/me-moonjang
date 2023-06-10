@@ -19,7 +19,8 @@ const QuizByGroup = () => {
 
   return (
     <>
-      <Seo title={`QUIZ - ${groupData.name}`} />
+      <Seo title={`퀴즈-${groupData.name}`} />
+
       <section className="flex flex-col w-full max-w-2xl px-8 mx-auto md:p-5">
         <div className="flex pr-8">
           <span
