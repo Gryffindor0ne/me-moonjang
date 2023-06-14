@@ -130,7 +130,7 @@ const ProfilePage = () => {
           </div>
           <div className="flex items-center justify-between px-5 py-3 font-mono border-b border-gray-100 md:text-lg">
             <div className="text-base text-gray-600 md:text-lg">이메일</div>
-            <div className="text-sm md:text-lg">{user.email}</div>
+            <div className="text-xs md:text-lg">{user.email}</div>
           </div>
 
           <div className="flex items-center justify-between px-5 py-3 border-b border-gray-100 md:text-lg">

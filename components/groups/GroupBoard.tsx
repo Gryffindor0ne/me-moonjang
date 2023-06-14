@@ -36,8 +36,7 @@ const GroupBoard = () => {
   return (
     <>
       <GroupsNavbar />
-
-      <div className="flex items-center justify-between w-full max-w-xl p-2 my-3">
+      <div className="flex items-center justify-between w-full max-w-lg p-4 ">
         <div className="flex flex-col">
           <div className="flex justify-start text-lg font-bold text-gray-600 md:text-2xl">
             {`${user?.username.toUpperCase()}'s `}
@@ -55,15 +54,17 @@ const GroupBoard = () => {
       </div>
 
       {groups?.length !== 0 ? (
-        groups?.map((group, idx) => {
-          return (
-            <Group
-              key={idx}
-              group={group}
-              setIsSelectGroupId={setIsSelectGroupId}
-            />
-          );
-        })
+        <div className="flex flex-col items-center justify-center w-full max-w-lg p-2">
+          {groups?.map((group, idx) => {
+            return (
+              <Group
+                key={idx}
+                group={group}
+                setIsSelectGroupId={setIsSelectGroupId}
+              />
+            );
+          })}
+        </div>
       ) : (
         <div className="flex flex-col items-center justify-center max-w-2xl p-2 mt-10 text-xl text-center">
           <div className="p-2 mb-5 text-3xl text-center text-teal-500 md:text-4xl">

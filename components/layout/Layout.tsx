@@ -6,7 +6,7 @@ type MemoonjangLayoutProps = {
 const Layout = (props: MemoonjangLayoutProps) => {
   return (
     <>
-      <main className="flex flex-col items-center justify-center w-full px-8 pb-24">
+      <main className="flex flex-col items-center justify-center w-full px-4 pb-24">
         {props.children}
       </main>
       <MainNavigation />

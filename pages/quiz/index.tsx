@@ -39,9 +39,11 @@ const QuizPage = () => {
 
           <div className="flex flex-wrap justify-center mt-3 text-xl text-center md:mt-10">
             {groups?.length !== 0 ? (
-              groups?.map((group, idx) => {
-                return <GroupBox key={idx} groupName={group} />;
-              })
+              <div className="flex flex-col items-center justify-center w-full max-w-lg p-2">
+                {groups?.map((group, idx) => {
+                  return <GroupBox key={idx} groupName={group} />;
+                })}
+              </div>
             ) : (
               <div className="flex flex-col items-center justify-center max-w-2xl p-2 mt-10 text-xl text-center">
                 <div className="p-2 mb-5 text-3xl text-center text-teal-500 md:text-4xl">
