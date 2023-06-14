@@ -12,7 +12,7 @@ const Splash = () => {
 
   return (
     <div className={styles.splash}>
-      <div className="flex items-center justify-center w-full h-full pb-40 bg-teal-500">
+      <div className="flex items-center justify-center w-full h-[100vh] pb-40 bg-teal-500">
         <div className="tracking-in-expand-fwd">
           <div className="blur-out-expand">
             <span className="text-3xl font-bold text-white md:text-4xl">
