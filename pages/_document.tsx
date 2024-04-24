@@ -11,6 +11,7 @@ class MyDocument extends Document {
     return (
       <Html>
         <Head>
+          <meta charSet="utf-8" />
           <meta
             name="description"
             content="영어문장 학습 어플리케이션 - 미문장"
